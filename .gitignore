@@ -1,0 +1,13 @@
+zsh/zshrc.d/99-private.local.zsh
+zsh/zshrc.d/*.local.zsh
+.DS_Store
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+*.rej
+.idea/
+.vscode/
+Session.vim
+tags

@@ -1,0 +1,13 @@
+# Use Neovim as the blocking text/code editor inside Yazi.
+[opener]
+edit = [
+	{ run = "nvim %s", block = true }
+]
+
+[open]
+prepend_rules = [
+	{ mime = "text/*", use = "edit" },
+	{ url = "*.{c,cc,cpp,cxx,h,hh,hpp,hxx,rs,go,py,rb,js,mjs,cjs,ts,tsx,jsx,java,kt,swift,lua,sh,bash,zsh,fish,php,css,scss,less,html,htm,xml,sql}" , use = "edit" },
+	{ url = "*.{md,txt,log,rst,tex}" , use = "edit" },
+	{ url = "*.{toml,yaml,yml,json,jsonc,json5,ini,conf,cfg}" , use = "edit" }
+]
