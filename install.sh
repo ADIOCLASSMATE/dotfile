@@ -2,6 +2,34 @@
 
 set -u
 
+resolve_user_home() {
+  local user_name="$1"
+
+  if [[ "$(uname -s)" == "Darwin" ]] && command -v dscl >/dev/null 2>&1; then
+    dscl . -read "/Users/$user_name" NFSHomeDirectory 2>/dev/null | awk '{print $2}'
+    return
+  fi
+
+  if command -v getent >/dev/null 2>&1; then
+    getent passwd "$user_name" | cut -d: -f6
+    return
+  fi
+
+  eval "printf '%s\n' \"~$user_name\""
+}
+
+if [[ "$(id -u)" -eq 0 && -n "${SUDO_USER:-}" ]]; then
+  ORIGINAL_USER="$SUDO_USER"
+  ORIGINAL_HOME="$(resolve_user_home "$ORIGINAL_USER")"
+
+  if [[ -n "$ORIGINAL_HOME" ]]; then
+    echo "Re-running install.sh as $ORIGINAL_USER so dotfiles are installed into $ORIGINAL_HOME"
+    exec sudo -H -u "$ORIGINAL_USER" \
+      env -u SUDO_USER -u SUDO_UID -u SUDO_GID HOME="$ORIGINAL_HOME" PATH="$PATH" \
+      bash "$0" "$@"
+  fi
+fi
+
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OS_NAME="$(uname -s)"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
@@ -138,14 +166,18 @@ install_yazi() {
   fi
 
   if ! command -v cargo >/dev/null 2>&1; then
-    log_warn "cargo is unavailable, skipped yazi-fm installation"
+    log_warn "cargo is unavailable, skipped Yazi installation"
     return
   fi
 
-  if cargo install yazi-fm --locked; then
-    log_done "Installed yazi-fm with cargo"
+  if cargo install --force yazi-build; then
+    if command -v yazi >/dev/null 2>&1 && command -v ya >/dev/null 2>&1; then
+      log_done "Installed Yazi with cargo install --force yazi-build"
+    else
+      log_warn "yazi-build completed but yazi/ya were not found on PATH; check $HOME/.cargo/bin"
+    fi
   else
-    log_warn "Failed to install yazi-fm with cargo"
+    log_warn "Failed to install Yazi with cargo install --force yazi-build; ensure make and gcc are installed"
   fi
 }
 
@@ -169,13 +201,16 @@ install_oh_my_zsh() {
 }
 
 current_login_shell() {
+  local current_user
+  current_user="$(id -un)"
+
   if [[ "$OS_NAME" == "Darwin" ]] && command -v dscl >/dev/null 2>&1; then
-    dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}'
+    dscl . -read "/Users/$current_user" UserShell 2>/dev/null | awk '{print $2}'
     return
   fi
 
   if [[ "$OS_NAME" == "Linux" ]] && command -v getent >/dev/null 2>&1; then
-    getent passwd "$USER" | cut -d: -f7
+    getent passwd "$current_user" | cut -d: -f7
     return
   fi
 

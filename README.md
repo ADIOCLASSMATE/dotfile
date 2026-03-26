@@ -62,6 +62,7 @@ cd ~/dotfile
 The installer detects `uname`, creates backups under `~/.dotfile-backups/<timestamp>/`, manages symlinks without GNU Stow, installs tools on a best-effort basis, installs Oh My Zsh if missing, creates `99-private.local.zsh` from the template when needed, and prints a final summary of completed, skipped, and warning items.
 
 The script uses the repository location it is executed from, so it works both for `/Users/wjx/dotfile` on macOS and for any cloned path on Linux.
+Run the script as your normal user. It will use `sudo` internally for `apt` when needed; if you start it with `sudo`, it will re-exec itself as the original user before managing dotfiles.
 
 ## Secrets and private values
 
@@ -87,7 +88,8 @@ Linux behavior:
 
 - If `apt-get` and `sudo` are available, the installer tries to install `zsh tmux git curl ripgrep fzf neovim`.
 - If the host is already root, it uses `apt-get` directly.
-- If `sudo` is unavailable, it skips system packages and still tries user-level Rust and `cargo install yazi-fm`.
+- If `sudo` is unavailable, it skips system packages and still tries user-level Rust and Cargo-based Yazi installation.
+- If Cargo is available, Yazi is installed with `cargo install --force yazi-build`, which is the current upstream-supported path for crates.io.
 - `50-linux-remote.zsh` only loads Linux-only logic behind guards, including optional `nvm`, optional `$HOME/.local/bin/env`, a minimal welcome banner, and safe Linux tool exports.
 
 ## Re-running safely
@@ -133,7 +135,7 @@ Re-run `./install.sh`. If package installation still fails, install `zsh` with t
 
 ### Linux host has no sudo
 
-The installer will still set up symlinks, try to install Rust with `rustup`, and install `yazi-fm` with Cargo if possible. For `zsh`, `tmux`, `git`, `curl`, `ripgrep`, `fzf`, and `neovim`, install them manually or ask an administrator to do so.
+The installer will still set up symlinks, try to install Rust with `rustup`, and install Yazi with Cargo if possible. For `zsh`, `tmux`, `git`, `curl`, `ripgrep`, `fzf`, and `neovim`, install them manually or ask an administrator to do so.
 
 ### Neovim fails on first launch
 
