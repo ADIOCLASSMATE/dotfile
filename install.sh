@@ -62,6 +62,25 @@ warn_missing_command() {
   fi
 }
 
+command_version_ge() {
+  local current_version="$1"
+  local minimum_version="$2"
+
+  if [[ -z "$current_version" ]]; then
+    return 1
+  fi
+
+  [[ "$(printf '%s\n%s\n' "$minimum_version" "$current_version" | sort -V | tail -n1)" == "$current_version" ]]
+}
+
+get_nvim_version() {
+  if ! command -v nvim >/dev/null 2>&1; then
+    return 1
+  fi
+
+  nvim --version 2>/dev/null | awk 'NR==1 { sub(/^v/, "", $2); print $2 }'
+}
+
 ensure_dir() {
   mkdir -p "$1"
 }
@@ -262,6 +281,84 @@ install_yazi_support_packages_linux() {
   apt_install_package build-essential gcc
 }
 
+install_official_neovim_linux() {
+  local arch
+  local archive_name
+  local download_url
+  local install_root="$HOME/.local/opt"
+  local install_dir
+  local tmp_dir
+
+  if ! command -v curl >/dev/null 2>&1; then
+    log_warn "curl is unavailable, skipped official Neovim download fallback"
+    return
+  fi
+
+  if ! command -v tar >/dev/null 2>&1; then
+    log_warn "tar is unavailable, skipped official Neovim download fallback"
+    return
+  fi
+
+  case "$(uname -m)" in
+    x86_64 | amd64)
+      arch="x86_64"
+      ;;
+    aarch64 | arm64)
+      arch="arm64"
+      ;;
+    *)
+      log_warn "Unsupported Linux architecture for official Neovim fallback: $(uname -m)"
+      return
+      ;;
+  esac
+
+  archive_name="nvim-linux-${arch}.tar.gz"
+  download_url="https://github.com/neovim/neovim/releases/latest/download/${archive_name}"
+  install_dir="$install_root/nvim-linux-${arch}"
+  tmp_dir="$(mktemp -d)"
+
+  ensure_dir "$install_root"
+
+  if curl -fL "$download_url" -o "$tmp_dir/$archive_name"; then
+    rm -rf "$install_dir"
+    if tar -C "$install_root" -xzf "$tmp_dir/$archive_name"; then
+      ensure_dir "$HOME/.local/bin"
+      ln -sfn "$install_dir/bin/nvim" "$HOME/.local/bin/nvim"
+      log_done "Installed official Neovim tarball to $install_dir"
+    else
+      log_warn "Failed to extract official Neovim tarball"
+    fi
+  else
+    log_warn "Failed to download official Neovim tarball from $download_url"
+  fi
+
+  rm -rf "$tmp_dir"
+}
+
+ensure_usable_neovim() {
+  local nvim_version
+  nvim_version="$(get_nvim_version || true)"
+
+  if command_version_ge "$nvim_version" "0.8.0"; then
+    log_skip "Neovim version is usable: ${nvim_version}"
+    return
+  fi
+
+  if [[ "$OS_NAME" == "Linux" ]]; then
+    if [[ -n "$nvim_version" ]]; then
+      log_warn "System Neovim is too old for LazyVim (${nvim_version} < 0.8.0); installing official Neovim tarball"
+    else
+      log_warn "Neovim is unavailable after package installation; installing official Neovim tarball"
+    fi
+    install_official_neovim_linux
+    return
+  fi
+
+  if [[ -n "$nvim_version" ]]; then
+    log_warn "Neovim is installed but too old for LazyVim: ${nvim_version}"
+  fi
+}
+
 current_login_shell() {
   local current_user
   current_user="$(id -un)"
@@ -428,6 +525,7 @@ main() {
   install_yazi
   install_oh_my_zsh
   install_oh_my_zsh_plugins
+  ensure_usable_neovim
   copy_private_template
 
   ensure_link "$REPO_ROOT/zsh/.zshrc" "$HOME/.zshrc"

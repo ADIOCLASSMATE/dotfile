@@ -90,6 +90,7 @@ Linux behavior:
 - If the host is already root, it uses `apt-get` directly.
 - If `sudo` is unavailable, it skips system packages and still tries user-level Rust and Cargo-based Yazi installation.
 - If Cargo is available, Yazi is installed with `cargo install --force yazi-build`, which is the current upstream-supported path for crates.io.
+- On Linux, if the distro `neovim` package is missing or older than `0.8.0`, the installer falls back to the official Neovim tarball under `~/.local/opt` and links `~/.local/bin/nvim`.
 - After installation, the script warns if `nvim`, `yazi`, or key Yazi helper commands are still missing.
 - `50-linux-remote.zsh` only loads Linux-only logic behind guards, including optional `nvm`, optional `$HOME/.local/bin/env`, a minimal welcome banner, and safe Linux tool exports.
 
@@ -141,6 +142,7 @@ The installer will still set up symlinks, try to install Rust with `rustup`, and
 ### Neovim fails on first launch
 
 The bundled config uses LazyVim and `lazy.nvim`. First launch may need internet access to clone plugin sources before the lockfile can be applied locally.
+On older Linux distros, the system `neovim` package may be too old for LazyVim. `./install.sh` now falls back to an official Neovim build if it detects a version older than `0.8.0`.
 
 ### Yazi cannot open files in Neovim
 
