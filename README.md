@@ -59,7 +59,7 @@ cd ~/dotfile
 ./install.sh
 ```
 
-The installer detects `uname`, creates backups under `~/.dotfile-backups/<timestamp>/`, manages symlinks without GNU Stow, installs tools on a best-effort basis, installs Oh My Zsh if missing, creates `99-private.local.zsh` from the template when needed, and prints a final summary of completed, skipped, and warning items.
+The installer detects `uname`, creates backups under `~/.dotfile-backups/<timestamp>/`, manages symlinks without GNU Stow, installs tools on a best-effort basis, installs Oh My Zsh if missing, installs Neovim and Yazi when possible, adds common Yazi runtime helpers when package management is available, creates `99-private.local.zsh` from the template when needed, and prints a final summary of completed, skipped, and warning items.
 
 The script uses the repository location it is executed from, so it works both for `/Users/wjx/dotfile` on macOS and for any cloned path on Linux.
 Run the script as your normal user. It will use `sudo` internally for `apt` when needed; if you start it with `sudo`, it will re-exec itself as the original user before managing dotfiles.
@@ -86,10 +86,11 @@ cd ~/dotfile
 
 Linux behavior:
 
-- If `apt-get` and `sudo` are available, the installer tries to install `zsh tmux git curl ripgrep fzf neovim`.
+- If `apt-get` and `sudo` are available, the installer tries to install `zsh tmux git curl ripgrep fzf neovim` plus common Yazi support packages such as `file`, `jq`, `ffmpeg`, `p7zip`, `poppler`, and `imagemagick`.
 - If the host is already root, it uses `apt-get` directly.
 - If `sudo` is unavailable, it skips system packages and still tries user-level Rust and Cargo-based Yazi installation.
 - If Cargo is available, Yazi is installed with `cargo install --force yazi-build`, which is the current upstream-supported path for crates.io.
+- After installation, the script warns if `nvim`, `yazi`, or key Yazi helper commands are still missing.
 - `50-linux-remote.zsh` only loads Linux-only logic behind guards, including optional `nvm`, optional `$HOME/.local/bin/env`, a minimal welcome banner, and safe Linux tool exports.
 
 ## Re-running safely

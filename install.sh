@@ -53,6 +53,15 @@ log_warn() {
   WARN_MESSAGES+=("$1")
 }
 
+warn_missing_command() {
+  local command_name="$1"
+  local message="$2"
+
+  if ! command -v "$command_name" >/dev/null 2>&1; then
+    log_warn "$message"
+  fi
+}
+
 ensure_dir() {
   mkdir -p "$1"
 }
@@ -235,6 +244,24 @@ install_oh_my_zsh_plugins() {
   install_oh_my_zsh_plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting"
 }
 
+install_yazi_support_packages_macos() {
+  brew_install_package jq
+  brew_install_package ffmpeg
+  brew_install_package p7zip
+  brew_install_package poppler
+  brew_install_package imagemagick
+}
+
+install_yazi_support_packages_linux() {
+  apt_install_package file file
+  apt_install_package jq jq
+  apt_install_package ffmpeg ffmpeg
+  apt_install_package p7zip-full 7z
+  apt_install_package poppler-utils pdfinfo
+  apt_install_package imagemagick identify
+  apt_install_package build-essential gcc
+}
+
 current_login_shell() {
   local current_user
   current_user="$(id -un)"
@@ -293,6 +320,7 @@ install_packages_macos() {
   brew_install_package ripgrep
   brew_install_package fzf
   brew_install_package neovim
+  install_yazi_support_packages_macos
 }
 
 install_packages_linux() {
@@ -332,6 +360,7 @@ install_packages_linux() {
     apt_install_package ripgrep rg
     apt_install_package fzf fzf
     apt_install_package neovim nvim
+    install_yazi_support_packages_linux
   else
     APT_RUNNER="env"
     apt_install_package zsh zsh
@@ -341,7 +370,18 @@ install_packages_linux() {
     apt_install_package ripgrep rg
     apt_install_package fzf fzf
     apt_install_package neovim nvim
+    install_yazi_support_packages_linux
   fi
+}
+
+check_runtime_tools() {
+  warn_missing_command "nvim" "Neovim is still unavailable; this LazyVim config will not work until nvim is installed"
+  warn_missing_command "yazi" "Yazi is still unavailable; install it manually or ensure $HOME/.cargo/bin is on PATH"
+  warn_missing_command "file" "The 'file' utility is unavailable; Yazi file type detection will be reduced"
+  warn_missing_command "jq" "jq is unavailable; some Yazi JSON-based integrations may not work"
+  warn_missing_command "ffmpeg" "ffmpeg is unavailable; Yazi media previews may be limited"
+  warn_missing_command "7z" "7z is unavailable; Yazi archive handling may be limited"
+  warn_missing_command "pdfinfo" "poppler-utils is unavailable; Yazi PDF metadata/preview helpers may be limited"
 }
 
 print_summary() {
@@ -402,6 +442,7 @@ main() {
   ensure_link "$REPO_ROOT/nvim" "$HOME/.config/nvim"
   ensure_link "$REPO_ROOT/yazi" "$HOME/.config/yazi"
 
+  check_runtime_tools
   switch_default_shell
   print_summary
 }
