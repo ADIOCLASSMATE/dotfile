@@ -200,6 +200,41 @@ install_oh_my_zsh() {
   fi
 }
 
+install_oh_my_zsh_plugin() {
+  local plugin_name="$1"
+  local plugin_repo="$2"
+  local zsh_custom_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+  local plugin_dir="$zsh_custom_dir/plugins/$plugin_name"
+
+  if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+    log_warn "Oh My Zsh is unavailable, skipped plugin: $plugin_name"
+    return
+  fi
+
+  if [[ -d "$plugin_dir" ]]; then
+    log_skip "Oh My Zsh plugin already installed: $plugin_name"
+    return
+  fi
+
+  if ! command -v git >/dev/null 2>&1; then
+    log_warn "git is unavailable, skipped Oh My Zsh plugin: $plugin_name"
+    return
+  fi
+
+  ensure_dir "$zsh_custom_dir/plugins"
+
+  if git clone --depth=1 "$plugin_repo" "$plugin_dir"; then
+    log_done "Installed Oh My Zsh plugin: $plugin_name"
+  else
+    log_warn "Failed to install Oh My Zsh plugin: $plugin_name"
+  fi
+}
+
+install_oh_my_zsh_plugins() {
+  install_oh_my_zsh_plugin "zsh-autosuggestions" "https://github.com/zsh-users/zsh-autosuggestions"
+  install_oh_my_zsh_plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-syntax-highlighting"
+}
+
 current_login_shell() {
   local current_user
   current_user="$(id -un)"
@@ -352,6 +387,7 @@ main() {
   install_rust
   install_yazi
   install_oh_my_zsh
+  install_oh_my_zsh_plugins
   copy_private_template
 
   ensure_link "$REPO_ROOT/zsh/.zshrc" "$HOME/.zshrc"

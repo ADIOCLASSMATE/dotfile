@@ -11,10 +11,5 @@ if [[ -f "$HOME/.local/bin/env" ]]; then
   source "$HOME/.local/bin/env"
 fi
 
-if [[ -o interactive && -f "$HOME/.welcome_Inspire" ]]; then
-  cat "$HOME/.welcome_Inspire"
-  echo
-fi
-
 export HF_ENDPOINT="https://hf-mirror.com"
 export UV_PYTHON="3.12"
