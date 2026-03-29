@@ -11,3 +11,5 @@ zsh/zshrc.d/*.local.zsh
 .vscode/
 Session.vim
 tags
+.claude
+.codex
