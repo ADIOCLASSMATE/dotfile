@@ -30,10 +30,25 @@ return {
     },
   },
   {
-    "mason-org/mason.nvim",
+    "mason-org/mason-lspconfig.nvim",
+    opts = {},
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = {
+      "mason-org/mason.nvim",
+      "mason-org/mason-lspconfig.nvim",
+    },
     opts = {
       ensure_installed = {
+        "bash-language-server",
+        "lua-language-server",
+        "pyright",
+        "ruff",
         "shellcheck",
+        "shfmt",
+        "stylua",
+        "tree-sitter-cli",
       },
     },
   },
