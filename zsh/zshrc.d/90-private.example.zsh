@@ -1,6 +1,7 @@
-# Copy this file to 99-private.local.zsh and fill in local-only values.
+# ./init.sh copies this template into the local block inside ~/.zshrc
+# when no machine-specific config has been created yet.
 # Keep secrets, passwords, tokens, machine-specific paths, and server-only
-# directories in that local file instead of tracked config.
+# directories in that local block instead of tracked config.
 
 # Optional custom PATH entries:
 # if [[ -d "$HOME/rtunnel" ]]; then
