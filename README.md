@@ -10,7 +10,6 @@ This repository turns the current working shell, tmux, Neovim, Yazi, and baselin
 - `nvim/` copied from the active LazyVim config
 - `yazi/yazi.toml`
 - `init.sh` for bootstrap, package installation, backups, symlink management, and `~/.zshrc` generation
-- `install.sh` as a compatibility wrapper around `init.sh`
 
 ## Layout
 
@@ -18,7 +17,6 @@ This repository turns the current working shell, tmux, Neovim, Yazi, and baselin
 dotfile/
 ├── README.md
 ├── init.sh
-├── install.sh
 ├── .gitignore
 ├── zsh/
 │   └── zshrc.d/
@@ -104,7 +102,7 @@ Linux behavior:
 
 ## Re-running safely
 
-`./install.sh` is intended to be safe to rerun.
+`./init.sh` is intended to be safe to rerun.
 
 - Existing correct symlinks are skipped.
 - Existing non-matching files or links are moved to `~/.dotfile-backups/<timestamp>/` before new links are created.
@@ -156,4 +154,4 @@ On older Linux distros, the system `neovim` package may be too old for LazyVim. 
 
 ### Yazi cannot open files in Neovim
 
-This repo uses `nvim %s` as the editor opener so the same config works on macOS and Linux. If `nvim` is not on `PATH`, install Neovim or add the correct path in your private local zsh file.
+This repo uses `nvim %s` as the editor opener so the same config works on macOS and Linux. If `nvim` is not on `PATH`, install Neovim or add the correct path in the local block inside `~/.zshrc`.
