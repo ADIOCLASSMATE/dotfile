@@ -29,7 +29,7 @@ tags
 .claude/plugins/cache/
 .claude/plugins/install-counts-cache.json
 .claude/plugins/installed_plugins.json
-.claude/plugins/marketplaces/
+.claude/plugins/marketplaces/*.json
 .claude/projects/
 .claude/session-data/
 .claude/session-env/
@@ -61,4 +61,4 @@ tags
 .codex/state_5.sqlite-shm
 .codex/state_5.sqlite-wal
 .codex/tmp/
-.codex/vendor_imports/
+.codex/vendor_imports/*.json
