@@ -25,7 +25,6 @@ tags
 .claude/ide/
 .claude/observer-last-run.log
 .claude/paste-cache/
-.claude/pet/
 .claude/plans/
 .claude/plugins/cache/
 .claude/plugins/install-counts-cache.json
