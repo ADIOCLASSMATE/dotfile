@@ -18,6 +18,7 @@ tags
 .claude/cost-tracker.log
 .claude/debug/
 .claude/downloads/
+.claude/ecc/install-state.json
 .claude/file-history/
 .claude/history.jsonl
 .claude/homunculus/
@@ -29,6 +30,7 @@ tags
 .claude/plugins/cache/
 .claude/plugins/install-counts-cache.json
 .claude/plugins/installed_plugins.json
+.claude/plugins/known_marketplaces.json
 .claude/plugins/marketplaces/*.json
 .claude/projects/
 .claude/session-data/
@@ -62,3 +64,4 @@ tags
 .codex/state_5.sqlite-wal
 .codex/tmp/
 .codex/vendor_imports/*.json
+.codex/config-backup.toml
