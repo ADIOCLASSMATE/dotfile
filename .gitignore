@@ -22,6 +22,7 @@ tags
 .claude/file-history/
 .claude/history.jsonl
 .claude/homunculus/
+.claude/metrics/
 .claude/ide/
 .claude/observer-last-run.log
 .claude/paste-cache/
