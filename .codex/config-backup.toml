@@ -1,0 +1,51 @@
+model_provider = "OpenAI"
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+approvals_reviewer = "user"
+network_access = "enabled"
+disable_response_storage = true
+windows_wsl_setup_acknowledged = true
+model_verbosity = "high"
+
+[model_providers.OpenAI]
+name = "OpenAI"
+base_url = "https://capi.quan2go.com/openai"
+wire_api = "responses"
+requires_openai_auth = true
+
+[projects."/inspire/hdd/global_user/wanjiaxin-253108030048/code/Stochastic-Orders-Language-Modeling"]
+trust_level = "trusted"
+
+[projects."/inspire/hdd/global_user/wanjiaxin-253108030048/Inspire-cli"]
+trust_level = "trusted"
+
+[projects."/Users/wjx/code/parameter-golf"]
+trust_level = "trusted"
+
+[projects."/Users/wjx/code/openclaw"]
+trust_level = "trusted"
+
+[projects."/Users/wjx/.config/nvim"]
+trust_level = "trusted"
+
+[projects."/Users/wjx/.config/yazi"]
+trust_level = "trusted"
+
+[projects."/Users/wjx/博士/paper"]
+trust_level = "trusted"
+
+[projects."/Users/wjx/dotfile"]
+trust_level = "trusted"
+
+[projects."/Users/wjx/code/claude-code"]
+trust_level = "trusted"
+
+[projects."/Users/wjx/code/slowrun"]
+trust_level = "trusted"
+
+[notice]
+hide_full_access_warning = true
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+
