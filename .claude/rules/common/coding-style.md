@@ -78,6 +78,26 @@ Use named constants for meaningful thresholds, delays, and limits.
 
 Split large functions into focused pieces with clear responsibilities.
 
+## Anti-Silent-Assumption
+
+Don't hide confusion or silently pick one interpretation:
+
+- If multiple interpretations exist, present them all — don't pick silently
+- If a simpler approach exists, say so. Push back when warranted
+- If something is unclear, stop. Name what's confusing and ask
+
+## Multi-Step Verification
+
+For multi-step tasks, state a brief plan with verification at each step:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
 ## Code Quality Checklist
 
 Before marking work complete:
@@ -88,3 +108,29 @@ Before marking work complete:
 - [ ] Proper error handling
 - [ ] No hardcoded values (use constants or config)
 - [ ] No mutation (immutable patterns used)
+
+## Communication
+
+- Prefer concise, actionable answers.
+- When giving commands, prefer copy/paste-ready blocks.
+
+## Safety
+
+- Don't propose destructive commands unless explicitly requested.
+- For risky operations (force-push, rm -rf, etc.), ask for confirmation first.
+
+## Planning and Execution
+
+- For any large plan, backup the plan to the project directory (e.g., `PLAN.md` or `.claude/plan.md`).
+- When user explicitly requests continuous work, work autonomously without excessive confirmation requests.
+- Prioritize execution over confirmation to save time and resources.
+- Complete work first, summarize results, then let user review and provide feedback.
+
+## Rules Working Indicators
+
+These rules are working if you observe:
+- Fewer unnecessary changes in diffs — only requested changes appear
+- Fewer rewrites due to overcomplication — code is simple the first time
+- Clarifying questions come before implementation — not after mistakes
+- Clean, minimal PRs — no drive-by refactoring or "improvements"
+

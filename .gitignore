@@ -45,6 +45,8 @@ tags
 # secrets with API keys / tokens
 .claude/config.json
 .claude/settings.json
+.claude/backup-settings.json
+.claude/metrics/
 
 # --- .codex runtime / secrets ---
 .codex/.codex
@@ -65,3 +67,10 @@ tags
 .codex/tmp/
 .codex/vendor_imports/*.json
 .codex/config-backup.toml
+
+# --- other runtime / local files ---
+.sii/
+responses_proxy.py
+.codex/backup-auth.json
+.codex/backup-config.toml
+.codex/.sync_backup_*/

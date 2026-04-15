@@ -1,0 +1,4 @@
+prefix_rule(pattern=["nvidia-smi"], decision="allow")
+prefix_rule(pattern=["dmesg", "-T"], decision="allow")
+prefix_rule(pattern=["ps", "-eo"], decision="allow")
+prefix_rule(pattern=["ps", "-fp"], decision="allow")
