@@ -1,8 +1,6 @@
 # Agent Instructions
 
-This is a **production-ready AI coding plugin** providing 48 specialized agents, 183 skills, 79 commands, and automated hook workflows for software development.
-
-**Version:** 1.10.0
+Custom Claude Code configuration with 48 specialized agents, 35 skills, 47 commands, and advisory hook workflows for software development.
 
 ## Core Principles
 
@@ -146,13 +144,12 @@ Troubleshoot failures: check test isolation → verify mocks → fix implementat
 
 ```
 agents/          — 48 specialized subagents
-skills/          — 183 workflow skills and domain knowledge
-commands/        — 79 slash commands
-hooks/           — Trigger-based automations
+skills/          — 35 workflow skills and domain knowledge
+commands/        — 47 slash commands
+hooks/           — Advisory hook workflows (3 active scripts)
 rules/           — Always-follow guidelines (common + per-language)
 scripts/         — Cross-platform Node.js utilities
-mcp-configs/     — 14 MCP server configurations
-tests/           — Test suite
+mcp-configs/     — MCP server template catalog
 ```
 
 `commands/` remains in the repo for compatibility, but the long-term direction is skills-first.

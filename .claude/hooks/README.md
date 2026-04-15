@@ -1,6 +1,6 @@
 # Hooks
 
-Hooks are event-driven automations that fire before or after Claude Code tool executions. They enforce code quality, catch mistakes early, and automate repetitive checks.
+Hooks are event-driven automations that fire before or after Claude Code tool executions.
 
 ## How Hooks Work
 
@@ -8,106 +8,62 @@ Hooks are event-driven automations that fire before or after Claude Code tool ex
 User request → Claude picks a tool → PreToolUse hook runs → Tool executes → PostToolUse hook runs
 ```
 
-- **PreToolUse** hooks run before the tool executes. They can **block** (exit code 2) or **warn** (stderr without blocking).
+- **PreToolUse** hooks run before the tool executes. They can **block** (exit code 2), **warn** (stderr without blocking), or **advise** (inject additionalContext with `permissionDecision: 'allow'`).
 - **PostToolUse** hooks run after the tool completes. They can analyze output but cannot block.
 - **Stop** hooks run after each Claude response.
-- **SessionStart/SessionEnd** hooks run at session lifecycle boundaries.
-- **PreCompact** hooks run before context compaction, useful for saving state.
 
-## Hooks in This Plugin
+## Active Hooks
 
-## Installing These Hooks Manually
+Hooks are registered in `~/.claude/settings.json`, not in a standalone `hooks.json`.
 
-For Claude Code manual installs, do not paste the raw repo `hooks.json` into `~/.claude/settings.json` or copy it directly into `~/.claude/hooks/hooks.json`. The checked-in file is plugin/repo-oriented and is meant to be installed through the installer or loaded as a plugin.
+### PreToolUse
 
-Use the installer instead so hook commands are rewritten against your actual Claude root:
+| Hook | Matcher | Behavior | Description |
+|------|---------|----------|-------------|
+| **GateGuard** | `Edit\|Write\|MultiEdit` | Advises via `additionalContext` (allow) | Injects `[Check]` prompts for new files, large edits (>10 lines), and deletions (>3 lines) |
+| **GateGuard** | `Bash` | Advises via `additionalContext` (allow) | Injects `[Check]` prompts for destructive commands (`rm -rf`, `git reset --hard`, etc.) |
+| **Pre-commit quality** | `Bash` | Warns via stderr (allow) | Runs quality checks before `git commit`: detects console.log, debugger, secrets, validates commit message format |
 
-```bash
-bash ./install.sh --target claude --modules hooks-runtime
-```
+### Stop
 
-```powershell
-pwsh -File .\install.ps1 --target claude --modules hooks-runtime
-```
+| Hook | Matcher | Behavior | Description |
+|------|---------|----------|-------------|
+| **Desktop notify** | `""` | Async notification | Sends macOS/WSL desktop notification when Claude finishes responding |
 
-That installs resolved hooks to `~/.claude/hooks/hooks.json`. On Windows, the Claude config root is `%USERPROFILE%\\.claude`.
+## GateGuard Silent Advisory
 
-### PreToolUse Hooks
+GateGuard uses `permissionDecision: 'allow'` with `additionalContext` to inject `[Check]` messages into the model's context without blocking the operation. The model is required by rule (`coding-style.md` — Check Response CRITICAL) to address every bullet point before proceeding.
 
-| Hook | Matcher | Behavior | Exit Code |
-|------|---------|----------|-----------|
-| **Dev server blocker** | `Bash` | Blocks `npm run dev` etc. outside tmux — ensures log access | 2 (blocks) |
-| **Tmux reminder** | `Bash` | Suggests tmux for long-running commands (npm test, cargo build, docker) | 0 (warns) |
-| **Git push reminder** | `Bash` | Reminds to review changes before `git push` | 0 (warns) |
-| **Pre-commit quality check** | `Bash` | Runs quality checks before `git commit`: lints staged files, validates commit message format when provided via `-m/--message`, detects console.log/debugger/secrets | 2 (blocks critical) / 0 (warns) |
-| **Doc file warning** | `Write` | Warns about non-standard `.md`/`.txt` files (allows README, CLAUDE, CONTRIBUTING, CHANGELOG, LICENSE, SKILL, docs/, skills/); cross-platform path handling | 0 (warns) |
-| **Strategic compact** | `Edit\|Write` | Suggests manual `/compact` at logical intervals (every ~50 tool calls) | 0 (warns) |
-
-### PostToolUse Hooks
-
-| Hook | Matcher | What It Does |
-|------|---------|-------------|
-| **PR logger** | `Bash` | Logs PR URL and review command after `gh pr create` |
-| **Build analysis** | `Bash` | Background analysis after build commands (async, non-blocking) |
-| **Quality gate** | `Edit\|Write\|MultiEdit` | Runs fast quality checks after edits |
-| **Design quality check** | `Edit\|Write\|MultiEdit` | Warns when frontend edits drift toward generic template-looking UI |
-| **Prettier format** | `Edit` | Auto-formats JS/TS files with Prettier after edits |
-| **TypeScript check** | `Edit` | Runs `tsc --noEmit` after editing `.ts`/`.tsx` files |
-| **console.log warning** | `Edit` | Warns about `console.log` statements in edited files |
-
-### Lifecycle Hooks
-
-| Hook | Event | What It Does |
-|------|-------|-------------|
-| **Session start** | `SessionStart` | Loads previous context and detects package manager |
-| **Pre-compact** | `PreCompact` | Saves state before context compaction |
-| **Console.log audit** | `Stop` | Checks all modified files for `console.log` after each response |
-| **Session summary** | `Stop` | Persists session state when transcript path is available |
-| **Pattern extraction** | `Stop` | Evaluates session for extractable patterns (continuous learning) |
-| **Cost tracker** | `Stop` | Emits lightweight run-cost telemetry markers |
-| **Desktop notify** | `Stop` | Sends macOS desktop notification with task summary (standard+) |
-| **Session end marker** | `SessionEnd` | Lifecycle marker and cleanup log |
+Trigger thresholds:
+- **Write** (new file): always triggers
+- **Edit/MultiEdit** deletion: old_string > 3 lines, new_string empty
+- **Edit/MultiEdit** large: old_string > 10 lines
+- **Bash** destructive: matches `rm -rf`, `git reset --hard`, `git push --force`, etc.
 
 ## Customizing Hooks
 
-### Disabling a Hook
-
-Remove or comment out the hook entry in `hooks.json`. If installed as a plugin, override in your `~/.claude/settings.json`:
+Hooks are configured in `~/.claude/settings.json`:
 
 ```json
 {
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write",
-        "hooks": [],
-        "description": "Override: allow all .md file creation"
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [{ "type": "command", "command": "node path/to/hook.js" }]
       }
     ]
   }
 }
 ```
 
-### Runtime Hook Controls (Recommended)
+### Disabling a Hook
 
-Use environment variables to control hook behavior without editing `hooks.json`:
-
-```bash
-# minimal | standard | strict (default: standard)
-export HOOK_PROFILE=standard
-
-# Disable specific hook IDs (comma-separated)
-export DISABLED_HOOKS="pre:bash:tmux-reminder,post:edit:typecheck"
-```
-
-Profiles:
-- `minimal` — keep essential lifecycle and safety hooks only.
-- `standard` — default; balanced quality + safety checks.
-- `strict` — enables additional reminders and stricter guardrails.
+Remove or comment out the hook entry in `settings.json`.
 
 ### Writing Your Own Hook
 
-Hooks are shell commands that receive tool input as JSON on stdin and must output JSON on stdout.
+Hooks are Node.js scripts that receive tool input as JSON on stdin and must output JSON on stdout.
 
 **Basic structure:**
 
@@ -117,20 +73,20 @@ let data = '';
 process.stdin.on('data', chunk => data += chunk);
 process.stdin.on('end', () => {
   const input = JSON.parse(data);
+  const toolName = input.tool_name;
+  const toolInput = input.tool_input;
 
-  // Access tool info
-  const toolName = input.tool_name;        // "Edit", "Bash", "Write", etc.
-  const toolInput = input.tool_input;      // Tool-specific parameters
-  const toolOutput = input.tool_output;    // Only available in PostToolUse
+  // Advise mode: inject context without blocking
+  console.log(JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: 'PreToolUse',
+      permissionDecision: 'allow',
+      additionalContext: '[Check] Your advisory message here'
+    }
+  }));
 
-  // Warn (non-blocking): write to stderr
-  console.error('[Hook] Warning message shown to Claude');
-
-  // Block (PreToolUse only): exit with code 2
+  // Block mode: exit with code 2
   // process.exit(2);
-
-  // Always output the original data to stdout
-  console.log(data);
 });
 ```
 
@@ -139,99 +95,26 @@ process.stdin.on('end', () => {
 - `2` — Block the tool call (PreToolUse only)
 - Other non-zero — Error (logged but does not block)
 
-### Hook Input Schema
+**Hook Input Schema:**
 
 ```typescript
 interface HookInput {
-  tool_name: string;          // "Bash", "Edit", "Write", "Read", etc.
+  tool_name: string;
   tool_input: {
-    command?: string;         // Bash: the command being run
-    file_path?: string;       // Edit/Write/Read: target file
-    old_string?: string;      // Edit: text being replaced
-    new_string?: string;      // Edit: replacement text
-    content?: string;         // Write: file content
+    command?: string;       // Bash
+    file_path?: string;     // Edit/Write/Read
+    old_string?: string;    // Edit
+    new_string?: string;    // Edit
+    content?: string;       // Write
   };
-  tool_output?: {             // PostToolUse only
-    output?: string;          // Command/tool output
+  tool_output?: {           // PostToolUse only
+    output?: string;
   };
 }
 ```
-
-### Async Hooks
-
-For hooks that should not block the main flow (e.g., background analysis):
-
-```json
-{
-  "type": "command",
-  "command": "node my-slow-hook.js",
-  "async": true,
-  "timeout": 30
-}
-```
-
-Async hooks run in the background. They cannot block tool execution.
-
-## Common Hook Recipes
-
-### Warn about TODO comments
-
-```json
-{
-  "matcher": "Edit",
-  "hooks": [{
-    "type": "command",
-    "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const ns=i.tool_input?.new_string||'';if(/TODO|FIXME|HACK/.test(ns)){console.error('[Hook] New TODO/FIXME added - consider creating an issue')}console.log(d)})\""
-  }],
-  "description": "Warn when adding TODO/FIXME comments"
-}
-```
-
-### Block large file creation
-
-```json
-{
-  "matcher": "Write",
-  "hooks": [{
-    "type": "command",
-    "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\\n').length;if(lines>800){console.error('[Hook] BLOCKED: File exceeds 800 lines ('+lines+' lines)');console.error('[Hook] Split into smaller, focused modules');process.exit(2)}console.log(d)})\""
-  }],
-  "description": "Block creation of files larger than 800 lines"
-}
-```
-
-### Auto-format Python files with ruff
-
-```json
-{
-  "matcher": "Edit",
-  "hooks": [{
-    "type": "command",
-    "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.py$/.test(p)){const{execFileSync}=require('child_process');try{execFileSync('ruff',['format',p],{stdio:'pipe'})}catch(e){}}console.log(d)})\""
-  }],
-  "description": "Auto-format Python files with ruff after edits"
-}
-```
-
-### Require test files alongside new source files
-
-```json
-{
-  "matcher": "Write",
-  "hooks": [{
-    "type": "command",
-    "command": "node -e \"const fs=require('fs');let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/src\\/.*\\.(ts|js)$/.test(p)&&!/\\.test\\.|\\.spec\\./.test(p)){const testPath=p.replace(/\\.(ts|js)$/,'.test.$1');if(!fs.existsSync(testPath)){console.error('[Hook] No test file found for: '+p);console.error('[Hook] Expected: '+testPath);console.error('[Hook] Consider writing tests first (/tdd)')}}console.log(d)})\""
-  }],
-  "description": "Remind to create tests when adding new source files"
-}
-```
-
-## Cross-Platform Notes
-
-Hook logic is implemented in Node.js scripts for cross-platform behavior on Windows, macOS, and Linux. A small number of shell wrappers are retained for continuous-learning observer hooks; those wrappers are profile-gated and have Windows-safe fallback behavior.
 
 ## Related
 
 - [rules/common/hooks.md](../rules/common/hooks.md) — Hook architecture guidelines
-- [skills/strategic-compact/](../skills/strategic-compact/) — Strategic compaction skill
+- [rules/common/coding-style.md](../rules/common/coding-style.md) — Check Response (CRITICAL) rule
 - [scripts/hooks/](../scripts/hooks/) — Hook script implementations
