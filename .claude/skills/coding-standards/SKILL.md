@@ -1,7 +1,6 @@
 ---
 name: coding-standards
 description: Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns.
-origin: ECC
 ---
 
 # Coding Standards & Best Practices
@@ -34,7 +33,7 @@ Activate this skill for:
 Do not use this skill as the primary source for:
 - React composition, hooks, or rendering patterns
 - backend architecture, API design, or database layering
-- domain-specific framework guidance when a narrower ECC skill already exists
+- domain-specific framework guidance when a narrower skill already exists
 
 ## Code Quality Principles
 

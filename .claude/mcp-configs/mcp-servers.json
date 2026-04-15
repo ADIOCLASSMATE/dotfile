@@ -1,4 +1,5 @@
 {
+  "_readme": "This file is a TEMPLATE catalog. Copy servers you need to ~/.claude.json mcpServers after filling in credentials. No server here is active by default.",
   "mcpServers": {
     "jira": {
       "command": "uvx",
@@ -8,7 +9,8 @@
         "JIRA_EMAIL": "YOUR_JIRA_EMAIL_HERE",
         "JIRA_API_TOKEN": "YOUR_JIRA_API_TOKEN_HERE"
       },
-      "description": "Jira issue tracking — search, create, update, comment, transition issues"
+      "description": "Jira issue tracking — search, create, update, comment, transition issues",
+      "_requires": "Jira Cloud URL + email + API token"
     },
     "github": {
       "command": "npx",
@@ -16,7 +18,8 @@
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_PAT_HERE"
       },
-      "description": "GitHub operations - PRs, issues, repos"
+      "description": "GitHub operations - PRs, issues, repos",
+      "_requires": "GitHub personal access token"
     },
     "firecrawl": {
       "command": "npx",
@@ -24,12 +27,14 @@
       "env": {
         "FIRECRAWL_API_KEY": "YOUR_FIRECRAWL_KEY_HERE"
       },
-      "description": "Web scraping and crawling"
+      "description": "Web scraping and crawling",
+      "_requires": "Firecrawl API key"
     },
     "supabase": {
       "command": "npx",
       "args": ["-y", "@supabase/mcp-server-supabase@latest", "--project-ref=YOUR_PROJECT_REF"],
-      "description": "Supabase database operations"
+      "description": "Supabase database operations",
+      "_requires": "Supabase project ref"
     },
     "memory": {
       "command": "npx",
@@ -39,7 +44,7 @@
     "omega-memory": {
       "command": "uvx",
       "args": ["omega-memory", "serve"],
-      "description": "Persistent agent memory with semantic search, multi-agent coordination, and knowledge graphs — run via uvx (richer than the basic memory store)"
+      "description": "Persistent agent memory with semantic search, multi-agent coordination, and knowledge graphs"
     },
     "sequential-thinking": {
       "command": "npx",
@@ -87,12 +92,13 @@
       "env": {
         "EXA_API_KEY": "YOUR_EXA_API_KEY_HERE"
       },
-      "description": "Web search, research, and data ingestion via Exa API — prefer task-scoped use for broader research after GitHub search and primary docs"
+      "description": "Web search, research, and data ingestion via Exa API",
+      "_requires": "Exa API key"
     },
     "context7": {
       "command": "npx",
       "args": ["-y", "@upstash/context7-mcp@latest"],
-      "description": "Live documentation lookup — use with /docs command and documentation-lookup skill (resolve-library-id, query-docs)."
+      "description": "Live documentation lookup — use with /docs command and documentation-lookup skill"
     },
     "magic": {
       "command": "npx",
@@ -102,7 +108,8 @@
     "filesystem": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/your/projects"],
-      "description": "Filesystem operations (set your path)"
+      "description": "Filesystem operations (set your path)",
+      "_requires": "Set actual project path in args"
     },
     "playwright": {
       "command": "npx",
@@ -115,7 +122,8 @@
       "env": {
         "FAL_KEY": "YOUR_FAL_KEY_HERE"
       },
-      "description": "AI image/video/audio generation via fal.ai models"
+      "description": "AI image/video/audio generation via fal.ai models",
+      "_requires": "fal.ai API key"
     },
     "browserbase": {
       "command": "npx",
@@ -123,7 +131,8 @@
       "env": {
         "BROWSERBASE_API_KEY": "YOUR_BROWSERBASE_KEY_HERE"
       },
-      "description": "Cloud browser sessions via Browserbase"
+      "description": "Cloud browser sessions via Browserbase",
+      "_requires": "Browserbase API key"
     },
     "browser-use": {
       "type": "http",
@@ -131,22 +140,19 @@
       "headers": {
         "x-browser-use-api-key": "YOUR_BROWSER_USE_KEY_HERE"
       },
-      "description": "AI browser agent for web tasks"
+      "description": "AI browser agent for web tasks",
+      "_requires": "Browser Use API key"
     },
     "devfleet": {
       "type": "http",
       "url": "http://localhost:18801/mcp",
-      "description": "Multi-agent orchestration — dispatch parallel Claude Code agents in isolated worktrees. Plan projects, auto-chain missions, read structured reports. Repo: https://github.com/LEC-AI/claude-devfleet"
+      "description": "Multi-agent orchestration — dispatch parallel Claude Code agents in isolated worktrees",
+      "_requires": "devfleet server running locally"
     },
     "token-optimizer": {
       "command": "npx",
       "args": ["-y", "token-optimizer-mcp"],
       "description": "Token optimization for 95%+ context reduction via content deduplication and compression"
-    },
-    "laraplugins": {
-      "type": "http",
-      "url": "https://laraplugins.io/mcp/plugins",
-      "description": "Laravel plugin discovery — search packages by keyword, health score, Laravel/PHP version compatibility. Use with laravel-plugin-discovery skill."
     },
     "confluence": {
       "command": "npx",
@@ -156,7 +162,8 @@
         "CONFLUENCE_EMAIL": "YOUR_EMAIL_HERE",
         "CONFLUENCE_API_TOKEN": "YOUR_CONFLUENCE_TOKEN_HERE"
       },
-      "description": "Confluence Cloud integration — search pages, retrieve content, explore spaces"
+      "description": "Confluence Cloud integration — search pages, retrieve content, explore spaces",
+      "_requires": "Confluence Cloud URL + email + API token"
     },
     "evalview": {
       "command": "python3",
@@ -164,13 +171,19 @@
       "env": {
         "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY_HERE"
       },
-      "description": "AI agent regression testing — snapshot behavior, detect regressions in tool calls and output quality. 8 tools: create_test, run_snapshot, run_check, list_tests, validate_skill, generate_skill_tests, run_skill_test, generate_visual_report. API key optional — deterministic checks (tool diff, output hash) work without it. Install: pip install \"evalview>=0.5,<1\""
+      "description": "AI agent regression testing — API key optional for deterministic checks. Install: pip install \"evalview>=0.5,<1\"",
+      "_requires": "OPENAI_API_KEY (optional — deterministic checks work without it)"
+    },
+    "laraplugins": {
+      "type": "http",
+      "url": "https://laraplugins.io/mcp/plugins",
+      "description": "Laravel plugin discovery — search packages by keyword, health score, Laravel/PHP version compatibility"
     }
   },
   "_comments": {
-    "usage": "Copy the servers you need to your ~/.claude.json mcpServers section",
-    "env_vars": "Replace YOUR_*_HERE placeholders with actual values",
-    "disabling": "Use ECC_DISABLED_MCPS=github,context7,... to disable bundled ECC MCPs during install/sync, or use disabledMcpServers in project config for per-project overrides",
+    "usage": "This is a TEMPLATE catalog — copy servers you need to ~/.claude.json mcpServers after filling in credentials",
+    "env_vars": "Replace YOUR_*_HERE placeholders with actual values before use",
+    "disabling": "Use DISABLED_MCPS=github,context7,... to disable bundled MCPs during install/sync, or use disabledMcpServers in project config for per-project overrides",
     "context_warning": "Keep under 10 MCPs enabled to preserve context window"
   }
 }

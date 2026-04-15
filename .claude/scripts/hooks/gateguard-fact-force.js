@@ -1,265 +1,205 @@
 #!/usr/bin/env node
 /**
- * PreToolUse Hook: GateGuard Fact-Forcing Gate
+ * PreToolUse Hook: GateGuard — Silent Advisory Guardian
  *
- * Forces Claude to investigate before editing files or running commands.
- * Instead of asking "are you sure?" (which LLMs always answer "yes"),
- * this hook demands concrete facts: importers, public API, data schemas.
+ * All interventions use allow + additionalContext (silent injection).
+ * The tool always proceeds; guidance is injected into model context.
  *
- * The act of investigation creates awareness that self-evaluation never did.
+ * Triggers:
+ *   - Write (new file) → duplication & usage check
+ *   - Edit/MultiEdit deleting >3 lines → deletion check
+ *   - Edit/MultiEdit replacing >10 lines → scope check
+ *   - Bash destructive commands → safety check
+ *   - Small edits / safe Bash → passthrough (no intervention)
  *
- * Gates:
- *   - Edit/Write: list importers, affected API, verify data schemas, quote instruction
- *   - Bash (destructive): list targets, rollback plan, quote instruction
- *   - Bash (routine): quote current instruction (once per session)
- *
- * Compatible with run-with-flags.js via module.exports.run().
+ * Compatible with direct invocation via module.exports.run().
  * Cross-platform (Windows, macOS, Linux).
- *
- * Full package with config support: pip install gateguard-ai
- * Repo: https://github.com/zunoworks/gateguard
  */
 
 'use strict';
 
-const crypto = require('crypto');
-const fs = require('fs');
 const path = require('path');
 
-// Session state — scoped per session to avoid cross-session races.
-// Uses CLAUDE_SESSION_ID (set by Claude Code) or falls back to PID-based isolation.
-const STATE_DIR = process.env.GATEGUARD_STATE_DIR || path.join(process.env.HOME || process.env.USERPROFILE || '/tmp', '.gateguard');
-const SESSION_ID = process.env.CLAUDE_SESSION_ID || process.env.ECC_SESSION_ID || `pid-${process.ppid || process.pid}`;
-const STATE_FILE = path.join(STATE_DIR, `state-${SESSION_ID.replace(/[^a-zA-Z0-9_-]/g, '_')}.json`);
+// ── Constants ────────────────────────────────────────────────────
 
-// State expires after 30 minutes of inactivity
-const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+const LARGE_EDIT_THRESHOLD = 10;
+const DELETION_LINE_THRESHOLD = 3;
 
-// Maximum checked entries to prevent unbounded growth
-const MAX_CHECKED_ENTRIES = 500;
-const MAX_SESSION_KEYS = 50;
-const ROUTINE_BASH_SESSION_KEY = '__bash_session__';
+const DESTRUCTIVE_BASH = /\b(rm\s+-rf|rm\s+(?!-i\b)[\w\s.\/~*-]+|git\s+reset\s+--hard|git\s+checkout\s+--|git\s+clean\s+-f|drop\s+table|delete\s+from|truncate|git\s+push\s+--force|dd\s+if=)/i;
 
-const DESTRUCTIVE_BASH = /\b(rm\s+-rf|git\s+reset\s+--hard|git\s+checkout\s+--|git\s+clean\s+-f|drop\s+table|delete\s+from|truncate|git\s+push\s+--force|dd\s+if=)\b/i;
-
-// --- State management (per-session, atomic writes, bounded) ---
-
-function loadState() {
-  try {
-    if (fs.existsSync(STATE_FILE)) {
-      const state = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
-      const lastActive = state.last_active || 0;
-      if (Date.now() - lastActive > SESSION_TIMEOUT_MS) {
-        try { fs.unlinkSync(STATE_FILE); } catch (_) { /* ignore */ }
-        return { checked: [], last_active: Date.now() };
-      }
-      return state;
-    }
-  } catch (_) { /* ignore */ }
-  return { checked: [], last_active: Date.now() };
-}
-
-function pruneCheckedEntries(checked) {
-  if (checked.length <= MAX_CHECKED_ENTRIES) {
-    return checked;
-  }
-
-  const preserved = checked.includes(ROUTINE_BASH_SESSION_KEY) ? [ROUTINE_BASH_SESSION_KEY] : [];
-  const sessionKeys = checked.filter(k => k.startsWith('__') && k !== ROUTINE_BASH_SESSION_KEY);
-  const fileKeys = checked.filter(k => !k.startsWith('__'));
-  const remainingSessionSlots = Math.max(MAX_SESSION_KEYS - preserved.length, 0);
-  const cappedSession = sessionKeys.slice(-remainingSessionSlots);
-  const remainingFileSlots = Math.max(MAX_CHECKED_ENTRIES - preserved.length - cappedSession.length, 0);
-  const cappedFiles = fileKeys.slice(-remainingFileSlots);
-  return [...preserved, ...cappedSession, ...cappedFiles];
-}
-
-function saveState(state) {
-  try {
-    state.last_active = Date.now();
-    state.checked = pruneCheckedEntries(state.checked);
-    fs.mkdirSync(STATE_DIR, { recursive: true });
-    // Atomic write: temp file + rename prevents partial reads
-    const tmpFile = STATE_FILE + '.tmp.' + process.pid;
-    fs.writeFileSync(tmpFile, JSON.stringify(state, null, 2), 'utf8');
-    fs.renameSync(tmpFile, STATE_FILE);
-  } catch (_) { /* ignore */ }
-}
-
-function markChecked(key) {
-  const state = loadState();
-  if (!state.checked.includes(key)) {
-    state.checked.push(key);
-    saveState(state);
-  }
-}
-
-function isChecked(key) {
-  const state = loadState();
-  const found = state.checked.includes(key);
-  saveState(state);
-  return found;
-}
-
-// Prune stale session files older than 1 hour
-(function pruneStaleFiles() {
-  try {
-    const files = fs.readdirSync(STATE_DIR);
-    const now = Date.now();
-    for (const f of files) {
-      if (!f.startsWith('state-') || !f.endsWith('.json')) continue;
-      const fp = path.join(STATE_DIR, f);
-      const stat = fs.statSync(fp);
-      if (now - stat.mtimeMs > SESSION_TIMEOUT_MS * 2) {
-        fs.unlinkSync(fp);
-      }
-    }
-  } catch (_) { /* ignore */ }
-})();
-
-// --- Sanitize file path against injection ---
+// ── Sanitize ───────────────────────────────────────────────────────
 
 function sanitizePath(filePath) {
-  // Strip control chars (including null), bidi overrides, and newlines
   return filePath.replace(/[\x00-\x1f\x7f\u200e\u200f\u202a-\u202e\u2066-\u2069]/g, ' ').trim().slice(0, 500);
 }
 
-// --- Gate messages ---
+// ── Count lines in a string ────────────────────────────────────────
 
-function editGateMsg(filePath) {
+function countLines(str) {
+  if (!str) return 0;
+  return str.split('\n').length;
+}
+
+// ── Guide messages ─────────────────────────────────────────────────
+
+/**
+ * Destructive Bash — safety check.
+ */
+function destructiveBashMsg(command) {
+  return [
+    '[Check] Destructive command detected.',
+    '',
+    '- List every file/directory that will be permanently deleted or overwritten.',
+    '- Confirm nothing else depends on or references these targets.',
+  ].join('\n');
+}
+
+/**
+ * Large deletion — removal check.
+ */
+function deletionAdviceMsg(filePath, lineCount) {
   const safe = sanitizePath(filePath);
   return [
-    '[Fact-Forcing Gate]',
+    `[Check] Removing ${lineCount} lines from ${safe}.`,
     '',
-    `Before editing ${safe}, present these facts:`,
-    '',
-    '1. List ALL files that import/require this file (use Grep)',
-    '2. List the public functions/classes affected by this change',
-    '3. If this file reads/writes data files, show field names, structure, and date format (use redacted or synthetic values, not raw production data)',
-    '4. Quote the user\'s current instruction verbatim',
-    '',
-    'Present the facts, then retry the same operation.'
+    '- Confirm the deleted content is not referenced elsewhere.',
+    '- Verify this removal is what the user requested.',
   ].join('\n');
 }
 
-function writeGateMsg(filePath) {
+/**
+ * New file creation — duplication & usage check.
+ */
+function newFileAdviceMsg(filePath) {
   const safe = sanitizePath(filePath);
   return [
-    '[Fact-Forcing Gate]',
+    `[Check] Creating new file: ${safe}`,
     '',
-    `Before creating ${safe}, present these facts:`,
-    '',
-    '1. Name the file(s) and line(s) that will call this new file',
-    '2. Confirm no existing file serves the same purpose (use Glob)',
-    '3. If this file reads/writes data files, show field names, structure, and date format (use redacted or synthetic values, not raw production data)',
-    '4. Quote the user\'s current instruction verbatim',
-    '',
-    'Present the facts, then retry the same operation.'
+    '- What is the purpose of creating this file? How does it serve the current goal?',
+    '- Confirm no existing file already serves this purpose.',
   ].join('\n');
 }
 
-function destructiveBashMsg() {
+/**
+ * Large edit (>threshold lines) — scope check.
+ */
+function largeEditAdviceMsg(filePath, lineCount) {
+  const safe = sanitizePath(filePath);
   return [
-    '[Fact-Forcing Gate]',
+    `[Check] Replacing ${lineCount} lines in ${safe}.`,
     '',
-    'Destructive command detected. Before running, present:',
-    '',
-    '1. List all files/data this command will modify or delete',
-    '2. Write a one-line rollback procedure',
-    '3. Quote the user\'s current instruction verbatim',
-    '',
-    'Present the facts, then retry the same operation.'
+    '- What is the purpose of this change? How does it move toward the current goal?',
+    '- Verify the scope is correct — not replacing more than intended.',
   ].join('\n');
 }
 
-function routineBashMsg() {
-  return [
-    '[Fact-Forcing Gate]',
-    '',
-    'Quote the user\'s current instruction verbatim.',
-    'Then retry the same operation.'
-  ].join('\n');
-}
+// ── Output helper ─────────────────────────────────────────────────
 
-// --- Deny helper ---
-
-function denyResult(reason) {
+function adviseResult(message) {
   return {
     stdout: JSON.stringify({
       hookSpecificOutput: {
         hookEventName: 'PreToolUse',
-        permissionDecision: 'deny',
-        permissionDecisionReason: reason
-      }
+        permissionDecision: 'allow',
+        additionalContext: message,
+      },
     }),
-    exitCode: 0
+    exitCode: 0,
   };
 }
 
-// --- Core logic (exported for run-with-flags.js) ---
+// ── Core logic ─────────────────────────────────────────────────────
 
 function run(rawInput) {
   let data;
   try {
     data = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
   } catch (_) {
-    return rawInput; // allow on parse error
+    return rawInput;
   }
 
   const rawToolName = data.tool_name || '';
   const toolInput = data.tool_input || {};
-  // Normalize: case-insensitive matching via lookup map
   const TOOL_MAP = { 'edit': 'Edit', 'write': 'Write', 'multiedit': 'MultiEdit', 'bash': 'Bash' };
   const toolName = TOOL_MAP[rawToolName.toLowerCase()] || rawToolName;
 
-  if (toolName === 'Edit' || toolName === 'Write') {
+  // ── Write → advise ──────────────────────────────────────────────
+
+  if (toolName === 'Write') {
     const filePath = toolInput.file_path || '';
-    if (!filePath) {
-      return rawInput; // allow
-    }
-
-    if (!isChecked(filePath)) {
-      markChecked(filePath);
-      return denyResult(toolName === 'Edit' ? editGateMsg(filePath) : writeGateMsg(filePath));
-    }
-
-    return rawInput; // allow
+    if (!filePath) return rawInput;
+    return adviseResult(newFileAdviceMsg(filePath));
   }
 
-  if (toolName === 'MultiEdit') {
-    const edits = toolInput.edits || [];
-    for (const edit of edits) {
-      const filePath = edit.file_path || '';
-      if (filePath && !isChecked(filePath)) {
-        markChecked(filePath);
-        return denyResult(editGateMsg(filePath));
-      }
+  // ── Edit / MultiEdit ─────────────────────────────────────────────
+
+  if (toolName === 'Edit' || toolName === 'MultiEdit') {
+    let filePath, oldString;
+    if (toolName === 'MultiEdit') {
+      const edits = toolInput.edits || [];
+      const firstEdit = edits.find(e => e.file_path) || {};
+      filePath = firstEdit.file_path || 'unknown';
+      oldString = firstEdit.old_string || '';
+    } else {
+      filePath = toolInput.file_path || '';
+      oldString = toolInput.old_string || '';
     }
-    return rawInput; // allow
+    if (!filePath) return rawInput;
+
+    const oldLines = countLines(oldString);
+    const newString = (toolName === 'MultiEdit')
+      ? ((toolInput.edits || []).find(e => e.file_path) || {}).new_string || ''
+      : toolInput.new_string || '';
+    const isDeletion = oldLines > DELETION_LINE_THRESHOLD && newString.trim() === '';
+    const isLargeEdit = oldLines > LARGE_EDIT_THRESHOLD;
+
+    if (isDeletion) {
+      return adviseResult(deletionAdviceMsg(filePath, oldLines));
+    }
+    if (isLargeEdit) {
+      return adviseResult(largeEditAdviceMsg(filePath, oldLines));
+    }
+    return rawInput;
   }
+
+  // ── Bash ─────────────────────────────────────────────────────────
 
   if (toolName === 'Bash') {
     const command = toolInput.command || '';
-
     if (DESTRUCTIVE_BASH.test(command)) {
-      // Gate destructive commands on first attempt; allow retry after facts presented
-      const key = '__destructive__' + crypto.createHash('sha256').update(command).digest('hex').slice(0, 16);
-      if (!isChecked(key)) {
-        markChecked(key);
-        return denyResult(destructiveBashMsg());
-      }
-      return rawInput; // allow retry after facts presented
+      return adviseResult(destructiveBashMsg(command));
     }
-
-    if (!isChecked(ROUTINE_BASH_SESSION_KEY)) {
-      markChecked(ROUTINE_BASH_SESSION_KEY);
-      return denyResult(routineBashMsg());
-    }
-
-    return rawInput; // allow
+    return rawInput;
   }
 
-  return rawInput; // allow
+  return rawInput;
 }
 
 module.exports = { run };
+
+// ── stdin entry point ──────────────────────────────────────────────
+if (require.main === module) {
+  let data = '';
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', chunk => { data += chunk; });
+  process.stdin.on('end', () => {
+    const result = run(data);
+    if (typeof result === 'object' && result !== null) {
+      if (result.stderr) {
+        process.stderr.write(result.stderr + '\n');
+      }
+      if (result.stdout) {
+        process.stdout.write(result.stdout);
+      } else if (result.exitCode === 0 || result.exitCode === undefined) {
+        process.stdout.write(data);
+      }
+      process.exit(result.exitCode || 0);
+    } else if (typeof result === 'string') {
+      process.stdout.write(result);
+      process.exit(0);
+    } else {
+      process.stdout.write(data);
+      process.exit(0);
+    }
+  });
+}

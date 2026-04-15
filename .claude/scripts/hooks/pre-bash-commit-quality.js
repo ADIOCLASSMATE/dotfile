@@ -11,8 +11,7 @@
  * Cross-platform (Windows, macOS, Linux)
  *
  * Exit codes:
- *   0 - Success (allow commit)
- *   2 - Block commit (quality issues found)
+ *   0 - Always allow (warns via stderr if quality issues found)
  */
 
 const { spawnSync } = require('child_process');
@@ -361,8 +360,7 @@ function evaluate(rawInput) {
       console.error(`\nSummary: ${totalIssues} issue(s) found (${errorCount} error(s), ${warningCount} warning(s), ${infoCount} info)`);
       
       if (errorCount > 0) {
-        console.error('\n[Hook] ERROR: Commit blocked due to critical issues. Fix them before committing.');
-        return { output: rawInput, exitCode: 2 };
+        console.error('\n[Guide] Critical issues found. Consider fixing them before committing.');
       } else {
         console.error('\n[Hook] WARNING: Warnings found. Consider fixing them, but commit is allowed.');
         console.error('[Hook] To bypass these checks, use: git commit --no-verify');

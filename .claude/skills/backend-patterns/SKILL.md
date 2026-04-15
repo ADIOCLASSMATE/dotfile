@@ -1,7 +1,6 @@
 ---
 name: backend-patterns
-description: Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes.
-origin: ECC
+description: Backend architecture patterns, REST API design (resource naming, pagination, versioning, rate limiting), database optimization, and server-side best practices.
 ---
 
 # Backend Development Patterns
@@ -19,6 +18,130 @@ Backend architecture patterns and best practices for scalable server-side applic
 - Building middleware (auth, logging, rate limiting)
 
 ## API Design Patterns
+
+### Resource Naming
+
+```
+# Resources are nouns, plural, lowercase, kebab-case
+GET    /api/v1/users
+GET    /api/v1/users/:id
+POST   /api/v1/users
+PUT    /api/v1/users/:id
+PATCH  /api/v1/users/:id
+DELETE /api/v1/users/:id
+
+# Sub-resources for relationships
+GET    /api/v1/users/:id/orders
+POST   /api/v1/users/:id/orders
+
+# Actions that don't map to CRUD (use verbs sparingly)
+POST   /api/v1/orders/:id/cancel
+POST   /api/v1/auth/login
+POST   /api/v1/auth/refresh
+```
+
+### HTTP Status Codes
+
+```
+# Success
+200 OK                    — GET, PUT, PATCH (with response body)
+201 Created               — POST (include Location header)
+204 No Content            — DELETE, PUT (no response body)
+
+# Client Errors
+400 Bad Request           — Validation failure, malformed JSON
+401 Unauthorized          — Missing or invalid authentication
+403 Forbidden             — Authenticated but not authorized
+404 Not Found             — Resource doesn't exist
+409 Conflict              — Duplicate entry, state conflict
+422 Unprocessable Entity  — Semantically invalid (valid JSON, bad data)
+429 Too Many Requests     — Rate limit exceeded
+
+# Server Errors
+500 Internal Server Error — Unexpected failure (never expose details)
+502 Bad Gateway           — Upstream service failed
+503 Service Unavailable   — Temporary overload, include Retry-After
+```
+
+### Response Format
+
+```json
+// Success with single resource
+{ "data": { "id": "abc-123", "email": "alice@example.com" } }
+
+// Collection with pagination
+{
+  "data": [...],
+  "meta": { "total": 142, "page": 1, "per_page": 20, "total_pages": 8 },
+  "links": { "self": "?page=1", "next": "?page=2", "last": "?page=8" }
+}
+
+// Error
+{
+  "error": {
+    "code": "validation_error",
+    "message": "Request validation failed",
+    "details": [{ "field": "email", "message": "Must be a valid email", "code": "invalid_format" }]
+  }
+}
+```
+
+### Pagination
+
+**Offset-Based** — Easy, supports "jump to page N", but slow on large offsets:
+```
+GET /api/v1/users?page=2&per_page=20
+SELECT * FROM users ORDER BY created_at DESC LIMIT 20 OFFSET 20;
+```
+
+**Cursor-Based** — Consistent performance, stable with concurrent inserts, but no page jumping:
+```
+GET /api/v1/users?cursor=eyJpZCI6MTIzfQ&limit=20
+SELECT * FROM users WHERE id > :cursor_id ORDER BY id ASC LIMIT 21;
+
+// Response
+{ "data": [...], "meta": { "has_next": true, "next_cursor": "eyJpZCI6MTQzfQ" } }
+```
+
+| Use Case | Type |
+|----------|------|
+| Admin dashboards, small datasets (<10K) | Offset |
+| Infinite scroll, feeds, large datasets | Cursor |
+| Public APIs | Cursor (default) with offset (optional) |
+
+### Filtering, Sorting, Search
+
+```
+# Filtering
+GET /api/v1/orders?status=active&customer_id=abc-123
+GET /api/v1/products?price[gte]=10&price[lte]=100
+GET /api/v1/products?category=electronics,clothing
+
+# Sorting (prefix - for descending)
+GET /api/v1/products?sort=-created_at
+GET /api/v1/products?sort=-featured,price,-created_at
+
+# Full-text search
+GET /api/v1/products?q=wireless+headphones
+
+# Sparse fieldsets
+GET /api/v1/users?fields=id,name,email
+```
+
+### API Versioning
+
+```
+# URL path versioning (recommended)
+/api/v1/users
+/api/v2/users
+
+# Strategy
+1. Start with /api/v1/ — don't version until you need to
+2. Maintain at most 2 active versions (current + previous)
+3. Deprecation: 6 months notice, add Sunset header, return 410 Gone after
+4. Non-breaking: new fields, new optional params, new endpoints — no version bump
+5. Breaking: removed/renamed fields, changed types, changed auth — new version required
+```
 
 ### RESTful API Structure
 

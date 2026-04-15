@@ -16,7 +16,9 @@
 'use strict';
 
 const { spawnSync } = require('child_process');
-const { isMacOS, log } = require('../lib/utils');
+
+const isMacOS = process.platform === 'darwin';
+const log = (msg) => process.stderr.write(msg + '\n');
 
 const TITLE = 'Claude Code';
 const MAX_BODY_LENGTH = 100;
@@ -114,7 +116,7 @@ function notifyMacOS(title, body) {
 }
 
 /**
- * Fast-path entry point for run-with-flags.js (avoids extra process spawn).
+ * Fast-path entry point.
  */
 function run(raw) {
   try {
@@ -150,7 +152,7 @@ function run(raw) {
 
 module.exports = { run };
 
-// Legacy stdin path (when invoked directly rather than via run-with-flags)
+// stdin entry point
 if (require.main === module) {
   const MAX_STDIN = 1024 * 1024;
   let data = '';

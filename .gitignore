@@ -13,12 +13,12 @@ Session.vim
 tags
 # --- .claude runtime / secrets ---
 .claude/backups/
+.claude/.agents/
 .claude/bash-commands.log
 .claude/cache/
 .claude/cost-tracker.log
 .claude/debug/
 .claude/downloads/
-.claude/ecc/install-state.json
 .claude/file-history/
 .claude/history.jsonl
 .claude/homunculus/

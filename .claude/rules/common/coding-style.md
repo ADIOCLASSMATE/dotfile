@@ -78,6 +78,24 @@ Use named constants for meaningful thresholds, delays, and limits.
 
 Split large functions into focused pieces with clear responsibilities.
 
+## Check Response (CRITICAL)
+
+When a `[Check]` message appears from the hook system before a write/edit/delete/bash operation, you MUST respond to every bullet point BEFORE performing the action. Do not skip or silently ignore any check.
+
+Format: address each bullet with a brief one-line answer, then proceed.
+
+Example:
+```
+[Check] Creating new file: utils/format.ts
+- Confirm no existing file serves the same purpose.
+- Ensure this file will actually be used.
+
+→ No existing formatter utility found (Glob `**/format*` returns no matches).
+→ Will be imported by UserCard.ts and ProfilePage.ts.
+```
+
+If you cannot answer a check item confidently, stop and investigate first.
+
 ## Anti-Silent-Assumption
 
 Don't hide confusion or silently pick one interpretation:
@@ -133,4 +151,5 @@ These rules are working if you observe:
 - Fewer rewrites due to overcomplication — code is simple the first time
 - Clarifying questions come before implementation — not after mistakes
 - Clean, minimal PRs — no drive-by refactoring or "improvements"
+
 
