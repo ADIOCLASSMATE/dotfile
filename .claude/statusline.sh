@@ -24,7 +24,15 @@ CAT_W="${CAT[4]}"
 BAR=$(render_bar "$PCT")
 COST_FMT=$(printf '$%.2f' "$COST")
 
-INFO1="[${MODEL}] 📂 ${DIR##*/}"
-INFO2="${BAR} ${PCT}% | ${COST_FMT}"
+# Color the model name based on state
+model_color="$CYAN"
+if [ "$PCT" -ge 70 ]; then
+  model_color="$RED"
+elif [ "$PCT" -ge 50 ]; then
+  model_color="$YELLOW"
+fi
+
+INFO1="${model_color}${BOLD}${MODEL}${RESET}  ${DIM}in${RESET}  📂 ${DIR##*/}"
+INFO2="${BAR} ${BOLD}${PCT}%${RESET}  ${DIM}·${RESET}  ${MAGENTA}${COST_FMT}${RESET}"
 
 draw_layout "$CAT1" "$CAT2" "$CAT3" "$INFO1" "$INFO2" "$CAT_W"
