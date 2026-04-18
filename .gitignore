@@ -42,6 +42,7 @@ tags
 .claude/tasks/
 .claude/telemetry/
 .claude/todos/
+.claude/transcripts/
 # secrets with API keys / tokens
 .claude/config.json
 .claude/settings.json
