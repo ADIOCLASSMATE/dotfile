@@ -1,6 +1,6 @@
 # Agent Instructions
 
-Custom Claude Code configuration with 48 specialized agents, 36 skills, and advisory hook workflows for software development.
+Custom Claude Code configuration with 46 specialized agents, 33 skills, and advisory hook workflows for software development.
 
 ## Core Principles
 
@@ -14,7 +14,10 @@ Custom Claude Code configuration with 48 specialized agents, 36 skills, and advi
 
 | Agent | Purpose | When to Use |
 |-------|---------|-------------|
-| planner | Implementation planning | Complex features, refactoring |
+| pipeline-lead | Orchestrate: research, plan, delegate | Non-trivial features, refactoring |
+| pipeline-executor | Implement: write code, verify | Code implementation |
+| pipeline-critic | Review: score quality, PASS/FAIL | After executor completes |
+| loop-operator | Diagnose stalls, recommend recovery | When pipeline stalls |
 | architect | System design and scalability | Architectural decisions |
 | tdd-guide | Test-driven development | New features, bug fixes |
 | code-reviewer | Code quality and maintainability | After writing/modifying code |
@@ -44,7 +47,7 @@ Custom Claude Code configuration with 48 specialized agents, 36 skills, and advi
 ## Agent Orchestration
 
 Use agents proactively without user prompt:
-- Complex feature requests → **planner**
+- Complex feature requests → **pipeline-lead** (use `/pipeline`)
 - Code just written/modified → **code-reviewer**
 - Bug fix or new feature → **tdd-guide**
 - Architectural decision → **architect**
@@ -104,7 +107,7 @@ Troubleshoot failures: check test isolation → verify mocks → fix implementat
 
 ## Development Workflow
 
-1. **Plan** — Use planner agent, identify dependencies and risks, break into phases
+1. **Plan** — Use `/pipeline` for non-trivial tasks; pipeline-lead researches and plans
 2. **TDD** — Use tdd-guide agent, write tests first, implement, refactor
 3. **Review** — Use code-reviewer agent immediately, address CRITICAL/HIGH issues
 4. **Capture knowledge in the right place**
@@ -142,8 +145,8 @@ Troubleshoot failures: check test isolation → verify mocks → fix implementat
 ## Project Structure
 
 ```
-agents/          — 48 specialized subagents
-skills/          — 36 workflow skills and domain knowledge
+agents/          — 46 specialized subagents
+skills/          — 33 workflow skills and domain knowledge
 hooks/           — Advisory hook workflows (3 active scripts)
 rules/           — Always-follow guidelines (common + python/rust/typescript/web)
 scripts/         — Cross-platform Node.js utilities
