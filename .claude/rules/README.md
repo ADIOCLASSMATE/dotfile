@@ -9,7 +9,7 @@ rules/
 │   ├── agents.md
 │   ├── code-review.md
 │   ├── coding-style.md
-│   ├── development-workflow.md
+│   (development workflow now in skills/pipeline/)
 │   ├── git-workflow.md
 │   ├── hooks.md
 │   ├── patterns.md
