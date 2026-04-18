@@ -1,6 +1,6 @@
 # Agent Instructions
 
-Custom Claude Code configuration with 48 specialized agents, 35 skills, 47 commands, and advisory hook workflows for software development.
+Custom Claude Code configuration with 48 specialized agents, 36 skills, and advisory hook workflows for software development.
 
 ## Core Principles
 
@@ -117,8 +117,7 @@ Troubleshoot failures: check test isolation → verify mocks → fix implementat
 ## Workflow Surface Policy
 
 - `skills/` is the canonical workflow surface.
-- New workflow contributions should land in `skills/` first.
-- `commands/` is a legacy slash-entry compatibility surface and should only be added or updated when a shim is still required for migration or cross-harness parity.
+- `commands/` has been removed. All workflow contributions land in `skills/`.
 
 ## Git Workflow
 
@@ -144,15 +143,12 @@ Troubleshoot failures: check test isolation → verify mocks → fix implementat
 
 ```
 agents/          — 48 specialized subagents
-skills/          — 35 workflow skills and domain knowledge
-commands/        — 47 slash commands
+skills/          — 36 workflow skills and domain knowledge
 hooks/           — Advisory hook workflows (3 active scripts)
-rules/           — Always-follow guidelines (common + per-language)
+rules/           — Always-follow guidelines (common + python/rust/typescript/web)
 scripts/         — Cross-platform Node.js utilities
 mcp-configs/     — MCP server template catalog
 ```
-
-`commands/` remains in the repo for compatibility, but the long-term direction is skills-first.
 
 ## Success Metrics
 
