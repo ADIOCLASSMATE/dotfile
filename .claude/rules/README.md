@@ -18,6 +18,7 @@ rules/
 │   └── testing.md
 ├── python/          # Python specific (environment, type hints, pytest)
 ├── rust/            # Rust specific (ownership, lifetimes, cargo)
+├── swift/           # Swift specific (SwiftUI, concurrency, actors)
 ├── typescript/      # TypeScript/JavaScript specific (types, async, Zod)
 └── web/             # Web and frontend specific (CSS, design quality, CWV)
 ```
@@ -56,4 +57,4 @@ For non-language domains like `web/`, follow the same layered pattern when there
 When language-specific rules and common rules conflict, **language-specific rules take precedence** (specific overrides general). This follows the standard layered configuration pattern (similar to CSS specificity or `.gitignore` precedence).
 
 - `rules/common/` defines universal defaults applicable to all projects.
-- `rules/python/`, `rules/rust/`, `rules/typescript/`, `rules/web/` override those defaults where language idioms differ.
+- `rules/python/`, `rules/rust/`, `rules/swift/`, `rules/typescript/`, `rules/web/` override those defaults where language idioms differ.
