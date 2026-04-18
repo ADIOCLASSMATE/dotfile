@@ -1,25 +1,23 @@
 ---
 name: pipeline
 description: >-
-  Multi-agent pipeline: Research → Execute → Review loop.
-  Triggers pipeline-lead which orchestrates pipeline-executor and pipeline-critic
-  in an iterative quality-gated loop. Replaces blueprint, continuous-agent-loop,
-  and development-workflow.
-  TRIGGER when: user requests a non-trivial feature, refactor, or investigation
-  that benefits from plan-execute-review iteration.
+  Multi-agent pipeline: Plan → Execute → Review loop.
+  Main agent becomes pipeline-lead and orchestrates pipeline-executor and
+  pipeline-critic in an iterative quality-gated loop.
+  TRIGGER when: Plan Mode is approved and /pipeline is invoked.
   DO NOT TRIGGER when: task is a simple fix, single-line change, or user says "just do it."
 ---
 
 # Pipeline — Multi-Agent Orchestration
 
-Run a structured plan-execute-review loop using three specialized agents.
+Run a structured plan-execute-review loop. The **main agent** acts as pipeline-lead and directly spawns executor and critic subagents.
 
 ## When to Use
 
+- After Plan Mode is approved (mandatory — see CLAUDE.md)
 - Implementing a non-trivial feature (multiple files, new components)
 - Refactoring that spans multiple modules
 - Bug investigation requiring research before fix
-- Any task where plan-then-execute beats trial-and-error
 
 **Do not use** for:
 - Simple fixes (1-2 files, obvious change)
@@ -32,38 +30,39 @@ Run a structured plan-execute-review loop using three specialized agents.
 /pipeline [task description]
   |
   v
-pipeline-lead (opus, read-only + delegate)
-  |-- Research codebase, write plan
-  |-- Delegate to pipeline-executor
+YOU (main agent) become pipeline-lead
+  |-- Read approved plan from .claude/plans/
+  |-- Spawn pipeline-executor (subagent, sonnet)
   |     |
   |     v
-  |   pipeline-executor (sonnet, full tools)
-  |     |-- Implements code
+  |   pipeline-executor (sonnet, Read + Write + Edit + Bash + Grep + Glob)
+  |     |-- Implements code per plan
   |     |-- Runs build/test/lint
   |     |-- Reports what was built
   |     |
-  |-- Delegate to pipeline-critic
+  |-- Spawn pipeline-critic (subagent, opus)
   |     |
   |     v
-  |   pipeline-critic (opus, read + bash + agent)
+  |   pipeline-critic (opus, Read + Grep + Glob + Bash + Agent)
   |     |-- Reviews against plan
   |     |-- Scores quality
   |     |-- Returns PASS or FAIL with feedback
   |     |
-  |-- If FAIL → extract improvements, loop back to executor
-  |-- If PASS → return final result
-  |-- If stalled → call loop-operator for diagnosis
+  |-- If FAIL → feed feedback to executor, loop (max 3x)
+  |-- If PASS → relay final result to user
+  |-- If stalled → spawn loop-operator for diagnosis
 ```
 
 ## How to Run
 
-When this skill is triggered, call the pipeline-lead agent:
+When this skill is triggered, **you (the main agent) become the pipeline-lead**. Do NOT spawn a separate pipeline-lead agent — that role is yours.
 
-```
-Agent(subagent_type="pipeline-lead", prompt="[task description from user]")
-```
-
-The pipeline-lead handles all orchestration. You do not need to manage the loop yourself.
+1. Read the approved plan from `.claude/plans/`
+2. Decide execution strategy: parallel or sequential (see agents.md)
+3. Spawn `pipeline-executor` with a detailed, self-contained brief
+4. After executor completes, spawn `pipeline-critic` to review
+5. If FAIL → synthesize critic feedback into concrete improvements, spawn executor again
+6. If PASS → relay result to user
 
 ## Pipeline Modes
 
@@ -71,26 +70,26 @@ The pipeline-lead handles all orchestration. You do not need to manage the loop 
 
 Full plan-execute-review loop for feature implementation:
 
-```
-pipeline-lead → pipeline-executor → pipeline-critic → loop if needed
+```text
+pipeline-lead (you) → pipeline-executor → pipeline-critic → loop if needed
 ```
 
 ### Research-Only
 
 For investigations and analysis where no code changes are needed:
 
-```
-pipeline-lead (research only, no executor delegation)
+```text
+pipeline-lead (you) — research only, no executor delegation
 ```
 
-The lead researches and returns findings without starting the execution loop.
+Research and return findings without starting the execution loop.
 
 ### Quick-Fix
 
 For small but non-trivial changes that still benefit from review:
 
-```
-pipeline-lead → pipeline-executor (single pass) → pipeline-critic (verification-only mode)
+```text
+pipeline-lead (you) → pipeline-executor (single pass) → pipeline-critic (verification-only mode)
 ```
 
 One iteration, no loop. Faster but lower quality assurance.
@@ -101,18 +100,38 @@ All pipeline state is stored in `.claude/pipeline/`:
 
 | File | Written by | Purpose |
 |------|-----------|---------|
-| `plan.md` | pipeline-lead | Implementation plan with phases and success criteria |
-| `state.md` | pipeline-lead | Current iteration status and next action |
+| `plan.md` | pipeline-lead (you) | Implementation plan with phases and success criteria |
+| `state.md` | pipeline-lead (you) | Current iteration status and next action |
 | `executor-report.md` | pipeline-executor | What was built, changed, and known issues |
 | `critic-feedback.md` | pipeline-critic | Verdict, scores, and specific issues |
 
 Clean up `.claude/pipeline/` between unrelated tasks.
 
+## Executor Brief Rules
+
+Subagents have NO access to your conversation history. Every brief must:
+
+1. **Be self-contained** — include ALL information the executor needs
+2. **Specify exact file paths** — list every file to CREATE/MODIFY
+3. **Define file boundaries** for parallel execution — CREATE / MODIFY / READ ONLY / DO NOT TOUCH
+4. **Include relevant code context** — paste function signatures, type definitions, API contracts
+5. **Specify verification commands** — how to confirm the work is correct
+
+See `~/.claude/rules/common/agents.md` for full executor brief format.
+
 ## Iteration Limits
 
 - **Maximum 3 executor→critic cycles** per pipeline run
 - After 3 cycles, return results even if not all criteria pass
-- If stalled for 2 consecutive iterations, pipeline-lead calls loop-operator
+- If stalled for 2 consecutive iterations, spawn loop-operator
+
+## Pipeline-Lead Discipline
+
+When acting as pipeline-lead, you MUST NOT:
+- Write or edit source code — that is the executor's job
+- Run build/test commands — that is the executor's job
+- Evaluate quality yourself — that is the critic's job
+- Fall back to direct execution if pipeline fails — report to user instead
 
 ## Integration with Existing Skills
 
@@ -122,7 +141,6 @@ Clean up `.claude/pipeline/` between unrelated tasks.
 | `eval-harness` | Pipeline-critic may invoke eval-harness for formal pass@k measurement when needed. |
 | `tdd-workflow` | Pipeline-executor follows TDD when the project requires it (write tests first). |
 | `search-first` | Pipeline-lead uses search-first principles during research phase. |
-| `agentic-engineering` | Model tier routing is already built into the pipeline agents (opus for lead/critic, sonnet for executor). |
 
 ## Examples
 
@@ -132,7 +150,7 @@ Clean up `.claude/pipeline/` between unrelated tasks.
 /pipeline Add user authentication with OAuth2 and session management
 ```
 
-Pipeline-lead researches auth patterns in the codebase, plans the implementation, delegates to executor, gets reviewed by critic, loops until quality gates pass.
+You research auth patterns in the codebase, plan the implementation, spawn executor with detailed brief, spawn critic to review, loop until quality gates pass.
 
 ### Refactoring
 
@@ -140,7 +158,7 @@ Pipeline-lead researches auth patterns in the codebase, plans the implementation
 /pipeline Extract the payment processing logic into a separate service
 ```
 
-Pipeline-lead maps all dependencies, plans extraction order, executor implements phase by phase, critic checks for regressions.
+You map all dependencies, plan extraction order, executor implements phase by phase, critic checks for regressions.
 
 ### Bug investigation
 
@@ -148,7 +166,7 @@ Pipeline-lead maps all dependencies, plans extraction order, executor implements
 /pipeline --mode=research-only Investigate why the WebSocket connection drops under load
 ```
 
-Pipeline-lead researches the WebSocket implementation, identifies likely causes, returns findings without starting the execution loop.
+You research the WebSocket implementation, identify likely causes, return findings without starting the execution loop.
 
 ## Anti-Patterns
 
@@ -157,3 +175,4 @@ Pipeline-lead researches the WebSocket implementation, identifies likely causes,
 - Ignoring critic feedback (defeats the purpose of the loop)
 - Running more than 3 iterations (diminishing returns, should reduce scope instead)
 - Mixing pipeline with manual edits mid-loop (confuses state tracking)
+- Spawning pipeline-lead as a subagent (it doesn't exist — you ARE the lead)
