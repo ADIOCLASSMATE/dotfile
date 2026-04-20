@@ -174,7 +174,7 @@ After implementation, report:
 ```text
 Review the implementation against the plan.
 
-Plan file: .claude/pipeline/plan.md (read it for success criteria)
+Plan file: .pipeline/plan.md (read it for success criteria)
 
 ## What was implemented
 [Summary from executor report]

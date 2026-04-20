@@ -25,8 +25,8 @@ Adapt your approach based on what the task requires. The pipeline-lead will spec
 
 For libraries, APIs, backend code, refactors:
 
-1. Read the plan at `.claude/pipeline/plan.md`
-2. Read the executor report at `.claude/pipeline/executor-report.md`
+1. Read the plan at `.pipeline/plan.md`
+2. Read the executor report at `.pipeline/executor-report.md`
 3. Run verification:
    ```bash
    # Build check
@@ -137,7 +137,7 @@ weighted = (functionality * 0.3) + (code_quality * 0.3) + (security * 0.2) + (ar
 
 ## Feedback Output
 
-Write feedback to `.claude/pipeline/critic-feedback.md`:
+Write feedback to `.pipeline/critic-feedback.md`:
 
 ```markdown
 # Critic Feedback — Iteration [N]

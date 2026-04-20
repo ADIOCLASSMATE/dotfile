@@ -96,7 +96,7 @@ One iteration, no loop. Faster but lower quality assurance.
 
 ## File Protocol
 
-All pipeline state is stored in `.claude/pipeline/`:
+All pipeline state is stored in `.pipeline/` at the project root:
 
 | File | Written by | Purpose |
 |------|-----------|---------|
@@ -105,7 +105,7 @@ All pipeline state is stored in `.claude/pipeline/`:
 | `executor-report.md` | pipeline-executor | What was built, changed, and known issues |
 | `critic-feedback.md` | pipeline-critic | Verdict, scores, and specific issues |
 
-Clean up `.claude/pipeline/` between unrelated tasks.
+Clean up `.pipeline/` between unrelated tasks.
 
 ## Executor Brief Rules
 

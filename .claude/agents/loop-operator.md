@@ -20,10 +20,10 @@ The pipeline-lead calls you when:
 ### 1. Read Pipeline State
 
 ```
-Read .claude/pipeline/plan.md        — original plan
-Read .claude/pipeline/state.md       — current iteration state
-Read .claude/pipeline/critic-feedback.md — latest critic verdict
-Read .claude/pipeline/executor-report.md — latest executor output
+Read .pipeline/plan.md        — original plan
+Read .pipeline/state.md       — current iteration state
+Read .pipeline/critic-feedback.md — latest critic verdict
+Read .pipeline/executor-report.md — latest executor output
 ```
 
 ### 2. Classify the Stall
