@@ -117,7 +117,7 @@ Map intent + scope + tech stack (from Phase 0) to specific components.
 
 | Intent | Commands | Skills | Agents |
 |--------|----------|--------|--------|
-| New Feature | /pipeline, /tdd, /code-review | tdd-workflow, pipeline | pipeline-executor, tdd-guide |
+| New Feature | /pipeline, /tdd, /code-review | tdd-workflow, pipeline | pipeline-critic, tdd-guide |
 | Bug Fix | /tdd, /build-fix, /verify | tdd-workflow | tdd-guide, build-error-resolver |
 | Refactor | /pipeline, /code-review | pipeline | pipeline-critic, refactor-cleaner |
 | Research | /plan | search-first, iterative-retrieval | — |
@@ -125,8 +125,8 @@ Map intent + scope + tech stack (from Phase 0) to specific components.
 | Review | /code-review | security-review | code-reviewer, security-reviewer |
 | Documentation | /update-docs, /update-codemaps | — | doc-updater |
 | Infrastructure | /plan, /verify | docker-patterns, deployment-patterns, database-migrations | architect |
-| Design (MEDIUM-HIGH) | /pipeline | pipeline | pipeline-executor, architect |
-| Design (EPIC) | /pipeline | pipeline (invoke as skill) | pipeline-executor, architect |
+| Design (MEDIUM-HIGH) | /pipeline | pipeline | pipeline-critic, architect |
+| Design (EPIC) | /pipeline | pipeline (invoke as skill) | pipeline-critic, architect |
 
 #### By Tech Stack
 

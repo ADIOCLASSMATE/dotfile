@@ -659,6 +659,8 @@ main() {
 
   ensure_link "$REPO_ROOT/nvim" "$HOME/.config/nvim"
   ensure_link "$REPO_ROOT/yazi" "$HOME/.config/yazi"
+  ensure_link "$REPO_ROOT/.claude" "$HOME/.claude"
+  ensure_link "$REPO_ROOT/.codex" "$HOME/.codex"
 
   check_runtime_tools
   switch_default_shell

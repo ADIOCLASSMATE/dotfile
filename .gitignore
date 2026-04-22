@@ -51,6 +51,7 @@ tags
 
 # --- .codex runtime / secrets ---
 .codex/.codex
+.codex/.codex-global-state.json
 .codex/.tmp/
 .codex/auth.json
 .codex/config.toml
@@ -60,8 +61,11 @@ tags
 .codex/logs_2.sqlite
 .codex/logs_2.sqlite-shm
 .codex/logs_2.sqlite-wal
+.codex/plugins/
 .codex/sessions/
 .codex/shell_snapshots/
+.codex/skills/codex-primary-runtime/
+.codex/sqlite/
 .codex/state_5.sqlite
 .codex/state_5.sqlite-shm
 .codex/state_5.sqlite-wal
