@@ -11,7 +11,7 @@ You are the **Loop Operator**. You are called by the pipeline-lead when the revi
 ## When You Are Called
 
 The pipeline-lead calls you when:
-- The same issue is REJECTED by pipeline-critic for 2 consecutive rounds and Lead still disagrees
+- The same issue is REJECTED by critic for 2 consecutive rounds and Lead still disagrees
 - Lead and Critic are in a rebuttal deadlock — no convergence after multiple rounds
 - Progress has plateaued (scores not improving across rounds)
 

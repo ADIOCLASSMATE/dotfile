@@ -541,7 +541,7 @@ from mypackage.models import User
 from mypackage.utils import format_name
 
 # Good: Use isort for automatic import sorting
-# pip install isort
+# uv add --dev isort
 ```
 
 ### __init__.py for Package Exports
@@ -619,26 +619,28 @@ result = buffer.getvalue()
 ### Essential Commands
 
 ```bash
+# All commands must run through uv — see rules/python/environment.md
+
 # Code formatting
-black .
-isort .
+uv run black .
+uv run isort .
 
 # Linting
-ruff check .
-pylint mypackage/
+uv run ruff check .
+uv run pylint mypackage/
 
 # Type checking
-mypy .
+uv run mypy .
 
 # Testing
-pytest --cov=mypackage --cov-report=html
+uv run pytest --cov=mypackage --cov-report=html
 
 # Security scanning
-bandit -r .
+uv run bandit -r .
 
-# Dependency management
-pip-audit
-safety check
+# Dependency auditing
+uv run pip-audit
+uv run safety check
 ```
 
 ### pyproject.toml Configuration

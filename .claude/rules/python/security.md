@@ -22,7 +22,7 @@ api_key = os.environ["OPENAI_API_KEY"]  # Raises KeyError if missing
 
 - Use **bandit** for static security analysis:
   ```bash
-  bandit -r src/
+  uv run bandit -r src/
   ```
 
 ## Reference

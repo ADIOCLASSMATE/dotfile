@@ -93,7 +93,7 @@ Instead, you must enumerate agent files explicitly:
   "agents": [
     "./agents/planner.md",
     "./agents/architect.md",
-    "./agents/code-reviewer.md"
+    "./agents/critic.md"
   ]
 }
 ```
@@ -177,7 +177,7 @@ Avoid cleverness. Be explicit.
   "version": "1.1.0",
   "agents": [
     "./agents/planner.md",
-    "./agents/code-reviewer.md"
+    "./agents/critic.md"
   ],
   "commands": ["./commands/"],
   "skills": ["./skills/"]

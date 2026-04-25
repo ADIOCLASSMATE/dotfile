@@ -21,11 +21,11 @@ Plan Mode approved
        │
        ├── Write implementation-summary.md for Critic
        │
-       ├── Spawn pipeline-critic (Agent tool, review mode)
+       ├── Spawn critic (Agent tool, pipeline-review mode)
        │
        ├── Read critic-feedback.md, write rebuttal + fix ACCEPT issues
        │
-       ├── Spawn pipeline-critic (Agent tool, verify mode)
+       ├── Spawn critic (Agent tool, pipeline-verify mode)
        │     │
        │     FAIL → fix issues, append Round N Changes to summary, loop (max 3 rounds)
        │     PASS → done
@@ -42,7 +42,7 @@ Subagents cannot spawn further subagents in Claude Code. So pipeline-lead must b
 | Agent | Who | Tools | Role |
 |-------|-----|-------|------|
 | pipeline-lead | **You (main agent)** | All | Read plan, implement code, write implementation summary, rebuttal, loop control |
-| pipeline-critic | Subagent (opus) | Read, Grep, Glob, Bash, Agent | Review code + implementation summary, PASS/FAIL verdict, rebuttal evaluation |
+| critic | Subagent (opus) | Read, Grep, Glob, Bash, Agent | Review code + implementation summary, PASS/FAIL verdict, rebuttal evaluation. Three modes: pipeline-review, pipeline-verify, standalone |
 | loop-operator | Subagent (sonnet) | Read, Grep, Glob, Bash, Edit | Diagnose stalls, recommend recovery |
 
 ## Your Responsibilities as Pipeline-Lead
@@ -51,11 +51,23 @@ Subagents cannot spawn further subagents in Claude Code. So pipeline-lead must b
 2. **Write implementation order** — To `.pipeline/state.md` before coding (think before you write)
 3. **Implement code yourself** — You are the executor. Write code, run build/test/lint.
 4. **Write implementation summary** — To `.pipeline/implementation-summary.md` before spawning Critic. Critic cannot read your mind.
-5. **Spawn critic (review mode)** — Pass implementation summary + plan path + changed files
+5. **Spawn critic (pipeline-review mode)** — Pass implementation summary + plan path + changed files
 6. **Write rebuttal** — Read `.pipeline/critic-feedback.md`, respond to each issue (ACCEPT/EXPLAIN/DEFER), fix ACCEPT issues, append Lead Rebuttal section
-7. **Spawn critic (verify mode)** — Pass critic-feedback.md path + implementation summary
+7. **Spawn critic (pipeline-verify mode)** — Pass critic-feedback.md path + implementation summary
 8. **Loop** — If FAIL, fix remaining issues, append Round N Changes to summary, re-spawn critic
 9. **Relay result** — Return final output to user
+
+The critic also supports **standalone mode** for direct invocation outside the pipeline (e.g., code review after writing code, security review). Brief format:
+
+```text
+Review the following code for quality, security, and correctness.
+
+Mode: standalone
+Files to review: [list file paths or describe diff range]
+Focus areas: [optional — security, architecture, all]
+
+Use S-C[X] numbering for issues. Output directly to conversation (not to .pipeline/).
+```
 
 ## Pipeline-Lead Discipline
 
@@ -71,12 +83,12 @@ When acting as pipeline-lead:
 
 ## Critic Brief Format
 
-### review mode brief
+### pipeline-review mode brief
 
 ```text
 Review the implementation against the plan and implementation summary.
 
-Mode: review
+Mode: pipeline-review
 Round: [N]
 Plan file: .pipeline/plan.md
 Implementation summary: .pipeline/implementation-summary.md
@@ -91,12 +103,12 @@ Append a new ## Round [N] section with ### Critic Feedback.
 Do NOT modify existing content in the file.
 ```
 
-### verify mode brief
+### pipeline-verify mode brief
 
 ```text
 Evaluate the Lead's rebuttal to your previous review.
 
-Mode: verify
+Mode: pipeline-verify
 Round: [N]
 Critic feedback file: .pipeline/critic-feedback.md (read it — contains your feedback + Lead rebuttal)
 Implementation summary: .pipeline/implementation-summary.md (check for Round [N] Changes at the end)

@@ -26,7 +26,7 @@ Activate this skill for:
 - producing a structured human-readable debug report
 
 Do not use this skill as the primary source for:
-- feature verification after code changes; use `pipeline-critic`
+- feature verification after code changes; use `critic`
 - framework-specific debugging when a narrower skill already exists
 - runtime promises the current harness cannot enforce automatically
 
@@ -136,7 +136,7 @@ Good pattern:
 
 ## Integration with Other Skills
 
-- Use `pipeline-critic` after recovery if code was changed.
+- Use `critic` after recovery if code was changed.
 - Use `continuous-learning-v2` when the failure pattern is worth turning into an instinct or later skill.
 - Use `council` when the issue is not technical failure but decision ambiguity.
 - Use `workspace-surface-audit` if the failure came from conflicting local state or repo drift.

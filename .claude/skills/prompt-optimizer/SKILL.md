@@ -117,16 +117,16 @@ Map intent + scope + tech stack (from Phase 0) to specific components.
 
 | Intent | Commands | Skills | Agents |
 |--------|----------|--------|--------|
-| New Feature | /pipeline, /tdd, /code-review | tdd-workflow, pipeline | pipeline-critic, tdd-guide |
+| New Feature | /pipeline, /tdd, /code-review | tdd-workflow, pipeline | critic, tdd-guide |
 | Bug Fix | /tdd, /build-fix, /verify | tdd-workflow | tdd-guide, build-error-resolver |
-| Refactor | /pipeline, /code-review | pipeline | pipeline-critic, refactor-cleaner |
+| Refactor | /pipeline, /code-review | pipeline | critic, refactor-cleaner |
 | Research | /plan | search-first, iterative-retrieval | — |
 | Testing | /tdd, /e2e, /test-coverage | tdd-workflow, e2e-testing | tdd-guide, e2e-runner |
-| Review | /code-review | security-review | code-reviewer, security-reviewer |
+| Review | /code-review | security-review | critic, security-reviewer |
 | Documentation | /update-docs, /update-codemaps | — | doc-updater |
 | Infrastructure | /plan, /verify | docker-patterns, deployment-patterns, database-migrations | architect |
-| Design (MEDIUM-HIGH) | /pipeline | pipeline | pipeline-critic, architect |
-| Design (EPIC) | /pipeline | pipeline (invoke as skill) | pipeline-critic, architect |
+| Design (MEDIUM-HIGH) | /pipeline | pipeline | critic, architect |
+| Design (EPIC) | /pipeline | pipeline (invoke as skill) | critic, architect |
 
 #### By Tech Stack
 
@@ -134,14 +134,14 @@ Map intent + scope + tech stack (from Phase 0) to specific components.
 |------------|--------------|-------|
 | Python / Django | django-patterns, django-tdd, django-security, django-verification, python-patterns, python-testing | python-reviewer |
 | Go | golang-patterns, golang-testing | go-reviewer, go-build-resolver |
-| Spring Boot / Java | springboot-patterns, springboot-tdd, springboot-security, springboot-verification, java-coding-standards, jpa-patterns | code-reviewer |
+| Spring Boot / Java | springboot-patterns, springboot-tdd, springboot-security, springboot-verification, java-coding-standards, jpa-patterns | critic |
 | Kotlin / Android | kotlin-coroutines-flows, compose-multiplatform-patterns, android-clean-architecture | kotlin-reviewer |
-| TypeScript / React | frontend-patterns, backend-patterns, coding-standards | code-reviewer |
-| Swift / iOS | swiftui-patterns, swift-concurrency-6-2, swift-actor-persistence, swift-protocol-di-testing | code-reviewer |
+| TypeScript / React | frontend-patterns, backend-patterns, coding-standards | critic |
+| Swift / iOS | swiftui-patterns, swift-concurrency-6-2, swift-actor-persistence, swift-protocol-di-testing | critic |
 | PostgreSQL | postgres-patterns, database-migrations | database-reviewer |
-| Perl | perl-patterns, perl-testing, perl-security | code-reviewer |
-| C++ | cpp-coding-standards, cpp-testing | code-reviewer |
-| Other / Unlisted | coding-standards (universal) | code-reviewer |
+| Perl | perl-patterns, perl-testing, perl-security | critic |
+| C++ | cpp-coding-standards, cpp-testing | critic |
+| Other / Unlisted | coding-standards (universal) | critic |
 
 ### Phase 4: Missing Context Detection
 
@@ -217,7 +217,7 @@ If Phase 0 auto-detected the answer, state it instead of asking.
 |------|-----------|---------|
 | Command | /plan | Plan architecture before coding |
 | Skill | tdd-workflow | TDD methodology guidance |
-| Agent | code-reviewer | Post-implementation review |
+| Agent | critic | Post-implementation review |
 | Model | Sonnet 4.6 | Recommended for this scope |
 
 ### Section 3: Optimized Prompt — Full Version

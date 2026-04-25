@@ -60,12 +60,14 @@ When invoked:
 
 ## Diagnostic Commands
 
+All commands must run through `uv run` — see rules/python/environment.md.
+
 ```bash
-mypy .                                     # Type checking
-ruff check .                               # Fast linting
-black --check .                            # Format check
-bandit -r .                                # Security scan
-pytest --cov=app --cov-report=term-missing # Test coverage
+uv run mypy .                                     # Type checking
+uv run ruff check .                               # Fast linting
+uv run black --check .                            # Format check
+uv run bandit -r .                                # Security scan
+uv run pytest --cov=app --cov-report=term-missing # Test coverage
 ```
 
 ## Review Output Format

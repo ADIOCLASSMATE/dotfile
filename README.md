@@ -176,7 +176,7 @@ Linux-specific behavior:
 
 ### Agents (44)
 
-Subagent definitions in `.claude/agents/`. Each `.md` file defines a specialized agent (code-reviewer, security-reviewer, rust-build-resolver, etc.) that can be spawned via the Agent tool.
+Subagent definitions in `.claude/agents/`. Each `.md` file defines a specialized agent (critic, security-reviewer, rust-build-resolver, etc.) that can be spawned via the Agent tool.
 
 ### Skills (38)
 

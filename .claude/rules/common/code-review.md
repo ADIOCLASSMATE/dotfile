@@ -63,7 +63,7 @@ Use these agents for code review:
 
 | Agent | Purpose |
 |-------|---------|
-| **code-reviewer** | General code quality, patterns, best practices |
+| **critic** | General code quality, patterns, best practices, weighted scoring (standalone mode) |
 | **security-reviewer** | Security vulnerabilities, OWASP Top 10 |
 | **typescript-reviewer** | TypeScript/JavaScript specific issues |
 | **python-reviewer** | Python specific issues |

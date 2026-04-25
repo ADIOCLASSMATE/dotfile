@@ -35,7 +35,7 @@ Examples:
 | Verifying whether output is correct | `santa-method` |
 | Breaking a feature into implementation steps | `planner` |
 | Designing system architecture | `architect` |
-| Reviewing code for bugs or security | `code-reviewer` or `santa-method` |
+| Reviewing code for bugs or security | `critic` or `santa-method` |
 | Straight factual questions | just answer directly |
 | Obvious execution tasks | just do the task |
 

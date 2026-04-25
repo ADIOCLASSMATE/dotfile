@@ -35,7 +35,7 @@ This creates a separate git worktree under `.claude/worktrees/` with its own bra
 |-----------|---------|
 | `isolation: "worktree"` | Create isolated worktree for the agent |
 | `run_in_background: true` | Run agent without blocking (for parallel dispatch) |
-| `subagent_type` | Choose specialized agent (e.g., `general-purpose`, `code-reviewer`) |
+| `subagent_type` | Choose specialized agent (e.g., `general-purpose`, `critic`) |
 | `model` | Override model (`sonnet`, `opus`, `haiku`) per agent |
 
 ## Worktree Lifecycle
@@ -96,7 +96,7 @@ Agent({ description: "Security review", subagent_type: "security-reviewer", prom
 
 Agent({ description: "Performance review", subagent_type: "performance-optimizer", prompt: "Review src/api/ for performance issues", isolation: "worktree", run_in_background: true })
 
-Agent({ description: "Code quality review", subagent_type: "code-reviewer", prompt: "Review src/api/ for code quality and maintainability", isolation: "worktree", run_in_background: true })
+Agent({ description: "Code quality review", subagent_type: "critic", prompt: "Review src/api/ for code quality and maintainability", isolation: "worktree", run_in_background: true })
 ```
 
 ### Pattern 5: Sequential with Review
@@ -109,7 +109,7 @@ Agent({ description: "Implement feature X", prompt: "Implement feature X with TD
 # → returns worktree with changes
 
 # Step 2: Review the implementation
-Agent({ description: "Review feature X", subagent_type: "code-reviewer", prompt: "Review the implementation of feature X for quality, security, and correctness", isolation: "worktree" })
+Agent({ description: "Review feature X", subagent_type: "critic", prompt: "Review the implementation of feature X for quality, security, and correctness", isolation: "worktree" })
 ```
 
 ## Merging Results

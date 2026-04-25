@@ -2,14 +2,14 @@
 name: pipeline
 description: >-
   Multi-agent pipeline: Lead implements → Critic reviews → Lead rebuttals → Critic verifies loop.
-  Main agent acts as pipeline-lead AND executor, with pipeline-critic as the quality gate.
+  Main agent acts as pipeline-lead AND executor, with critic as the quality gate.
   TRIGGER when: Plan Mode is approved and /pipeline is invoked.
   DO NOT TRIGGER when: task is a simple fix, single-line change, or user says "just do it."
 ---
 
 # Pipeline — Lead-Implements, Critic-Reviews
 
-Run a structured implement-review-rebuttal loop. The **main agent** acts as pipeline-lead AND executor — you implement code yourself. The **pipeline-critic** (opus subagent) reviews your work, and you rebuttal its feedback.
+Run a structured implement-review-rebuttal loop. The **main agent** acts as pipeline-lead AND executor — you implement code yourself. The **critic** (opus subagent) reviews your work, and you rebuttal its feedback.
 
 ## When to Use
 
@@ -46,7 +46,7 @@ YOU (main agent) = Lead + Executor
   |     - Key design decisions and rationale
   |     - Known tradeoffs / intentional non-standard patterns
   |
-  |-- 6. Spawn pipeline-critic (opus, review mode)
+  |-- 6. Spawn critic (opus, pipeline-review mode)
   |     |-- Reads plan + implementation summary + changed files
   |     |-- Writes numbered feedback to critic-feedback.md
   |
@@ -57,7 +57,7 @@ YOU (main agent) = Lead + Executor
   |     - Actually fix all ACCEPT issues
   |     - Append Lead Rebuttal section to critic-feedback.md
   |
-  |-- 8. Spawn pipeline-critic (opus, verify mode)
+  |-- 8. Spawn critic (opus, pipeline-verify mode)
   |     |-- Reads critic-feedback.md with your rebuttal
   |     |-- Verifies fixes via Diff Summary locations
   |     |-- Appends Critic Verdict + Round Verdict
@@ -77,9 +77,9 @@ When this skill is triggered, **you (the main agent) become the pipeline-lead AN
 3. Implement the code yourself
 4. Run build/test/lint yourself
 5. Write `.pipeline/implementation-summary.md` for the Critic
-6. Spawn `pipeline-critic` (review mode) — pass implementation summary + plan path + changed files
+6. Spawn `critic` (pipeline-review mode) — pass implementation summary + plan path + changed files
 7. Read `.pipeline/critic-feedback.md`, write your rebuttal (append Lead Rebuttal section)
-8. Spawn `pipeline-critic` (verify mode) — pass critic-feedback.md path + implementation summary
+8. Spawn `critic` (pipeline-verify mode) — pass critic-feedback.md path + implementation summary
 9. If FAIL → fix issues, append `## Round N Changes` to implementation-summary.md, loop
 10. If PASS → relay result to user
 
@@ -258,7 +258,7 @@ When acting as pipeline-lead:
 | Skill | Relationship |
 |-------|-------------|
 | `council` | Use for decision-making, not code quality. Pipeline and council serve different purposes. |
-| `eval-harness` | Pipeline-critic may invoke eval-harness for formal pass@k measurement when needed. |
+| `eval-harness` | Critic may invoke eval-harness for formal pass@k measurement when needed. |
 | `tdd-workflow` | Lead follows TDD when the project requires it (write tests first). |
 | `search-first` | Lead uses search-first principles during research phase. |
 

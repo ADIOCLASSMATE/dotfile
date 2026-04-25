@@ -4,7 +4,7 @@
 
 **ABSOLUTE RULE**: If you entered Plan Mode for a task, after the user approves the plan, you MUST execute it through `/pipeline`. No exceptions.
 
-After `/pipeline` is triggered, you become the pipeline-lead AND executor. You implement code yourself, then spawn pipeline-critic to review, rebuttal its feedback, and loop until PASS.
+After `/pipeline` is triggered, you become the pipeline-lead AND executor. You implement code yourself, then spawn critic to review, rebuttal its feedback, and loop until PASS.
 
 ### Pipeline flow (you are the lead + executor)
 
@@ -14,9 +14,9 @@ After `/pipeline` is triggered, you become the pipeline-lead AND executor. You i
 3. Implement code yourself
 4. Run build/test/lint yourself
 5. Write implementation summary for Critic
-6. Spawn pipeline-critic (Agent tool, subagent_type="pipeline-critic", review mode)
+6. Spawn critic (Agent tool, subagent_type="critic", pipeline-review mode)
 7. Write rebuttal in critic-feedback.md
-8. Spawn pipeline-critic (Agent tool, subagent_type="pipeline-critic", verify mode)
+8. Spawn critic (Agent tool, subagent_type="critic", pipeline-verify mode)
 9. If FAIL → fix issues + loop (max 3 rounds)
 10. If same issue REJECTED 2 rounds in a row → spawn loop-operator
 11. If PASS → relay final result to user
