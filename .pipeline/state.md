@@ -1,21 +1,14 @@
 # Pipeline State
 
-## Status: IN PROGRESS (Round 1)
+## Status: COMPLETE (Round 4 PASS)
+
+## Task
+Harden gateguard-fact-force.js and coding-style.md so Check responses require tool-based evidence, not vague confirmations.
 
 ## Implementation Order
-1. Create `.claude/agents/critic.md` (merged agent)
-2. Grep for complete reference list
-3. Update `.claude/CLAUDE.md`
-4. Update `.claude/agents/loop-operator.md`
-5. Update `.claude/rules/common/agents.md`
-6. Update `.claude/rules/common/code-review.md`
-7. Update `.claude/skills/pipeline/SKILL.md`
-8. Update `.claude/skills/council/SKILL.md`
-9. Update `.claude/skills/prompt-optimizer/SKILL.md`
-10. Update `.claude/skills/agent-introspection-debugging/SKILL.md`
-11. Update `.claude/skills/parallel-worktree-agents/SKILL.md`
-12. Delete old agent files
-13. Grep verification
+1. Edit `gateguard-fact-force.js` — rewrite all 4 Check messages to require specific tool calls (Glob/Grep/Read) and mandate fixes when issues found
+2. Edit `coding-style.md` — change Check Response format from "brief one-line answer" to "tool-based evidence + fix if issues found"
 
 ## Round History
-- Round 1: Implementation + review
+- Round 1-3: Prior task (skills installation)
+- Round 4: PASS (8.4/10) — All Check messages hardened, coding-style.md updated, Critic-identified refinements (target identification, mandatory determination, evidence-based deletion check) all fixed and verified

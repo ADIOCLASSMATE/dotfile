@@ -82,16 +82,19 @@ Split large functions into focused pieces with clear responsibilities.
 
 When a `[Check]` message appears from the hook system before a write/edit/delete/bash operation, you MUST respond to every bullet point BEFORE performing the action. Do not skip or silently ignore any check.
 
-Format: address each bullet with a brief one-line answer, then proceed.
+Format: address each bullet with **tool-based evidence** — actual Glob, Grep, or Read results. Vague confirmations ("confirmed", "no issues found") without tool results are NOT acceptable.
+
+If a check reveals an issue, you MUST fix it BEFORE proceeding with the original action.
 
 Example:
 ```
 [Check] Creating new file: utils/format.ts
-- Confirm no existing file serves the same purpose.
-- Ensure this file will actually be used.
+- You MUST use Glob to search for files with similar names...
+- You MUST use Grep to search for existing utilities...
 
-→ No existing formatter utility found (Glob `**/format*` returns no matches).
-→ Will be imported by UserCard.ts and ProfilePage.ts.
+→ Glob `**/*format*` returned 0 matches.
+→ Grep `formatUser\|formatDate\|formatCurrency` returned 0 matches across codebase.
+→ No existing formatter utility found — new file is justified.
 ```
 
 If you cannot answer a check item confidently, stop and investigate first.

@@ -27,8 +27,8 @@ You have three distinct modes. The caller will specify which mode in the brief.
 
 ### pipeline-review mode (first review of a pipeline round)
 
-1. Read the plan at `.pipeline/plan.md`
-2. Read the implementation summary at `.pipeline/implementation-summary.md`
+1. Read the plan at `.pipeline/<slug>/plan.md`
+2. Read the implementation summary at `.pipeline/<slug>/implementation-summary.md`
 3. Run verification:
    ```bash
    # Build check
@@ -42,13 +42,13 @@ You have three distinct modes. The caller will specify which mode in the brief.
    ```
 4. Read all changed files listed in the implementation summary
 5. Review deeply — apply the review dimensions below as guidance, not a mandatory checklist
-6. Write numbered feedback to `.pipeline/critic-feedback.md`
+6. Write numbered feedback to `.pipeline/<slug>/critic-feedback.md`
 7. **Create or append** a new `## Round N` section with `### Critic Feedback`. Do NOT modify existing content in the file.
 
 ### pipeline-verify mode (rebuttal evaluation in pipeline)
 
-1. Read `.pipeline/critic-feedback.md` — contains your previous feedback + Lead's rebuttal
-2. Read `.pipeline/implementation-summary.md` (check for `## Round N Changes` at the end)
+1. Read `.pipeline/<slug>/critic-feedback.md` — contains your previous feedback + Lead's rebuttal
+2. Read `.pipeline/<slug>/implementation-summary.md` (check for `## Round N Changes` at the end)
 3. For each Lead rebuttal item, evaluate:
    - If Lead says ACCEPT/Fixed: verify the fix by reading the code at the Diff Summary location
    - If Lead says EXPLAIN: judge whether the explanation is valid
@@ -64,7 +64,7 @@ You have three distinct modes. The caller will specify which mode in the brief.
 3. **Read surrounding code** — Don't review changes in isolation. Read the full file and understand imports, dependencies, and call sites.
 4. **Apply review checklist** — Work through each relevant dimension below, from CRITICAL to LOW severity.
 5. **Report findings** — Use the standalone output format (S-C[X] numbering). Only report issues you are confident about (>80% sure it is a real problem).
-6. **Output directly to conversation** — Do NOT write to `.pipeline/critic-feedback.md`. No rebuttal loop follows.
+6. **Output directly to conversation** — Do NOT write to `.pipeline/<slug>/critic-feedback.md`. No rebuttal loop follows.
 
 ## Confidence-Based Filtering (all modes)
 
@@ -314,7 +314,7 @@ Adapt your review to the project's established patterns. When in doubt, match wh
 
 ## Feedback Format — pipeline-review mode
 
-Write to `.pipeline/critic-feedback.md`. Append a new `## Round N` section.
+Write to `.pipeline/<slug>/critic-feedback.md`. Append a new `## Round N` section.
 
 ```markdown
 ## Round [N]

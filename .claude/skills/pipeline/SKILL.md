@@ -32,56 +32,74 @@ Run a structured implement-review-rebuttal loop. The **main agent** acts as pipe
 YOU (main agent) = Lead + Executor
   |
   |-- 1. Read approved plan from .claude/plans/
-  |-- 2. Write implementation order to state.md (think before you code)
+  |-- 2. Derive task slug, create .pipeline/<slug>/
+  |-- 3. Write implementation order to .pipeline/<slug>/state.md (think before you code)
   |     - File modification order
   |     - Dependencies if 3+ files
   |     - Keep under 10 lines
   |
-  |-- 3. Implement code yourself
-  |-- 4. Run build/test/lint yourself
-  |-- 5. Write implementation summary for Critic
+  |-- 4. Implement code yourself
+  |-- 5. Run build/test/lint yourself
+  |-- 6. Write implementation summary for Critic
   |     - User requirement summary (1-3 sentences)
   |     - Plan highlights (or reference plan.md path)
   |     - Change list (file + what changed in each)
   |     - Key design decisions and rationale
   |     - Known tradeoffs / intentional non-standard patterns
   |
-  |-- 6. Spawn critic (opus, pipeline-review mode)
+  |-- 7. Spawn critic (opus, pipeline-review mode)
   |     |-- Reads plan + implementation summary + changed files
-  |     |-- Writes numbered feedback to critic-feedback.md
+  |     |-- Writes numbered feedback to .pipeline/<slug>/critic-feedback.md
   |
-  |-- 7. Read critic-feedback.md, write rebuttal
+  |-- 8. Read .pipeline/<slug>/critic-feedback.md, write rebuttal
   |     - ACCEPT: fix the issue, include Diff Summary (which lines changed)
   |     - EXPLAIN: explain why it's not an issue
   |     - DEFER: record as follow-up (MEDIUM/LOW only; CRITICAL/HIGH cannot be deferred)
   |     - Actually fix all ACCEPT issues
-  |     - Append Lead Rebuttal section to critic-feedback.md
+  |     - Append Lead Rebuttal section to .pipeline/<slug>/critic-feedback.md
   |
-  |-- 8. Spawn critic (opus, pipeline-verify mode)
-  |     |-- Reads critic-feedback.md with your rebuttal
+  |-- 9. Spawn critic (opus, pipeline-verify mode)
+  |     |-- Reads .pipeline/<slug>/critic-feedback.md with your rebuttal
   |     |-- Verifies fixes via Diff Summary locations
   |     |-- Appends Critic Verdict + Round Verdict
   |
-  |-- 9. If FAIL → fix remaining issues, append Round N Changes to implementation-summary.md, loop
-  |-- 10. If PASS → relay final result to user
+  |-- 10. If FAIL → fix remaining issues, append Round N Changes to .pipeline/<slug>/implementation-summary.md, loop
+  |-- 11. If PASS → relay final result to user
   |
   |-- (If same issue REJECTED 2 rounds in a row → spawn loop-operator)
 ```
+
+## Task Slug
+
+When `/pipeline` is triggered, derive a kebab-case slug from the task description (max 4 words). This slug namespaces all state files so multiple pipeline runs don't conflict.
+
+**Slug generation**: lower-case, hyphen-separated, max 4 significant words. Strip filler words ("the", "a", "to", "with", "for", "and", "of").
+
+| Task description | Slug |
+|-----------------|------|
+| "Add 8 skills to Claude Code" | `add-skills` |
+| "Harden gateguard hook" | `harden-gateguard` |
+| "Fix auth bug in login flow" | `fix-auth-bug` |
+| "Refactor payment processing" | `refactor-payment` |
+
+All pipeline state is written to `.pipeline/<slug>/`. The slug is included in every agent brief so downstream agents (critic, loop-operator) know which directory to use.
 
 ## How to Run
 
 When this skill is triggered, **you (the main agent) become the pipeline-lead AND executor**. You implement code yourself, then spawn the critic to review.
 
 1. Read the approved plan from `.claude/plans/`
-2. Write implementation order to `.pipeline/state.md` (think before you code)
-3. Implement the code yourself
-4. Run build/test/lint yourself
-5. Write `.pipeline/implementation-summary.md` for the Critic
-6. Spawn `critic` (pipeline-review mode) — pass implementation summary + plan path + changed files
-7. Read `.pipeline/critic-feedback.md`, write your rebuttal (append Lead Rebuttal section)
-8. Spawn `critic` (pipeline-verify mode) — pass critic-feedback.md path + implementation summary
-9. If FAIL → fix issues, append `## Round N Changes` to implementation-summary.md, loop
-10. If PASS → relay result to user
+2. Derive a task slug from the description
+3. Create `.pipeline/<slug>/` directory
+4. Write implementation order to `.pipeline/<slug>/state.md` (think before you code)
+5. Implement the code yourself
+6. Run build/test/lint yourself
+7. Write `.pipeline/<slug>/implementation-summary.md` for the Critic
+8. Spawn `critic` (pipeline-review mode) — pass slug + implementation summary + plan path + changed files
+9. Read `.pipeline/<slug>/critic-feedback.md`, write your rebuttal (append Lead Rebuttal section)
+10. Spawn `critic` (pipeline-verify mode) — pass slug + critic-feedback.md path + implementation summary
+11. If FAIL → fix issues, append `## Round N Changes` to implementation-summary.md, loop
+12. If PASS → relay result to user
 
 ## Pipeline Modes
 
@@ -105,7 +123,7 @@ Research and return findings without starting the review loop.
 
 ## File Protocol
 
-All pipeline state is stored in `.pipeline/` at the project root:
+All pipeline state is stored in `.pipeline/<slug>/` at the project root (one subdirectory per pipeline run):
 
 | File | Written by | Purpose |
 |------|-----------|---------|
@@ -200,7 +218,7 @@ If the same issue (same issue number) is REJECTED by Critic for 2 consecutive ro
 
 ## Implementation Summary Format
 
-Write to `.pipeline/implementation-summary.md` before spawning Critic.
+Write to `.pipeline/<slug>/implementation-summary.md` before spawning Critic.
 
 ```markdown
 # Implementation Summary

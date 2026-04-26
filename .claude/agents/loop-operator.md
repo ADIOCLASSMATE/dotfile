@@ -20,10 +20,10 @@ The pipeline-lead calls you when:
 ### 1. Read Pipeline State
 
 ```
-Read .pipeline/plan.md               — original plan
-Read .pipeline/state.md              — current round state
-Read .pipeline/critic-feedback.md    — full review conversation (feedback + rebuttals + verdicts)
-Read .pipeline/implementation-summary.md — what Lead intended + per-round changes
+Read .pipeline/<slug>/plan.md               — original plan
+Read .pipeline/<slug>/state.md              — current round state
+Read .pipeline/<slug>/critic-feedback.md    — full review conversation (feedback + rebuttals + verdicts)
+Read .pipeline/<slug>/implementation-summary.md — what Lead intended + per-round changes
 ```
 
 ### 2. Classify the Stall

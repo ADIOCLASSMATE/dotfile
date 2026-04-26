@@ -6,10 +6,10 @@
  * The tool always proceeds; guidance is injected into model context.
  *
  * Triggers:
- *   - Write (new file) → duplication & usage check
- *   - Edit/MultiEdit deleting >3 lines → deletion check
- *   - Edit/MultiEdit replacing >10 lines → scope check
- *   - Bash destructive commands → safety check
+ *   - Write (new file) → requires Glob + Grep search for duplicates before creating
+ *   - Edit/MultiEdit deleting >3 lines → requires Grep for dangling references before deleting
+ *   - Edit/MultiEdit replacing >10 lines → requires Read context + Grep for call site impact
+ *   - Bash destructive commands → requires Grep for references to deletion targets
  *   - Small edits / safe Bash → passthrough (no intervention)
  *
  * Compatible with direct invocation via module.exports.run().
@@ -49,8 +49,10 @@ function destructiveBashMsg(command) {
   return [
     '[Check] Destructive command detected.',
     '',
-    '- List every file/directory that will be permanently deleted or overwritten.',
-    '- Confirm nothing else depends on or references these targets.',
+    '- Identify the specific file/directory targets from the command before running Grep.',
+    '- You MUST run Grep to find all files that import or reference the targets being deleted/overwritten. Report the Grep results.',
+    '- If any references are found, you MUST fix or remove them BEFORE executing this command.',
+    '- If no references exist, state the Grep command you ran and that it returned 0 matches.',
   ].join('\n');
 }
 
@@ -62,8 +64,9 @@ function deletionAdviceMsg(filePath, lineCount) {
   return [
     `[Check] Removing ${lineCount} lines from ${safe}.`,
     '',
-    '- Confirm the deleted content is not referenced elsewhere.',
-    '- Verify this removal is what the user requested.',
+    '- You MUST use Grep to search the codebase for references to the symbols/functions/exports being deleted. Report the Grep results.',
+    '- If references are found, you MUST update or remove them BEFORE proceeding. Do not leave dangling references.',
+    '- You MUST verify this deletion was explicitly requested. If the user did not request it, stop and ask for confirmation. If they did, state what they asked for.',
   ].join('\n');
 }
 
@@ -75,8 +78,10 @@ function newFileAdviceMsg(filePath) {
   return [
     `[Check] Creating new file: ${safe}`,
     '',
-    '- What is the purpose of creating this file? How does it serve the current goal?',
-    '- Confirm no existing file already serves this purpose.',
+    '- You MUST use Glob to search for files with similar names (e.g., glob pattern matching the file basename or purpose). Report the Glob results.',
+    '- You MUST use Grep to search for existing utilities/functions that serve the same purpose. Report the Grep results.',
+    '- If a similar file exists, you MUST Read it and explain why editing it is insufficient before creating a new one.',
+    '- State the specific purpose of this file and how it serves the current goal.',
   ].join('\n');
 }
 
@@ -88,8 +93,9 @@ function largeEditAdviceMsg(filePath, lineCount) {
   return [
     `[Check] Replacing ${lineCount} lines in ${safe}.`,
     '',
-    '- What is the purpose of this change? How does it move toward the current goal?',
-    '- Verify the scope is correct — not replacing more than intended.',
+    '- State the specific purpose of this change and how it moves toward the current goal.',
+    '- You MUST Read the surrounding context (lines before and after the edit region) to verify the scope is correct — not replacing more than intended. Report what you found.',
+    '- You MUST determine whether the edit removes or changes any exported symbols. If it does, use Grep to find all call sites and confirm they will still work after this change. Report your findings.',
   ].join('\n');
 }
 

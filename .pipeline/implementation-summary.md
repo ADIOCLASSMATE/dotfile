@@ -1,36 +1,27 @@
 # Implementation Summary
 
 ## User Requirement
-Merge `pipeline-critic` (opus, structured review+scoring+rebuttal loop, pipeline-internal only) and `code-reviewer` (sonnet, one-shot review, externally callable) into a single unified `critic` agent with three modes: pipeline-review, pipeline-verify, and standalone. Stricter PASS threshold: no CRITICAL + no HIGH + weighted ≥7.0.
+Harden the gateguard-fact-force.js hook and coding-style.md Check Response section so that when hooks fire, the model must respond with tool-based evidence (Glob/Grep/Read results) instead of vague confirmations like "confirmed, no issues found". If issues are found, the model must fix them before proceeding.
 
 ## Plan Reference
-`.pipeline/plan.md` — 4 steps: create merged agent, update references, delete old files, verify.
+No formal plan.md — user approved two specific changes inline:
+1. Rewrite gateguard-fact-force.js Check messages to require specific tool calls
+2. Change coding-style.md Check Response format from "brief one-line answer" to "tool-based evidence"
 
 ## Changes
 
 | File | What Changed |
 |------|-------------|
-| `.claude/agents/critic.md` | **Created** — merged agent combining pipeline-critic's 3-mode protocol, 7-dimension scoring, and structured output with code-reviewer's domain checklists (React/Next.js, Node.js/Backend, Performance), confidence-based filtering, AI-Generated Code Review Addendum, and project-specific guidelines. PASS: no CRITICAL + no HIGH + weighted ≥7.0. Standalone uses S-C[X] numbering. |
-| `.claude/agents/pipeline-critic.md` | **Deleted** — replaced by critic.md |
-| `.claude/agents/code-reviewer.md` | **Deleted** — replaced by critic.md |
-| `.claude/CLAUDE.md` | 3 refs: `pipeline-critic` → `critic`, mode names updated to `pipeline-review`/`pipeline-verify` |
-| `.claude/agents/loop-operator.md` | 1 ref: `REJECTED by pipeline-critic` → `REJECTED by critic` |
-| `.claude/rules/common/agents.md` | 3 direct refs updated, Pipeline Agents table row rewritten for critic (3 modes), brief format headers renamed, standalone mode brief added |
-| `.claude/rules/common/code-review.md` | 1 ref: `code-reviewer` → `critic` with updated description |
-| `.claude/skills/pipeline/SKILL.md` | 6 refs: `pipeline-critic` → `critic`, mode names updated to `pipeline-review`/`pipeline-verify` |
-| `.claude/skills/council/SKILL.md` | 1 ref: `code-reviewer` → `critic` |
-| `.claude/skills/prompt-optimizer/SKILL.md` | 4 `pipeline-critic` + 7 `code-reviewer` refs → `critic` |
-| `.claude/skills/agent-introspection-debugging/SKILL.md` | 2 refs: `pipeline-critic` → `critic` |
-| `.claude/skills/parallel-worktree-agents/SKILL.md` | 3 refs: `code-reviewer` → `critic` |
-| `.claude/PLUGIN_SCHEMA_NOTES.md` | 2 refs: `code-reviewer.md` → `critic.md` in examples |
+| `.claude/scripts/hooks/gateguard-fact-force.js` | Rewrote all 4 Check message functions (`destructiveBashMsg`, `deletionAdviceMsg`, `newFileAdviceMsg`, `largeEditAdviceMsg`) to require specific tool calls (Grep/Glob/Read) and mandate fixes when issues found. Updated JSDoc header to reflect new behavior. |
+| `.claude/rules/common/coding-style.md` | Replaced `## Check Response (CRITICAL)` section — changed format from "brief one-line answer" to "tool-based evidence". Added rule that vague confirmations without tool results are NOT acceptable. Added rule that if a check reveals an issue, model MUST fix before proceeding. Updated example to show Glob/Grep-based evidence. |
 
 ## Design Decisions
-1. **Keep 7 dimensions, not 10**: React/Next.js, Node.js/Backend, Performance are sub-checklists within existing dimensions, not separate scored dimensions. Avoids conditional weight redistribution math.
-2. **Standalone uses S-C[X] prefix**: Prevents cross-context confusion with pipeline-review's R[N]-C[X]. User specifically requested this.
-3. **opus model**: Inherited from pipeline-critic. Code-reviewer was sonnet; the merged agent uses opus for deeper analysis across all modes.
-4. **Stricter PASS (no HIGH)**: Old pipeline-critic allowed ≤2 HIGH. Now aligned with code-reviewer's standard.
-5. **Plugin files untouched**: All 19 `code-reviewer` references in `.claude/plugins/` are upstream submodules — not modified.
+1. **MUST language in hook messages**: Used "You MUST" instead of "please confirm" to make the requirement unambiguous. Models are more likely to comply with imperative instructions than with requests.
+2. **Specific tool names in messages**: Named Glob, Grep, Read explicitly so the model knows exactly what tool to call, rather than vaguely asking to "search" or "verify".
+3. **Mandatory fix-before-proceed**: Added "you MUST fix BEFORE proceeding" clauses to prevent the model from noting an issue and then ignoring it.
+4. **Kept exit code 0 (allow)**: Did not change to blocking (exit code 2). The hook remains advisory — it cannot force tool calls, but the coding-style.md rule now makes tool-based evidence mandatory at the rules level. This two-layer approach (hook message + rule) is more robust than blocking alone, since blocking would just prevent the action without requiring evidence.
 
 ## Known Tradeoffs
-- Plugin agents named `code-reviewer` coexist with the project-level `critic`. When a plugin invokes `code-reviewer`, it resolves to the plugin's own definition (plugin agents take precedence for plugin-internal references). No conflict expected.
-- Standalone mode does not support the rebuttal/verify loop. Callers needing iterative review should use the pipeline workflow instead.
+- **Hook messages are longer**: Each Check message went from 2-3 bullets to 3-4 bullets with explicit tool instructions. This adds ~50-100 tokens per Check to context. Acceptable because Checks only fire on potentially risky operations (new files, large edits, deletions, destructive bash).
+- **Model may still evade**: A determined model can still fabricate tool results in its response. The hook cannot verify that the model actually called the tools. However, the coding-style.md rule + explicit tool name requirements make evasion much harder and more obvious.
+- **No exit code 2 blocking**: User discussed but did not request blocking. Advisory approach with stronger wording chosen instead.

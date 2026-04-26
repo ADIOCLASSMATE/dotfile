@@ -15,15 +15,17 @@ Plan Mode approved
        │
        ├── Read approved plan from .claude/plans/
        │
-       ├── Write implementation order to state.md (think before you code)
+       ├── Derive task slug, create .pipeline/<slug>/
+       │
+       ├── Write implementation order to .pipeline/<slug>/state.md (think before you code)
        │
        ├── Implement code yourself + run build/test/lint
        │
-       ├── Write implementation-summary.md for Critic
+       ├── Write .pipeline/<slug>/implementation-summary.md for Critic
        │
        ├── Spawn critic (Agent tool, pipeline-review mode)
        │
-       ├── Read critic-feedback.md, write rebuttal + fix ACCEPT issues
+       ├── Read .pipeline/<slug>/critic-feedback.md, write rebuttal + fix ACCEPT issues
        │
        ├── Spawn critic (Agent tool, pipeline-verify mode)
        │     │
@@ -48,12 +50,13 @@ Subagents cannot spawn further subagents in Claude Code. So pipeline-lead must b
 ## Your Responsibilities as Pipeline-Lead
 
 1. **Read the approved plan** — Load from `.claude/plans/`. Do NOT redo research.
-2. **Write implementation order** — To `.pipeline/state.md` before coding (think before you write)
-3. **Implement code yourself** — You are the executor. Write code, run build/test/lint.
-4. **Write implementation summary** — To `.pipeline/implementation-summary.md` before spawning Critic. Critic cannot read your mind.
-5. **Spawn critic (pipeline-review mode)** — Pass implementation summary + plan path + changed files
-6. **Write rebuttal** — Read `.pipeline/critic-feedback.md`, respond to each issue (ACCEPT/EXPLAIN/DEFER), fix ACCEPT issues, append Lead Rebuttal section
-7. **Spawn critic (pipeline-verify mode)** — Pass critic-feedback.md path + implementation summary
+2. **Derive task slug** — Kebab-case from task description (max 4 words). Create `.pipeline/<slug>/`.
+3. **Write implementation order** — To `.pipeline/<slug>/state.md` before coding (think before you write)
+4. **Implement code yourself** — You are the executor. Write code, run build/test/lint.
+5. **Write implementation summary** — To `.pipeline/<slug>/implementation-summary.md` before spawning Critic. Critic cannot read your mind.
+6. **Spawn critic (pipeline-review mode)** — Pass slug + implementation summary + plan path + changed files
+7. **Write rebuttal** — Read `.pipeline/<slug>/critic-feedback.md`, respond to each issue (ACCEPT/EXPLAIN/DEFER), fix ACCEPT issues, append Lead Rebuttal section
+8. **Spawn critic (pipeline-verify mode)** — Pass slug + critic-feedback.md path + implementation summary
 8. **Loop** — If FAIL, fix remaining issues, append Round N Changes to summary, re-spawn critic
 9. **Relay result** — Return final output to user
 
@@ -66,7 +69,7 @@ Mode: standalone
 Files to review: [list file paths or describe diff range]
 Focus areas: [optional — security, architecture, all]
 
-Use S-C[X] numbering for issues. Output directly to conversation (not to .pipeline/).
+Use S-C[X] numbering for issues. Output directly to conversation (not to .pipeline/<slug>/).
 ```
 
 ## Pipeline-Lead Discipline
@@ -90,9 +93,10 @@ Review the implementation against the plan and implementation summary.
 
 Mode: pipeline-review
 Round: [N]
-Plan file: .pipeline/plan.md
-Implementation summary: .pipeline/implementation-summary.md
-Critic feedback file: .pipeline/critic-feedback.md
+Slug: [task-slug]
+Plan file: .pipeline/<slug>/plan.md
+Implementation summary: .pipeline/<slug>/implementation-summary.md
+Critic feedback file: .pipeline/<slug>/critic-feedback.md
 Changed files: [list all files to review]
 
 ## Focus areas
@@ -110,8 +114,9 @@ Evaluate the Lead's rebuttal to your previous review.
 
 Mode: pipeline-verify
 Round: [N]
-Critic feedback file: .pipeline/critic-feedback.md (read it — contains your feedback + Lead rebuttal)
-Implementation summary: .pipeline/implementation-summary.md (check for Round [N] Changes at the end)
+Slug: [task-slug]
+Critic feedback file: .pipeline/<slug>/critic-feedback.md (read it — contains your feedback + Lead rebuttal)
+Implementation summary: .pipeline/<slug>/implementation-summary.md (check for Round [N] Changes at the end)
 
 For each Lead rebuttal item:
 - ACCEPT/Fixed: verify the fix by reading the code at the Diff Summary location
@@ -127,7 +132,7 @@ If fix code introduces a new CRITICAL issue, report it. Do NOT report new HIGH/M
 
 - Maximum 3 rounds (1 round = review → rebuttal → verify)
 - Third round still FAIL with CRITICAL → report to user, do NOT auto-pass
-- Third round still FAIL with only HIGH/MEDIUM → Lead decides, record in state.md
+- Third round still FAIL with only HIGH/MEDIUM → Lead decides, record in .pipeline/<slug>/state.md
 - If same issue REJECTED by Critic for 2 consecutive rounds and Lead still disagrees → spawn loop-operator
 
 ## Specialist Agents
