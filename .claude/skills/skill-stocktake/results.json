@@ -1,0 +1,257 @@
+{
+  "evaluated_at": "2026-04-26T05:17:45Z",
+  "mode": "full",
+  "batch_progress": {
+    "total": 41,
+    "evaluated": 41,
+    "status": "completed"
+  },
+  "skills": {
+    "agent-harness-construction": {
+      "path": "~/.claude/skills/agent-harness-construction/SKILL.md",
+      "verdict": "Merge into agentic-engineering",
+      "reason": "Substantial overlap with agentic-engineering on model routing (Haiku/Sonnet/Opus tiers), context budgeting, and benchmarking. Unique content: action-space design, observation formatting, error-recovery contracts — integrate these 3 sections into agentic-engineering. Neither skill has any recorded usage.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "agent-introspection-debugging": {
+      "path": "~/.claude/skills/agent-introspection-debugging/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Four-phase capture/diagnosis/recovery/report workflow is unique and useful. References non-existent skills `continuous-learning-v2` and `workspace-surface-audit` — remove or replace with existing alternatives. Could add LLM-specific failure patterns (token-limit truncation, tool-result overflow).",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "agent-sort": {
+      "path": "~/.claude/skills/agent-sort/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Unique workflow for repo-specific skill curation with evidence-backed DAILY vs LIBRARY classification. No other skill provides this. The parallel-review-pass structure and evidence-table format are immediately actionable.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "agentic-engineering": {
+      "path": "~/.claude/skills/agentic-engineering/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Core eval-first loop and 15-minute-unit decomposition are valuable. Model routing section duplicates cost-aware-llm-pipeline — replace with a one-line reference. If agent-harness-construction is merged in, restructure with clear sections. Currently thin at 63 lines.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "ai-regression-testing": {
+      "path": "~/.claude/skills/ai-regression-testing/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Addresses unique problem (AI self-review blind spots, sandbox/production path mismatch). Concrete bug narrative and regression-pattern catalog not covered by any other skill or rule. Vitest/Next.js setup is specific and actionable.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "backend-patterns": {
+      "path": "~/.claude/skills/backend-patterns/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Solid pattern catalog (REST, pagination, caching, RBAC, rate limiting) but overlaps with coding-standards on API response format and Zod validation. Remove duplicated sections. Supabase-specific code should be explicitly scoped or generalized.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "claude-api": {
+      "path": "~/.claude/skills/claude-api/SKILL.md",
+      "verdict": "Update",
+      "reason": "Model IDs outdated: references claude-opus-4-1, claude-sonnet-4-0, claude-3-5-haiku-latest. SDK now shows claude-opus-4-6. Update all model IDs, code examples, and ANTHROPIC_MODEL defaults. Add pricing/reference table.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "coding-standards": {
+      "path": "~/.claude/skills/coding-standards/SKILL.md",
+      "verdict": "Merge into rules/common/coding-style.md",
+      "reason": "Substantial overlap with rules/common/coding-style.md on KISS/DRY/YAGNI, immutability, error handling, naming, code smells. TypeScript/React code examples belong in frontend-patterns. API design sections overlap with backend-patterns. Skill's own header says 'Use rules/common/coding-style.md when you need the shortest reusable rule layer' — follow its own advice.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "content-hash-cache-pattern": {
+      "path": "~/.claude/skills/content-hash-cache-pattern/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Narrow, actionable, and unique. No other skill covers content-hash-based file caching with service-layer-wrapper pattern. Python code examples are concrete (chunked SHA-256, frozen dataclass, corruption handling). Clear when-to-use/when-not-to-use boundaries.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "cost-aware-llm-pipeline": {
+      "path": "~/.claude/skills/cost-aware-llm-pipeline/SKILL.md",
+      "verdict": "Update",
+      "reason": "Model IDs and pricing outdated: references claude-sonnet-4-6, claude-haiku-4-5-20251001, claude-opus-4-5 inconsistent with current SDK. Pricing table claims '2025-2026' but amounts need verification. Immutable CostTracker pattern and retry-logic sections are solid. Update model IDs, verify pricing, add note about configurable constants.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "council": {
+      "path": "~/.claude/skills/council/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Unique decision-making framework. References non-existent skill `santa-method` three times — replace with `critic` or remove. References non-existent skill `knowledge-ops` — replace with existing alternative. Four-voice workflow and bias-guardrail synthesis rules are well-designed.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "doc-coauthoring": {
+      "path": "~/.claude/skills/doc-coauthoring/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Unique three-stage workflow (context gathering, refinement, reader testing) for collaborative document creation. Reader-testing stage with fresh subagents is a genuinely novel pattern. Correctly delegates file generation to docx/pdf skills.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "docx": {
+      "path": "~/.claude/skills/docx/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Essential utility skill with deep domain knowledge (docx-js pitfalls, DXA units, ShadingType.CLEAR vs SOLID, table dual-widths). Complete toolchain with scripts. npm docx package at v9.6.1 matches current API. Critical-rules section prevents hours of debugging.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "e2e-testing": {
+      "path": "~/.claude/skills/e2e-testing/SKILL.md",
+      "verdict": "Update",
+      "reason": "Uses waitForLoadState('networkidle') deprecated in Playwright 1.42+ (current 1.59.1). Replace with waitForLoadState('load') or web-first assertions. Also remove Web3/wallet-testing section — domain-specific cruft not belonging in general E2E skill. Page Object Model, CI/CD, and flaky-test patterns are solid.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "eval-harness": {
+      "path": "~/.claude/skills/eval-harness/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Actionable eval-driven development framework with grader types and pass@k metrics. References slash commands (/eval define, /eval check, /eval report) that do not exist — these are aspirational, not functional. Remove fake /eval commands, consolidate duplicated grader-type sections, add working code example.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "frontend-design": {
+      "path": "~/.claude/skills/frontend-design/SKILL.md",
+      "verdict": "Merge into frontend-patterns",
+      "reason": "Substantial overlap with rules/web/design-quality.md (anti-template policy, style directions, banned patterns). Design workflow (frame, build system, compose, motion) is useful but would be more valuable as a 'Design Workflow' section inside frontend-patterns. Integrate the Design Workflow and Strong Defaults typography/color/layout guidance; retire standalone skill.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "frontend-patterns": {
+      "path": "~/.claude/skills/frontend-patterns/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Solid React/Next.js pattern reference with code examples. Two issues: (1) Content overlap with rules/web/patterns.md — skill should reference the rule and avoid restating same tables. (2) Custom useQuery hook reinvents TanStack Query/SWR — replace with TanStack Query example. Absorb content from frontend-design if merged.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "golang-patterns": {
+      "path": "~/.claude/skills/golang-patterns/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Comprehensive, actionable Go reference covering error handling, concurrency, interfaces, struct design, memory, and tooling with idiomatic code examples. Patterns (errgroup, context cancellation, functional options) are timeless Go idioms. No Go-specific rules directory exists. Minor Go version staleness not enough to downgrade.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "golang-testing": {
+      "path": "~/.claude/skills/golang-testing/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Thorough Go testing reference. Two issues: (1) tt:=tt pattern unnecessary since Go 1.22 fixed loop variable scoping — add version-dependent note. (2) Fuzzing section references 'Go 1.18+' but Go is now 1.24+; update version framing.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "hookify-rules": {
+      "path": "~/.claude/skills/hookify-rules/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Unique, actionable skill for custom hookify tool with concrete YAML format, condition operators, event types, and regex tips. No overlap with any rule or other skill — hookify is a bespoke tool not covered elsewhere. Zero usage may indicate low demand but serves as documentation for a custom tool.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "mcp-server-patterns": {
+      "path": "~/.claude/skills/mcp-server-patterns/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Useful MCP server building reference but provides no concrete working example of tool/resource registration — just vague placeholders. Add one complete working server.ts example using SDK v1.29.0 API (McpServer, server.tool(), server.resource()) and note the SDK version.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "parallel-worktree-agents": {
+      "path": "~/.claude/skills/parallel-worktree-agents/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Useful pattern reference for concurrent agent dispatch but documents `isolation: \"worktree\"` parameter that does not exist in current Agent tool spec (actual tool uses EnterWorktree/ExitWorktree). Verify and correct Agent tool parameter names; replace isolation pattern with actual EnterWorktree workflow.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "pdf": {
+      "path": "~/.claude/skills/pdf/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Comprehensive PDF skill with working code examples (pypdf, pdfplumber, reportlab), CLI tools (qpdf, pdftotext), form handling, reference docs, and 8 supporting Python scripts. Superscript/subscript warning is a high-value gotcha. No overlap with any rule or other skill.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "pipeline": {
+      "path": "~/.claude/skills/pipeline/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Core workflow skill referenced by CLAUDE.md, agents.md, and global rules. Detailed and actionable with implementation summary format, critic-feedback conversation format, rebuttal actions, and loop control. Substantial content overlap with rules/common/agents.md but skill version is more complete (task slug, file protocol). Should be the authoritative source.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "pptx": {
+      "path": "~/.claude/skills/pptx/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Rich PPTX skill with design guidance, editing workflow, PptxGenJS for creation, QA loop with subagent visual inspection, and full script toolkit. Anti-boring-slide design advice and mandatory QA verification loop are high-value. No overlap with other skills or rules.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "prompt-optimizer": {
+      "path": "~/.claude/skills/prompt-optimizer/SKILL.md",
+      "verdict": "Update",
+      "reason": "References 'Sonnet 4.6' and 'Opus 4.6' as model recommendations — these model names do not exist as valid Anthropic model IDs. Factual error that produces incorrect advice. The 6-phase analysis pipeline is well-structured and unique. Update model recommendation table with current model names and verify referenced slash commands exist.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "python-patterns": {
+      "path": "~/.claude/skills/python-patterns/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Solid Python idioms reference. Two issues: (1) References both black and ruff — modern Python uses ruff for both linting and formatting; drop black. (2) Python 3.8 typing compatibility note is irrelevant (3.8 EOL Oct 2024); default to 3.10+ syntax (union types with |). Add cross-reference to rules/python/environment.md.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "python-testing": {
+      "path": "~/.claude/skills/python-testing/SKILL.md",
+      "verdict": "Improve",
+      "reason": "818-line skill with high actionability (comprehensive pytest fixtures, mocking, parametrization, async testing, coverage). Substantial overlap with tdd-workflow on TDD cycle and coverage targets — remove TDD philosophy sections and replace with pointer to tdd-workflow, focusing this skill purely on pytest mechanics. Note pytest-asyncio mode config changes.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "regex-vs-llm-structured-text": {
+      "path": "~/.claude/skills/regex-vs-llm-structured-text/SKILL.md",
+      "verdict": "Update",
+      "reason": "High-quality actionable skill with clear architecture pattern (regex-first + confidence scorer + LLM fallback). Line 137 references model name claude-haiku-4-5-20251001 which is a dated API identifier. Update to use variable or current model constant. Otherwise unique with zero overlap.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "research-ops": {
+      "path": "~/.claude/skills/research-ops/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Useful workflow skill for evidence-first research. References non-existent skills `market-research` and `knowledge-ops` — these are dead references that mislead the agent. Remove or replace with actual available tools (WebSearch, WebFetch, MCP). Core value (evidence boundary labeling, research classification, output format) is unique.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "rust-patterns": {
+      "path": "~/.claude/skills/rust-patterns/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Comprehensive, highly actionable Rust reference (ownership, Cow, Result/?, thiserror/anyhow, enums, trait objects, newtype, builder, iterators, Arc<Mutex>, channels, Tokio async, unsafe, modules) with concrete code examples. No other skill covers Rust idioms. Referenced crates are stable.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "rust-testing": {
+      "path": "~/.claude/skills/rust-testing/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Dense, actionable Rust testing reference covering unit/integration/proptest/mockall/criterion/doc tests/cargo-llvm-cov with working code examples. Complements rust-patterns without overlap. Referenced tools are actively maintained stable crates.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "search-first": {
+      "path": "~/.claude/skills/search-first/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Valuable anti-reinventing-the-wheel workflow with decision matrix. References 'researcher agent' and 'iterative-retrieval skill' which are not available — dead references. Also Context7 reference may not be configured. Replace dead references with available tools (WebSearch, WebFetch, rg, Glob).",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "skill-creator": {
+      "path": "~/.claude/skills/skill-creator/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Sophisticated meta-skill with complete iterative workflow (draft, test with subagents, grade, aggregate, viewer, description optimization), bundled scripts, reference schemas, and adaptation guidance. No other skill covers skill creation/evaluation. Referenced by skill-stocktake and agent-sort.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "skill-stocktake": {
+      "path": "~/.claude/skills/skill-stocktake/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Essential operational skill for skill quality auditing with well-defined two-mode flow, cached results, resume detection, and the exact checklist being used in this evaluation. Bundled scripts provide automation. No other skill covers auditing.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "strategic-compact": {
+      "path": "~/.claude/skills/strategic-compact/SKILL.md",
+      "verdict": "Retire",
+      "reason": "Two defects: (1) Bundled shell script is a trivial 55-line counter — Claude Code already has built-in auto-compaction and /compact command, making this hook redundant. (2) SKILL.md references non-existent tools: 'token-optimizer MCP' and 'context-mode' with implausible claims. Compaction decision guide table is the only useful content but could be a 5-line note in CLAUDE.md. PostCompact hook in settings.json already handles context restoration.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "submit-job": {
+      "path": "~/.claude/skills/submit-job/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Highly specific, actionable skill for Inspire cluster with exact CLI commands, environment constraints, GPU allocation workflow, and failure-mode troubleshooting table. No other skill covers cluster job submission. User-specific but appropriate for a personal dotfile repo.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "tdd-workflow": {
+      "path": "~/.claude/skills/tdd-workflow/SKILL.md",
+      "verdict": "Merge into python-testing",
+      "reason": "Language-agnostic TDD workflow but code examples are overwhelmingly TypeScript/Jest/Playwright-specific. TDD philosophy and git checkpoint discipline are the only unique content. Merge TDD cycle steps, git checkpoint rules, and RED validation criteria into python-testing's opening section, then retire. python-testing already covers TDD at L19-48.",
+      "mtime": "2025-12-01T00:00:00Z"
+    },
+    "web-artifacts-builder": {
+      "path": "~/.claude/skills/web-artifacts-builder/SKILL.md",
+      "verdict": "Improve",
+      "reason": "Unique skill for building claude.ai HTML artifacts with bundled React+Vite+shadcn stack. Tailwind CSS pinned to 3.4.1 which may be outdated — Tailwind v4 released in early 2025 with significant config changes. Verify compatibility with current Tailwind and update version reference. Verify '40+ shadcn/ui components pre-installed' claim.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "webapp-testing": {
+      "path": "~/.claude/skills/webapp-testing/SKILL.md",
+      "verdict": "Merge into e2e-testing",
+      "reason": "96-line thin skill covering ad-hoc Playwright scripting. e2e-testing already covers Playwright comprehensively. Unique content: (1) with_server.py helper for server lifecycle, (2) reconnaissance-then-action pattern, (3) decision tree for static vs dynamic apps. Integrate these as a 'Local Development Testing' section into e2e-testing. Descriptions cross-reference each other, confirming same domain.",
+      "mtime": "2026-04-26T00:00:00Z"
+    },
+    "xlsx": {
+      "path": "~/.claude/skills/xlsx/SKILL.md",
+      "verdict": "Keep",
+      "reason": "Highly specialized, actionable skill for Excel manipulation with professional financial modeling standards, openpyxl+pandas workflow, recalc.py for LibreOffice formula recalculation, and formula verification checklist. Financial model color coding and formula conventions are domain knowledge not available elsewhere.",
+      "mtime": "2026-04-26T00:00:00Z"
+    }
+  }
+}
