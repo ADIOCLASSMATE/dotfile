@@ -1,3 +1,13 @@
+---
+paths:
+  - "**/*.css"
+  - "**/*.scss"
+  - "**/*.html"
+  - "**/*.tsx"
+  - "**/*.jsx"
+  - "**/*.svg"
+---
+
 > This file extends [common/coding-style.md](../common/coding-style.md) with web-specific frontend content.
 
 # Web Coding Style

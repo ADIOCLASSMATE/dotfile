@@ -62,5 +62,4 @@ struct UserService {
 
 ## References
 
-See skill: `swift-actor-persistence` for actor-based persistence patterns.
-See skill: `swift-protocol-di-testing` for protocol-based DI and testing.
+For detailed Swift patterns, see `rules/swift/` and common patterns in `rules/common/patterns.md`.

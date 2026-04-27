@@ -63,12 +63,8 @@ Use these agents for code review:
 
 | Agent | Purpose |
 |-------|---------|
-| **critic** | General code quality, patterns, best practices, weighted scoring (standalone mode) |
-| **security-reviewer** | Security vulnerabilities, OWASP Top 10 |
-| **typescript-reviewer** | TypeScript/JavaScript specific issues |
-| **python-reviewer** | Python specific issues |
-| **go-reviewer** | Go specific issues |
-| **rust-reviewer** | Rust specific issues |
+| **critic** | All code review — quality, patterns, best practices, security, weighted scoring. Use **standalone mode** for direct review, **pipeline-review/pipeline-verify** modes within pipeline loop. |
+| **security-reviewer** | Dedicated security vulnerability analysis, OWASP Top 10 |
 
 ## Review Workflow
 

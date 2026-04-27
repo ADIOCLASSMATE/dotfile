@@ -15,8 +15,6 @@ Pull these tools into the workflow when relevant:
 
 - **WebSearch / WebFetch** for fast current-web discovery (built-in Claude Code tools)
 - **MCP servers** (if configured) for specialized data sources
-- `market-research` when the end result should be a recommendation or ranked decision
-- `knowledge-ops` when the result should be stored in durable context afterward
 
 ## When to Use
 
@@ -61,7 +59,6 @@ Choose the right lane before searching:
 - use **WebSearch** for fast discovery and current facts
 - use **WebFetch** to extract detail from specific pages
 - escalate to multi-source synthesis when claims need cross-referencing
-- use `market-research` when the outcome should end in a recommendation
 
 ### 4. Report with explicit evidence boundaries
 

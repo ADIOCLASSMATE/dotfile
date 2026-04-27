@@ -57,8 +57,8 @@ Subagents cannot spawn further subagents in Claude Code. So pipeline-lead must b
 6. **Spawn critic (pipeline-review mode)** — Pass slug + implementation summary + plan path + changed files
 7. **Write rebuttal** — Read `.pipeline/<slug>/critic-feedback.md`, respond to each issue (ACCEPT/EXPLAIN/DEFER), fix ACCEPT issues, append Lead Rebuttal section
 8. **Spawn critic (pipeline-verify mode)** — Pass slug + critic-feedback.md path + implementation summary
-8. **Loop** — If FAIL, fix remaining issues, append Round N Changes to summary, re-spawn critic
-9. **Relay result** — Return final output to user
+9. **Loop** — If FAIL, fix remaining issues, append Round N Changes to summary, re-spawn critic
+10. **Relay result** — Return final output to user
 
 The critic also supports **standalone mode** for direct invocation outside the pipeline (e.g., code review after writing code, security review). Brief format:
 

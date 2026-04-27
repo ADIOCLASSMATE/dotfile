@@ -17,13 +17,22 @@ Build applications with the Anthropic Claude API and SDKs.
 
 ## Model Selection
 
-| Model | ID | Best For |
-|-------|-----|----------|
-| Opus 4.1 | `claude-opus-4-1` | Complex reasoning, architecture, research |
-| Sonnet 4 | `claude-sonnet-4-0` | Balanced coding, most development tasks |
-| Haiku 3.5 | `claude-3-5-haiku-latest` | Fast responses, high-volume, cost-sensitive |
+Always use environment variables for model selection — never hardcode model IDs. This keeps your code portable across different API backends and model versions.
 
-Default to Sonnet 4 unless the task requires deep reasoning (Opus) or speed/cost optimization (Haiku). For production, prefer pinned snapshot IDs over aliases.
+| Tier | Env Var | Best For |
+|------|---------|----------|
+| Opus | `ANTHROPIC_DEFAULT_OPUS_MODEL` | Complex reasoning, architecture, research |
+| Sonnet | `ANTHROPIC_DEFAULT_SONNET_MODEL` | Balanced coding, most development tasks |
+| Haiku | `ANTHROPIC_DEFAULT_HAIKU_MODEL` | Fast responses, high-volume, cost-sensitive |
+
+```python
+import os
+model = os.environ.get("ANTHROPIC_DEFAULT_SONNET_MODEL", "claude-sonnet-4-0")
+```
+
+**Important**: All code examples below use hardcoded model strings for readability. In production, replace every `model="claude-sonnet-4-0"` with `os.environ.get("ANTHROPIC_DEFAULT_SONNET_MODEL", "claude-sonnet-4-0")` (Python) or `process.env.ANTHROPIC_DEFAULT_SONNET_MODEL || "claude-sonnet-4-0"` (TypeScript). Never ship hardcoded model IDs.
+
+Default to Sonnet unless the task requires deep reasoning (Opus) or speed/cost optimization (Haiku).
 
 ## Python SDK
 
@@ -330,7 +339,7 @@ except APIError as e:
 export ANTHROPIC_API_KEY="your-api-key-here"
 
 # Optional: set default model
-export ANTHROPIC_MODEL="claude-sonnet-4-0"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="your-model-id"
 ```
 
 Never hardcode API keys. Always use environment variables.

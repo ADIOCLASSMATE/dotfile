@@ -88,7 +88,7 @@ If a check reveals an issue, you MUST fix it BEFORE proceeding with the original
 
 Example:
 ```
-[Check] Creating new file: utils/format.ts
+[Check] Creating new file: utils/formatter.ext
 - You MUST use Glob to search for files with similar names...
 - You MUST use Grep to search for existing utilities...
 

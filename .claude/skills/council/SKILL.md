@@ -32,10 +32,10 @@ Examples:
 
 | Instead of council | Use |
 | --- | --- |
-| Verifying whether output is correct | `santa-method` |
+| Verifying whether output is correct | `critic` (standalone mode) |
 | Breaking a feature into implementation steps | `planner` |
 | Designing system architecture | `architect` |
-| Reviewing code for bugs or security | `critic` or `santa-method` |
+| Reviewing code for bugs or security | `critic` |
 | Straight factual questions | just answer directly |
 | Obvious execution tasks | just do the task |
 
@@ -155,8 +155,7 @@ Keep it scannable on a phone screen.
 Do **not** write ad-hoc notes to `~/.claude/notes` or other shadow paths from this skill.
 
 If the council materially changes the recommendation:
-- use `knowledge-ops` to store the lesson in the right durable location
-- or use `/save-session` if the outcome belongs in session memory
+- use `/save-session` if the outcome belongs in session memory
 - or update the relevant GitHub / Linear issue directly if the decision changes active execution truth
 
 Only persist a decision when it changes something real.
@@ -180,10 +179,7 @@ If the user wants another round:
 
 ## Related Skills
 
-- `santa-method` — adversarial verification
-- `knowledge-ops` — persist durable decision deltas correctly
 - `search-first` — gather external reference material before the council if needed
-- `architecture-decision-records` — formalize the outcome when the decision becomes long-lived system policy
 
 ## Example
 

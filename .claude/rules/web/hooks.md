@@ -1,3 +1,14 @@
+---
+paths:
+  - "**/*.css"
+  - "**/*.scss"
+  - "**/*.html"
+  - "**/*.tsx"
+  - "**/*.jsx"
+  - "**/*.svg"
+  - "**/*.json"
+---
+
 > This file extends [common/hooks.md](../common/hooks.md) with web-specific hook recommendations.
 
 # Web Hooks

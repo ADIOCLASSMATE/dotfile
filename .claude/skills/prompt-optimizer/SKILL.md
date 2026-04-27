@@ -120,7 +120,7 @@ Map intent + scope + tech stack (from Phase 0) to specific components.
 | New Feature | /pipeline, /tdd, /code-review | tdd-workflow, pipeline | critic, tdd-guide |
 | Bug Fix | /tdd, /build-fix, /verify | tdd-workflow | tdd-guide, build-error-resolver |
 | Refactor | /pipeline, /code-review | pipeline | critic, refactor-cleaner |
-| Research | /plan | search-first, iterative-retrieval | — |
+| Research | /plan | search-first | — |
 | Testing | /tdd, /e2e, /test-coverage | tdd-workflow, e2e-testing | tdd-guide, e2e-runner |
 | Review | /code-review | security-review | critic, security-reviewer |
 | Documentation | /update-docs, /update-codemaps | — | doc-updater |
@@ -132,12 +132,12 @@ Map intent + scope + tech stack (from Phase 0) to specific components.
 
 | Tech Stack | Skills to Add | Agent |
 |------------|--------------|-------|
-| Python / Django | django-patterns, django-tdd, django-security, django-verification, python-patterns, python-testing | python-reviewer |
-| Go | golang-patterns, golang-testing | go-reviewer, go-build-resolver |
+| Python / Django | django-patterns, django-tdd, django-security, django-verification, python-patterns, python-testing | critic |
+| Go | golang-patterns, golang-testing | critic, go-build-resolver |
 | Spring Boot / Java | springboot-patterns, springboot-tdd, springboot-security, springboot-verification, java-coding-standards, jpa-patterns | critic |
-| Kotlin / Android | kotlin-coroutines-flows, compose-multiplatform-patterns, android-clean-architecture | kotlin-reviewer |
+| Kotlin / Android | kotlin-coroutines-flows, compose-multiplatform-patterns, android-clean-architecture | critic |
 | TypeScript / React | frontend-patterns, backend-patterns, coding-standards | critic |
-| Swift / iOS | swiftui-patterns, swift-concurrency-6-2, swift-actor-persistence, swift-protocol-di-testing | critic |
+| Swift / iOS | — | critic |
 | PostgreSQL | postgres-patterns, database-migrations | database-reviewer |
 | Perl | perl-patterns, perl-testing, perl-security | critic |
 | C++ | cpp-coding-standards, cpp-testing | critic |

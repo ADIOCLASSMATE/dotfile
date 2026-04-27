@@ -18,7 +18,7 @@ rules/
 │   └── testing.md
 ├── python/          # Python specific (environment, type hints, pytest)
 ├── rust/            # Rust specific (ownership, lifetimes, cargo)
-├── swift/           # Swift specific (SwiftUI, concurrency, actors)
+├── swift/           # Swift specific (concurrency, actors, value types, protocol-oriented design)
 ├── typescript/      # TypeScript/JavaScript specific (types, async, Zod)
 └── web/             # Web and frontend specific (CSS, design quality, CWV)
 ```
