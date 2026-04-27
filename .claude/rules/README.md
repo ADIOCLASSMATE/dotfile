@@ -7,7 +7,6 @@ Rules are organized into a **common** layer plus **language-specific** directori
 rules/
 ├── common/          # Language-agnostic principles (always installed)
 │   ├── agents.md
-│   ├── code-review.md
 │   ├── coding-style.md
 │   (development workflow now in skills/pipeline/)
 │   ├── git-workflow.md

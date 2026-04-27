@@ -57,17 +57,7 @@ Subagents cannot spawn further subagents in Claude Code. So pipeline-lead must b
 
 For the complete workflow — rebuttal actions (ACCEPT/EXPLAIN/DEFER), file protocol, state.md template, critic brief formats, loop control rules, and lead discipline — see **`skills/pipeline/SKILL.md`**. That file is the single authority on pipeline mechanics.
 
-The critic also supports **standalone mode** for direct invocation outside the pipeline (e.g., code review after writing code, security review):
-
-```text
-Review the following code for quality, security, and correctness.
-
-Mode: standalone
-Files to review: [list file paths or describe diff range]
-Focus areas: [optional — security, architecture, all]
-
-Use S-C[X] numbering for issues. Output directly to conversation (not to .pipeline/<slug>/).
-```
+For standalone code review outside the pipeline, use the `/critic` skill — it handles context gathering and brief formatting before spawning the critic agent. See `skills/critic/SKILL.md`.
 
 ## Specialist Agents
 

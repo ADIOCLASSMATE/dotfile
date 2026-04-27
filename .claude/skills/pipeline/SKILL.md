@@ -96,9 +96,27 @@ When this skill is triggered, **you (the main agent) become the pipeline-lead AN
 6. Implement the code yourself
 7. Run build/test/lint yourself
 8. Write `.pipeline/<slug>/implementation-summary.md` for the Critic
-9. Spawn `critic` (pipeline-review mode) — pass slug + implementation summary + plan path + changed files
+9. Spawn `critic` (pipeline-review mode) with this brief:
+
+   ```text
+   Mode: pipeline-review
+   Slug: <slug>
+
+   Review the implementation against the plan at .pipeline/<slug>/plan.md.
+   Read the implementation summary at .pipeline/<slug>/implementation-summary.md.
+   Write your feedback to .pipeline/<slug>/critic-feedback.md.
+   ```
 10. Read `.pipeline/<slug>/critic-feedback.md`, write your rebuttal (append Lead Rebuttal section)
-11. Spawn `critic` (pipeline-verify mode) — pass slug + critic-feedback.md path + implementation summary
+11. Spawn `critic` (pipeline-verify mode) with this brief:
+
+    ```text
+    Mode: pipeline-verify
+    Slug: <slug>
+
+    Read the review conversation at .pipeline/<slug>/critic-feedback.md.
+    Verify all ACCEPT fixes at the Diff Summary locations.
+    Append your Critic Verdict and Round Verdict.
+    ```
 12. If FAIL → fix issues, append `## Round N Changes` to implementation-summary.md, loop
 13. If PASS → relay result to user
 

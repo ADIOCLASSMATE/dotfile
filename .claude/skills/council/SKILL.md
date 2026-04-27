@@ -9,7 +9,7 @@ Convene four advisors for ambiguous decisions:
 - the in-context Claude voice
 - a Skeptic subagent
 - a Pragmatist subagent
-- a Critic subagent
+- a Risk Analyst subagent
 
 This is for **decision-making under ambiguity**, not code review, implementation planning, or architecture design.
 
@@ -46,7 +46,7 @@ Examples:
 | Architect | correctness, maintainability, long-term implications |
 | Skeptic | premise challenge, simplification, assumption breaking |
 | Pragmatist | shipping speed, user impact, operational reality |
-| Critic | edge cases, downside risk, failure modes |
+| Risk Analyst | edge cases, downside risk, failure modes |
 
 The three external voices should be launched as fresh subagents with **only the question and relevant context**, not the full ongoing conversation. That is the anti-anchoring mechanism.
 
@@ -111,7 +111,7 @@ Be direct. No hedging. Keep it under 300 words.
 Role emphasis:
 - Skeptic: challenge framing, question assumptions, propose the simplest credible alternative
 - Pragmatist: optimize for speed, simplicity, and real-world execution
-- Critic: surface downside risk, edge cases, and reasons the plan could fail
+- Risk Analyst: surface downside risk, edge cases, and reasons the plan could fail
 
 ### 5. Synthesize with bias guardrails
 
@@ -138,7 +138,7 @@ Use this output shape:
 **Pragmatist:** [1-2 sentence position]
 [1 line on why]
 
-**Critic:** [1-2 sentence position]
+**Risk Analyst:** [1-2 sentence position]
 [1 line on why]
 
 ### Verdict
@@ -193,6 +193,6 @@ Likely council shape:
 - Architect pushes for structural integrity and avoiding a confused surface
 - Skeptic questions whether the UI is actually the gating factor
 - Pragmatist asks what can be shipped now without harming trust
-- Critic focuses on support burden, expectation debt, and rollout confusion
+- Risk Analyst focuses on support burden, expectation debt, and rollout confusion
 
 The value is not unanimity. The value is making the disagreement legible before choosing.
