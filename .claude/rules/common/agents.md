@@ -75,4 +75,4 @@ Use when pipeline delegates a specific concern:
 
 ## Multi-Perspective Analysis
 
-For ambiguous decisions (not code quality), use `/council` — convenes Architect, Skeptic, Pragmatist, and Critic voices.
+For ambiguous decisions (not code quality), use `/council` — convenes Architect, Skeptic, Pragmatist, and Risk Analyst voices.
