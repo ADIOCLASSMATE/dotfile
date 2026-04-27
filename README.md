@@ -72,8 +72,8 @@ dotfile/
 │
 ├── .claude/                     # → symlinked to ~/.claude
 │   ├── CLAUDE.md                # global rules (pipeline workflow, coding style)
-│   ├── agents/                  # 44 subagent definitions
-│   ├── skills/                  # 38 skill definitions
+│   ├── agents/                  # 43 subagent definitions
+│   ├── skills/                  # 41 skill definitions
 │   ├── rules/                   # layered rules (common, python, rust, swift, ts, web)
 │   ├── scripts/hooks/           # PreToolUse / PostCompact / Stop hooks
 │   ├── pet/                     # statusline cat animation
@@ -84,7 +84,6 @@ dotfile/
 │   └── plugins/                 # plugin marketplace (submodule)
 │
 ├── .codex/                      # → symlinked to ~/.codex
-│   ├── AGENTS.md
 │   ├── rules/default.rules
 │   ├── skills/feynman/          # research skills
 │   ├── skills/.system/          # system skills (imagegen, openai-docs, etc.)
@@ -174,11 +173,11 @@ Linux-specific behavior:
 
 ## Claude Code configuration details
 
-### Agents (44)
+### Agents (43)
 
 Subagent definitions in `.claude/agents/`. Each `.md` file defines a specialized agent (critic, security-reviewer, rust-build-resolver, etc.) that can be spawned via the Agent tool.
 
-### Skills (38)
+### Skills (41)
 
 Skill definitions in `.claude/skills/`. Each has a `SKILL.md` that defines a callable skill (pipeline, tdd-workflow, python-patterns, etc.).
 

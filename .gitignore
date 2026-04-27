@@ -79,3 +79,4 @@ responses_proxy.py
 .codex/backup-auth.json
 .codex/backup-config.toml
 .codex/.sync_backup_*/
+.pipeline/
