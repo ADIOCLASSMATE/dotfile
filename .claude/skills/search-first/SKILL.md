@@ -1,6 +1,13 @@
 ---
 name: search-first
-description: Research-before-coding workflow. Search for existing tools, libraries, and patterns before writing custom code. Invokes the researcher agent.
+description: >-
+  Research-before-coding workflow. Search for existing tools, libraries, and patterns
+  before writing custom code. Invokes the researcher agent.
+  
+  TRIGGER when: "search before coding", "find existing tools",
+  "don't reinvent the wheel", "research before implementing",
+  "look for existing solutions"
+
 ---
 
 # /search-first — Research Before You Code
@@ -105,10 +112,10 @@ Task(subagent_type="general-purpose", prompt="
 
 ## Integration Points
 
-### With planner agent
-The planner should invoke researcher before Phase 1 (Architecture Review):
+### With Plan Mode
+When entering Plan Mode, invoke research before Phase 1 (Architecture Review):
 - Researcher identifies available tools
-- Planner incorporates them into the implementation plan
+- The plan incorporates them into the implementation plan
 - Avoids "reinventing the wheel" in the plan
 
 ### With architect agent

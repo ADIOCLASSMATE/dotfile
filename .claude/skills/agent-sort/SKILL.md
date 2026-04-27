@@ -1,6 +1,12 @@
 ---
 name: agent-sort
-description: Build an evidence-backed install plan for a specific repo by sorting skills, commands, rules, hooks, and extras into DAILY vs LIBRARY buckets using parallel repo-aware review passes. Use when the skill set should be trimmed to what a project actually needs instead of loading the full bundle.
+description: >-
+  Build an evidence-backed install plan for a specific repo by sorting skills,
+  commands, rules, hooks, and extras into DAILY vs LIBRARY buckets using parallel
+  repo-aware review passes.
+  TRIGGER when: user says "trim my skills", "optimize skills for this project",
+  "too many skills loaded", "classify skills", "which skills do I need",
+  "clean up my skills", "reduce skill clutter", "sort skills for this repo".
 ---
 
 # Agent Sort

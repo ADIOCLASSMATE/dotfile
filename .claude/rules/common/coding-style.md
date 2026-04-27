@@ -58,11 +58,11 @@ ALWAYS validate at system boundaries:
 
 ## Naming Conventions
 
-- Variables and functions: `camelCase` with descriptive names
+- Use descriptive, pronounceable names that reveal intent
 - Booleans: prefer `is`, `has`, `should`, or `can` prefixes
-- Interfaces, types, and components: `PascalCase`
-- Constants: `UPPER_SNAKE_CASE`
-- Custom hooks: `camelCase` with a `use` prefix
+- Constants and configuration values: use a distinct casing convention (e.g., `UPPER_SNAKE_CASE`)
+- Follow the naming conventions of your language (see language-specific rules for details)
+- Avoid single-letter variables except in trivial loop counters
 
 ## Code Smells to Avoid
 

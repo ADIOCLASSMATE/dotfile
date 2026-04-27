@@ -113,6 +113,35 @@ export function formatUser(user) {
 }
 ```
 
+## Naming Conventions
+
+- Variables and functions: `camelCase` with descriptive names
+- Interfaces, types, and components: `PascalCase`
+- Constants: `UPPER_SNAKE_CASE`
+- Custom hooks: `camelCase` with a `use` prefix
+- Booleans: prefer `is`, `has`, `should`, or `can` prefixes
+- Files: kebab-case for modules, PascalCase for component files
+
+```typescript
+// Variables and functions: camelCase
+const userCount = 5
+function getUserById(id: string): User { ... }
+
+// Interfaces and types: PascalCase
+interface UserProfile { ... }
+type UserRole = 'admin' | 'member'
+
+// Components: PascalCase
+function UserCard({ user, onSelect }: UserCardProps) { ... }
+
+// Custom hooks: useXxx
+function useUserData(userId: string) { ... }
+
+// Constants: UPPER_SNAKE_CASE
+const MAX_RETRY_COUNT = 3
+const API_BASE_URL = 'https://api.example.com'
+```
+
 ## Immutability
 
 Use spread operator for immutable updates:

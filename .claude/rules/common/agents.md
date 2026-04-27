@@ -67,11 +67,24 @@ Use when pipeline delegates a specific concern:
 |-------|---------|-------------|
 | architect | System design | Architectural decisions |
 | tdd-guide | Test-driven development | Lead needs TDD guidance |
-| security-reviewer | Security analysis | Critic flags security concerns |
+| security-reviewer | Security analysis | Critic flags security concerns; use PROACTIVELY after writing auth/input code |
 | build-error-resolver | Fix build errors | Lead hits a build failure |
 | e2e-runner | E2E testing | Critic needs browser-based verification |
 | refactor-cleaner | Dead code cleanup | Code maintenance |
 | doc-updater | Documentation | Updating docs |
+| silent-failure-hunter | Error handling audit | Swallowed errors, missing propagation, bad fallbacks |
+| go-build-resolver | Go build/compilation errors | Minimal changes to fix Go build failures |
+| rust-build-resolver | Rust build/borrow-check errors | Minimal changes to fix Rust build failures |
+| cpp-build-resolver | C++ build/CMake/linker errors | C++ compilation and template errors |
+| dart-build-resolver | Dart/Flutter build errors | Dart analysis and pub dependency issues |
+| java-build-resolver | Java/Maven/Gradle errors | Spring Boot, Lombok, and Java build failures |
+| kotlin-build-resolver | Kotlin/Gradle build errors | Kotlin compiler and detekt issues |
+| pytorch-build-resolver | PyTorch/CUDA runtime errors | Tensor shapes, device, gradient errors |
+| database-reviewer | PostgreSQL query/schema review | SQL queries, migrations, indexing, performance |
+| docs-lookup | Library/framework documentation | Fetch current docs via Context7 MCP |
+| a11y-architect | WCAG 2.2 accessibility design | UI component and design system accessibility |
+| performance-optimizer | Performance analysis | Profiling, bundle size, rendering bottlenecks |
+| opensource-packager | Open-source packaging (stage 3) | CLAUDE.md, README, LICENSE, CI templates |
 
 ## Multi-Perspective Analysis
 

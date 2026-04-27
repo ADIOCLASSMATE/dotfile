@@ -1,6 +1,10 @@
 ---
 name: coding-standards
-description: Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns.
+description: >-
+  Baseline cross-project coding conventions for naming, readability, immutability,
+  and code-quality review. Use detailed frontend or backend skills for framework-specific patterns.
+  TRIGGER when: user asks about "coding style", "naming conventions", "code standards",
+  "code conventions", "immutability patterns", "code quality rules", "KISS DRY YAGNI".
 ---
 
 # Coding Standards & Best Practices
@@ -172,162 +176,27 @@ function getMarket(id: any): Promise<any> {
 
 ## React Best Practices
 
-### Component Structure
+> For detailed React patterns (components, hooks, state management, rendering, performance), use **`frontend-patterns`** skill. This section provides a brief summary only.
 
-```typescript
-// PASS: GOOD: Functional component with types
-interface ButtonProps {
-  children: React.ReactNode
-  onClick: () => void
-  disabled?: boolean
-  variant?: 'primary' | 'secondary'
-}
+### Key Principles
+- Define component props with a named `interface` or `type` — do not use `React.FC` without a specific reason.
+- Use functional state updates when updating state based on previous state: `setCount(prev => prev + 1)`.
+- Avoid deeply nested ternaries in JSX — extract into clear conditional blocks.
+- Custom hooks must start with `use` and follow the Rules of Hooks.
 
-export function Button({
-  children,
-  onClick,
-  disabled = false,
-  variant = 'primary'
-}: ButtonProps) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`btn btn-${variant}`}
-    >
-      {children}
-    </button>
-  )
-}
-
-// FAIL: BAD: No types, unclear structure
-export function Button(props) {
-  return <button onClick={props.onClick}>{props.children}</button>
-}
-```
-
-### Custom Hooks
-
-```typescript
-// PASS: GOOD: Reusable custom hook
-export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
-
-    return () => clearTimeout(handler)
-  }, [value, delay])
-
-  return debouncedValue
-}
-
-// Usage
-const debouncedQuery = useDebounce(searchQuery, 500)
-```
-
-### State Management
-
-```typescript
-// PASS: GOOD: Proper state updates
-const [count, setCount] = useState(0)
-
-// Functional update for state based on previous state
-setCount(prev => prev + 1)
-
-// FAIL: BAD: Direct state reference
-setCount(count + 1)  // Can be stale in async scenarios
-```
-
-### Conditional Rendering
-
-```typescript
-// PASS: GOOD: Clear conditional rendering
-{isLoading && <Spinner />}
-{error && <ErrorMessage error={error} />}
-{data && <DataDisplay data={data} />}
-
-// FAIL: BAD: Ternary hell
-{isLoading ? <Spinner /> : error ? <ErrorMessage error={error} /> : data ? <DataDisplay data={data} /> : null}
-```
+For comprehensive React guidance, see `skills/frontend-patterns/SKILL.md`.
 
 ## API Design Standards
 
-### REST API Conventions
+> For detailed backend patterns (REST, pagination, versioning, rate limiting, database layering), use **`backend-patterns`** skill. This section provides a brief summary only.
 
-```
-GET    /api/markets              # List all markets
-GET    /api/markets/:id          # Get specific market
-POST   /api/markets              # Create new market
-PUT    /api/markets/:id          # Update market (full)
-PATCH  /api/markets/:id          # Update market (partial)
-DELETE /api/markets/:id          # Delete market
+### Key Principles
+- Use consistent response envelopes: `{ success, data?, error?, meta? }`.
+- Validate all input at the boundary — use Zod or equivalent schema validation.
+- Use proper HTTP status codes: 200/201 for success, 400 for invalid input, 401/403 for auth, 404 for not found, 500 for server errors.
+- Paginate list endpoints with `limit`/`offset` or cursor-based pagination.
 
-# Query parameters for filtering
-GET /api/markets?status=active&limit=10&offset=0
-```
-
-### Response Format
-
-```typescript
-// PASS: GOOD: Consistent response structure
-interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-  meta?: {
-    total: number
-    page: number
-    limit: number
-  }
-}
-
-// Success response
-return NextResponse.json({
-  success: true,
-  data: markets,
-  meta: { total: 100, page: 1, limit: 10 }
-})
-
-// Error response
-return NextResponse.json({
-  success: false,
-  error: 'Invalid request'
-}, { status: 400 })
-```
-
-### Input Validation
-
-```typescript
-import { z } from 'zod'
-
-// PASS: GOOD: Schema validation
-const CreateMarketSchema = z.object({
-  name: z.string().min(1).max(200),
-  description: z.string().min(1).max(2000),
-  endDate: z.string().datetime(),
-  categories: z.array(z.string()).min(1)
-})
-
-export async function POST(request: Request) {
-  const body = await request.json()
-
-  try {
-    const validated = CreateMarketSchema.parse(body)
-    // Proceed with validated data
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({
-        success: false,
-        error: 'Validation failed',
-        details: error.errors
-      }, { status: 400 })
-    }
-  }
-}
-```
+For comprehensive backend guidance, see `skills/backend-patterns/SKILL.md`.
 
 ## File Organization
 

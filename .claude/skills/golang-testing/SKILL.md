@@ -1,6 +1,10 @@
 ---
 name: golang-testing
-description: Go testing patterns including table-driven tests, subtests, benchmarks, fuzzing, and test coverage. Follows TDD methodology with idiomatic Go practices.
+description: >-
+  Go testing patterns including table-driven tests, subtests, benchmarks, fuzzing,
+  and test coverage. Follows TDD methodology with idiomatic Go practices.
+  TRIGGER when: working in Go projects, user asks about "Go testing",
+  "table-driven tests", "Go test coverage", "Go benchmarks", "Go fuzzing".
 ---
 
 # Go Testing Patterns
@@ -16,6 +20,8 @@ Comprehensive Go testing patterns for writing reliable, maintainable tests follo
 - Following TDD workflow in Go projects
 
 ## TDD Workflow for Go
+
+For the complete TDD methodology, see `skills/tdd-workflow/SKILL.md`.
 
 ### The RED-GREEN-REFACTOR Cycle
 

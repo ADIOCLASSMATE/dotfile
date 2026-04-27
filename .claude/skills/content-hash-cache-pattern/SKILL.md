@@ -1,6 +1,11 @@
 ---
 name: content-hash-cache-pattern
-description: Cache expensive file processing results using SHA-256 content hashes — path-independent, auto-invalidating, with service layer separation.
+description: >-
+  Cache expensive file processing results using SHA-256 content hashes — path-independent,
+  auto-invalidating, with service layer separation.
+  TRIGGER when: user asks about "caching file processing", "cache invalidation",
+  "content-based caching", "file hash cache", "cache expensive operations",
+  or needs to cache results of PDF parsing, image analysis, or text extraction.
 ---
 
 # Content-Hash File Cache Pattern

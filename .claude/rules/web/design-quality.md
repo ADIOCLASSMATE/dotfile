@@ -8,7 +8,7 @@ paths:
   - "**/*.svg"
 ---
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with web-specific design-quality guidance.
+> This file establishes web-specific design-quality standards for frontend development.
 
 # Web Design Quality Standards
 

@@ -1,6 +1,11 @@
 ---
 name: hookify-rules
-description: This skill should be used when the user asks to create a hookify rule, write a hook rule, configure hookify, add a hookify rule, or needs guidance on hookify rule syntax and patterns.
+description: >-
+  Create and configure hookify rules (PreToolUse/PostToolUse/Stop hooks) with YAML
+  frontmatter patterns. Covers rule syntax, event types, regex patterns, and conditions.
+  TRIGGER when: user says "create a hook", "hookify", "add a hook rule",
+  "write a hook", "configure hook", "创建hook规则", "添加hook", "hook规则".
+  Also triggered by /hookify and /hookify-configure commands.
 ---
 
 # Writing Hookify Rules

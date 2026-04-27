@@ -1,6 +1,16 @@
 ---
 name: skill-creator
-description: Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy. For batch auditing of all skills, use skill-stocktake instead.
+description: >-
+  Create new skills, modify and improve existing skills, and measure skill performance.
+  Use when users want to create a skill from scratch, edit, or optimize an existing skill,
+  run evals to test a skill, benchmark skill performance with variance analysis,
+  or optimize a skill's description for better triggering accuracy.
+  
+  TRIGGER when: "create a skill", "make a new skill", "build a skill", "write a skill",
+  "optimize skill description", "skill benchmark"
+  
+  DO NOT TRIGGER when: batch auditing of all skills (use skill-stocktake instead)
+
 license: Proprietary. LICENSE.txt has complete terms
 ---
 

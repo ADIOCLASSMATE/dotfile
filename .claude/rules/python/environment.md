@@ -12,7 +12,7 @@ paths:
 ---
 # Python Environment Management
 
-> This file extends [common/coding-style.md](../common/coding-style.md) with Python environment tooling.
+> This file establishes Python-specific environment management tooling (uv).
 
 ## CRITICAL: uv-only Policy
 

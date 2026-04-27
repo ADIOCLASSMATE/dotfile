@@ -1,6 +1,12 @@
 ---
 name: ai-regression-testing
-description: Regression testing strategies for AI-assisted development. Sandbox-mode API testing without database dependencies, automated bug-check workflows, and patterns to catch AI blind spots where the same model writes and reviews code.
+description: >-
+  Regression testing strategies for AI-assisted development. Sandbox-mode API
+  testing without database dependencies, automated bug-check workflows, and patterns
+  to catch AI blind spots where the same model writes and reviews code.
+  TRIGGER when: user says "AI keeps missing bugs", "test AI-generated code",
+  "AI blind spot", "same model wrote and reviewed", "/bug-check",
+  "how to test AI output", "AI made the same mistake again", "regression test for AI code".
 ---
 
 # AI Regression Testing

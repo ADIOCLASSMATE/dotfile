@@ -1,6 +1,11 @@
 ---
 name: python-testing
-description: Python testing strategies using pytest, TDD methodology, fixtures, mocking, parametrization, and coverage requirements.
+description: >-
+  Python testing strategies using pytest, TDD methodology, fixtures, mocking,
+  parametrization, and coverage requirements.
+  TRIGGER when: working in Python projects, user asks about "pytest",
+  "Python testing", "Python test patterns", "pytest fixtures",
+  "Python mocking", "parametrize tests", "Python coverage".
 ---
 
 # Python Testing Patterns
@@ -18,11 +23,7 @@ Comprehensive testing strategies for Python applications using pytest, TDD metho
 
 ### Test-Driven Development (TDD)
 
-Always follow the TDD cycle:
-
-1. **RED**: Write a failing test for the desired behavior
-2. **GREEN**: Write minimal code to make the test pass
-3. **REFACTOR**: Improve code while keeping tests green
+Follow the RED-GREEN-REFACTOR cycle. For the complete TDD methodology, see `skills/tdd-workflow/SKILL.md`.
 
 ```python
 # Step 1: Write failing test (RED)

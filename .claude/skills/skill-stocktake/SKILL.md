@@ -1,6 +1,13 @@
 ---
 name: skill-stocktake
-description: "Use when auditing Claude skills and commands for quality. Supports Quick Scan (changed skills only) and Full Stocktake modes with sequential subagent batch evaluation."
+description: >-
+  Use when auditing Claude skills and commands for quality. Supports Quick Scan
+  (changed skills only) and Full Stocktake modes with sequential subagent batch
+  evaluation.
+  
+  TRIGGER when: "/skill-stocktake", "audit my skills", "skill quality check",
+  "review all skills", "skill inventory", "which skills need work"
+
 ---
 
 # skill-stocktake

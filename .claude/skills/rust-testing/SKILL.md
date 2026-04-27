@@ -1,6 +1,11 @@
 ---
 name: rust-testing
-description: Rust testing patterns including unit tests, integration tests, async testing, property-based testing, mocking, and coverage. Follows TDD methodology.
+description: >-
+  Rust testing patterns including unit tests, integration tests, async testing,
+  property-based testing, mocking, and coverage. Follows TDD methodology.
+  TRIGGER when: working in Rust projects, user asks about "Rust testing",
+  "cargo test", "Rust test patterns", "Rust integration tests",
+  "Rust mocking", "Rust proptest".
 ---
 
 # Rust Testing Patterns
@@ -26,6 +31,8 @@ Comprehensive Rust testing patterns for writing reliable, maintainable tests fol
 7. **Check coverage** — Use cargo-llvm-cov, target 80%+
 
 ## TDD Workflow for Rust
+
+For the complete TDD methodology, see `skills/tdd-workflow/SKILL.md`.
 
 ### The RED-GREEN-REFACTOR Cycle
 

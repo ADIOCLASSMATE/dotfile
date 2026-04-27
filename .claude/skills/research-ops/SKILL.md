@@ -1,6 +1,13 @@
 ---
 name: research-ops
-description: Evidence-first current-state research workflow. Use when the user wants fresh facts, comparisons, enrichment, or a recommendation built from current public evidence and any supplied local context.
+description: >-
+  Evidence-first current-state research workflow. Use when the user wants fresh facts,
+  comparisons, enrichment, or a recommendation built from current public evidence
+  and any supplied local context.
+  
+  TRIGGER when: "research this topic", "look up current info", "compare options",
+  "evidence-based research", "fact-finding", "what's the latest"
+
 ---
 
 # Research Ops

@@ -1,6 +1,16 @@
 ---
 name: webapp-testing
-description: Toolkit for interacting with and testing local web applications using Playwright. Supports verifying frontend functionality, debugging UI behavior, capturing browser screenshots, and viewing browser logs. For building committed E2E test suites with Page Object Model and CI/CD integration, use e2e-testing instead.
+description: >-
+  Toolkit for interacting with and testing local web applications using Playwright.
+  Supports verifying frontend functionality, debugging UI behavior, capturing browser
+  screenshots, and viewing browser logs.
+  
+  TRIGGER when: "test my web app", "inspect the UI", "quick browser test",
+  "visual inspection", "check frontend behavior", "debug UI"
+  
+  DO NOT TRIGGER when: building committed E2E test suites with Page Object Model
+  and CI/CD integration (use e2e-testing instead)
+
 license: Complete terms in LICENSE.txt
 ---
 

@@ -27,3 +27,11 @@ If security issue found:
 3. Fix CRITICAL issues before continuing
 4. Rotate any exposed secrets
 5. Review entire codebase for similar issues
+
+## Silent Failure Prevention
+
+Swallowed errors and missing error propagation are common sources of production incidents. When code handles I/O, external services, or user input:
+
+- Use **silent-failure-hunter** agent to audit for: empty catch blocks, swallowed exceptions, dangerous fallbacks (`.catch(() => [])`), missing error propagation, and unlogged failures
+- Every try/catch must either: recover meaningfully, log with context, or propagate
+- Fallback values must never silently hide that a real failure occurred

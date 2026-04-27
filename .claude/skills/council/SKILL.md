@@ -1,6 +1,15 @@
 ---
 name: council
-description: Convene a four-voice council for ambiguous decisions, tradeoffs, and go/no-go calls. Use when multiple valid paths exist and you need structured disagreement before choosing.
+description: >-
+  Convene a four-voice council for ambiguous decisions, tradeoffs, and go/no-go calls.
+  Use when multiple valid paths exist and you need structured disagreement before choosing.
+  
+  TRIGGER when: "second opinion", "multiple perspectives", "tradeoff decision",
+  "go/no-go call", "structured disagreement", "architect vs skeptic",
+  "which approach should I take"
+  
+  DO NOT TRIGGER when: code review, implementation planning, or straight factual questions
+
 ---
 
 # Council
@@ -33,7 +42,7 @@ Examples:
 | Instead of council | Use |
 | --- | --- |
 | Verifying whether output is correct | `critic` (standalone mode) |
-| Breaking a feature into implementation steps | `planner` |
+| Breaking a feature into implementation steps | Plan Mode |
 | Designing system architecture | `architect` |
 | Reviewing code for bugs or security | `critic` |
 | Straight factual questions | just answer directly |

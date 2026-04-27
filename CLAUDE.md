@@ -155,8 +155,8 @@ In a minimal Docker container, some tools may be missing:
 
 | Path | What | Tracked |
 |------|------|---------|
-| `agents/*.md` | Subagent definitions (44 agents) | Yes |
-| `skills/*/SKILL.md` | Skill definitions (38 skills) | Yes |
+| `agents/*.md` | Subagent definitions (25 agents) | Yes |
+| `skills/*/SKILL.md` | Skill definitions (40 skills) | Yes |
 | `rules/` | Layered rules (common + language-specific) | Yes |
 | `scripts/hooks/*.js` | PreToolUse / PostCompact / Stop hooks | Yes |
 | `pet/` | Statusline cat animation data | Yes |

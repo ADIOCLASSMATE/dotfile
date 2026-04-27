@@ -1,6 +1,16 @@
 ---
 name: web-artifacts-builder
-description: Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use ONLY for self-contained HTML artifact bundles. For production web application development, use frontend-design or frontend-patterns instead.
+description: >-
+  Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts
+  using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use ONLY
+  for self-contained HTML artifact bundles.
+  
+  TRIGGER when: "build an HTML artifact", "create a web artifact", "claude.ai artifact",
+  "self-contained HTML", "bundle HTML"
+  
+  DO NOT TRIGGER when: production web application development
+  (use frontend-design or frontend-patterns instead)
+
 license: Complete terms in LICENSE.txt
 ---
 

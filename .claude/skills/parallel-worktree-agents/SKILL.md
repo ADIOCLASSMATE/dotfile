@@ -1,6 +1,14 @@
 ---
 name: parallel-worktree-agents
-description: Dispatch parallel Claude Code agents in isolated git worktrees for conflict-free concurrent work. No external tools or MCP servers required. Use when running multiple experiments, parallel feature development, or any task that benefits from isolated concurrent execution.
+description: >-
+  Dispatch parallel Claude Code agents in isolated git worktrees for conflict-free
+  concurrent work. No external tools or MCP servers required. Use when running
+  multiple experiments, parallel feature development, or any task that benefits
+  from isolated concurrent execution.
+  
+  TRIGGER when: "run agents in parallel", "git worktree isolation",
+  "parallel experiments", "concurrent agent work", "worktree agents"
+
 ---
 
 # Parallel Worktree Agents

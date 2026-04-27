@@ -1,6 +1,11 @@
 ---
 name: python-patterns
-description: Pythonic idioms, PEP 8 standards, type hints, and best practices for building robust, efficient, and maintainable Python applications.
+description: >-
+  Pythonic idioms, PEP 8 standards, type hints, and best practices for building
+  robust, efficient, and maintainable Python applications.
+  TRIGGER when: working in Python projects, user asks about "Python patterns",
+  "Pythonic", "PEP 8", "Python best practices", "Python type hints",
+  "Python idioms", "Python conventions".
 ---
 
 # Python Development Patterns

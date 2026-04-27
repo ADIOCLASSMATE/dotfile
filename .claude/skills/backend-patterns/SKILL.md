@@ -1,6 +1,11 @@
 ---
 name: backend-patterns
-description: Backend architecture patterns, REST API design (resource naming, pagination, versioning, rate limiting), database optimization, and server-side best practices.
+description: >-
+  Backend architecture patterns, REST API design (resource naming, pagination,
+  versioning, rate limiting), database optimization, and server-side best practices.
+  TRIGGER when: user asks about "API design", "REST API", "backend patterns",
+  "rate limiting", "API pagination", "API versioning", "database optimization",
+  "N+1 queries", "backend architecture", "server-side patterns".
 ---
 
 # Backend Development Patterns

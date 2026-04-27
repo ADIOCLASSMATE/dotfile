@@ -182,6 +182,10 @@ Output: `SANITIZATION_REPORT.md` — PASS WITH WARNINGS (one hardcoded port in R
 - **Never** display full secret values — truncate to first 4 chars + "..."
 - **Never** modify source files — only generate reports (SANITIZATION_REPORT.md)
 - **Always** scan every text file, not just known extensions
+
+## Next Step
+
+If the project passes (PASS or PASS-WITH-WARNINGS), run **opensource-packager** to generate CLAUDE.md, README, LICENSE, CONTRIBUTING.md, and CI templates. The packager is the third and final stage of the open-source pipeline.
 - **Always** check git history, even for fresh repos
 - **Be paranoid** — false positives are acceptable, false negatives are not
 - A single CRITICAL finding in any category = overall FAIL

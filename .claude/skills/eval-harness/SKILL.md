@@ -1,6 +1,12 @@
 ---
 name: eval-harness
-description: Formal evaluation framework for Claude Code sessions implementing eval-driven development (EDD) principles
+description: >-
+  Formal evaluation framework for Claude Code sessions implementing eval-driven
+  development (EDD) principles.
+  
+  TRIGGER when: "eval-driven development", "pass@k measurement", "eval harness",
+  "/eval define", "formal evaluation", "EDD workflow"
+
 tools: Read, Write, Edit, Bash, Grep, Glob
 ---
 
