@@ -9,7 +9,7 @@ description: >-
 
 # Pipeline — Lead-Implements, Critic-Reviews
 
-Run a structured implement-review-rebuttal loop. The **main agent** acts as pipeline-lead AND executor — you implement code yourself. The **critic** (opus subagent) reviews your work, and you rebuttal its feedback.
+Run a structured implement-review-rebuttal loop. The **main agent** acts as pipeline-lead AND executor — you implement code yourself. The **critic** (opus subagent) assesses your work holistically: does it achieve the plan's goals? Is the approach right for this repo? What was missed? Code quality is a safety net, not the focus.
 
 ## When to Use
 
@@ -31,16 +31,16 @@ Run a structured implement-review-rebuttal loop. The **main agent** acts as pipe
   v
 YOU (main agent) = Lead + Executor
   |
-  |-- 1. Read approved plan from .claude/plans/
+  |-- 1. Copy approved plan VERBATIM from .claude/plans/ to .pipeline/<slug>/plan.md
+  |     - Do NOT rewrite, summarize, or modify
   |-- 2. Derive task slug, create .pipeline/<slug>/
   |-- 3. Write implementation order to .pipeline/<slug>/state.md (think before you code)
-  |     - File modification order
-  |     - Dependencies if 3+ files
-  |     - Keep under 10 lines
+  |     - Use the state.md template in File Protocol below
+  |     - Track phases, dependencies, verification goals, and round history
   |
   |-- 4. Implement code yourself
   |-- 5. Run build/test/lint yourself
-  |-- 6. Write implementation summary for Critic
+  |-- 6. Write implementation summary for Critic (.pipeline/<slug>/implementation-summary.md)
   |     - User requirement summary (1-3 sentences)
   |     - Plan highlights (or reference plan.md path)
   |     - Change list (file + what changed in each)
@@ -89,17 +89,18 @@ All pipeline state is written to `.pipeline/<slug>/`. The slug is included in ev
 When this skill is triggered, **you (the main agent) become the pipeline-lead AND executor**. You implement code yourself, then spawn the critic to review.
 
 1. Read the approved plan from `.claude/plans/`
-2. Derive a task slug from the description
-3. Create `.pipeline/<slug>/` directory
-4. Write implementation order to `.pipeline/<slug>/state.md` (think before you code)
-5. Implement the code yourself
-6. Run build/test/lint yourself
-7. Write `.pipeline/<slug>/implementation-summary.md` for the Critic
-8. Spawn `critic` (pipeline-review mode) — pass slug + implementation summary + plan path + changed files
-9. Read `.pipeline/<slug>/critic-feedback.md`, write your rebuttal (append Lead Rebuttal section)
-10. Spawn `critic` (pipeline-verify mode) — pass slug + critic-feedback.md path + implementation summary
-11. If FAIL → fix issues, append `## Round N Changes` to implementation-summary.md, loop
-12. If PASS → relay result to user
+2. Copy the approved plan **verbatim** to `.pipeline/<slug>/plan.md` — do NOT rewrite, summarize, or modify
+3. Derive a task slug from the description
+4. Create `.pipeline/<slug>/` directory at the **git repository root** (`git rev-parse --show-toplevel`), not the current working directory
+5. Write implementation order to `.pipeline/<slug>/state.md` using the template in File Protocol below
+6. Implement the code yourself
+7. Run build/test/lint yourself
+8. Write `.pipeline/<slug>/implementation-summary.md` for the Critic
+9. Spawn `critic` (pipeline-review mode) — pass slug + implementation summary + plan path + changed files
+10. Read `.pipeline/<slug>/critic-feedback.md`, write your rebuttal (append Lead Rebuttal section)
+11. Spawn `critic` (pipeline-verify mode) — pass slug + critic-feedback.md path + implementation summary
+12. If FAIL → fix issues, append `## Round N Changes` to implementation-summary.md, loop
+13. If PASS → relay result to user
 
 ## Pipeline Modes
 
@@ -123,14 +124,43 @@ Research and return findings without starting the review loop.
 
 ## File Protocol
 
-All pipeline state is stored in `.pipeline/<slug>/` at the project root (one subdirectory per pipeline run):
+All pipeline state is stored in `.pipeline/<slug>/` at the **git repository root** (`git rev-parse --show-toplevel`), not the current working directory. This ensures consistent location regardless of where you `cd`.
 
 | File | Written by | Purpose |
 |------|-----------|---------|
-| `plan.md` | Lead | Implementation plan with phases and success criteria |
-| `state.md` | Lead | Current round status + implementation order (lightweight) |
+| `plan.md` | Lead | **Verbatim copy** of the approved plan from `.claude/plans/`. Do NOT rewrite, summarize, or modify. The critic must review against the exact plan the user approved. |
+| `state.md` | Lead | Current round status + implementation order. Use the template below. |
 | `implementation-summary.md` | Lead | Intent input for Critic (requirements + changes + decisions). Round 2+: append `## Round N Changes` |
 | `critic-feedback.md` | Critic (writes) + Lead (appends rebuttal) | Conversation-style review record |
+
+### state.md Template
+
+```markdown
+# State — <slug>
+
+## Current Round
+Round [N] / 3 — [IN PROGRESS]
+
+## Implementation Order
+| # | Phase | Scope | Status | Verification |
+|---|-------|-------|--------|-------------|
+| 1 | [phase name] | [files/dirs affected] | pending | [what to verify — goal, not specific commands] |
+| 2 | [phase name] | [files/dirs affected] | pending | [what to verify] |
+
+## Dependencies
+- Phase X blocks Phase Y: [reason — what must exist before Y can start]
+- Phases A, B, C are independent
+
+## Round History
+| Round | Result | Score | Resolved | Deferred |
+|-------|--------|-------|----------|----------|
+| 1 | FAIL/PASS | X.X | N/M | N/M |
+```
+
+**Design principles**:
+- **Language-agnostic**: No assumptions about programming language or build tools
+- **Verification is a goal**: Write "all YAML frontmatter valid" not "npm test". Specific commands are decided at execution time.
+- **Round History** is filled in as rounds complete — single-round pipelines won't need it.
 
 **implementation-summary.md multi-round rule**:
 - Round 1: Lead writes full summary (requirements + change list + design decisions + tradeoffs)
@@ -145,6 +175,10 @@ One file records the entire review conversation. Each round follows this structu
 ## Round 1
 
 ### Critic Feedback
+
+#### Overall Assessment
+[3-5 sentences: Does the implementation achieve the plan's goals? What's the biggest risk or omission? Is the approach appropriate for this repo?]
+
 **Verdict: FAIL** | Weighted Score: 6.2/10
 
 | # | Severity | Location | Issue | Fix | Effort |
@@ -156,14 +190,14 @@ One file records the entire review conversation. Each round follows this structu
 
 | Dimension | Score | Weight | Weighted |
 |-----------|-------|--------|----------|
-| Functionality | 5/10 | 0.20 | 1.0 |
-| Code Quality | 7/10 | 0.15 | 1.05 |
+| Goal Alignment | 5/10 | 0.25 | 1.25 |
+| Approach Quality | 7/10 | 0.20 | 1.40 |
+| Impact & Completeness | 8/10 | 0.15 | 1.20 |
 | Security | 3/10 | 0.15 | 0.45 |
-| Architecture | 8/10 | 0.15 | 1.2 |
-| Impact Analysis | 8/10 | 0.15 | 1.2 |
-| Consistency | 7/10 | 0.10 | 0.7 |
-| Test Coverage | 6/10 | 0.10 | 0.6 |
-| **TOTAL** | | | **6.2/10** |
+| Code Quality | 7/10 | 0.10 | 0.70 |
+| Consistency | 7/10 | 0.10 | 0.70 |
+| Test Coverage | 6/10 | 0.05 | 0.30 |
+| **TOTAL** | | | **6.00/10** |
 
 ### Lead Rebuttal
 | Issue | Response | Action | Diff Summary |
