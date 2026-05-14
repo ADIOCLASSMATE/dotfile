@@ -82,6 +82,12 @@ These files are gitignored and must be created on each machine:
         "hooks": [{ "type": "command", "command": "node ~/dotfile/.claude/scripts/hooks/desktop-notify.js", "timeout": 10, "async": true }]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [{ "type": "command", "command": "node ~/dotfile/.claude/scripts/hooks/on-plan-accepted.js", "timeout": 10 }]
+      }
+    ],
     "PostCompact": [
       {
         "matcher": "",
