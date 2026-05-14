@@ -46,6 +46,7 @@ tags
 # secrets with API keys / tokens
 .claude/config.json
 .claude/settings.json
+.claude/settings.json.*
 .claude/backup-settings.json
 .claude/metrics/
 

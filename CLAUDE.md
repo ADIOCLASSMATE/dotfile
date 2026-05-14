@@ -18,12 +18,21 @@ This repo contains all config needed to reproduce a development environment on m
 
 Key design: `~/.claude` and `~/.codex` are **symlinks into this repo**, not copies. All agents, skills, rules, hooks, and statusline config are version-controlled here. Runtime state (sessions, transcripts, plans) lives inside the same directory tree and is gitignored.
 
+## Prerequisites
+
+Before provisioning, verify these tools are available. If any are missing, ask the user to install them or install via the OS package manager:
+
+- `git` — required to clone this repo
+- `node` — required for Claude Code hooks (`gateguard-fact-force.js`, `on-plan-accepted.js`, etc.)
+- `jq` — required for `statusline.sh` and `setup-hooks.sh`
+
 ## Provisioning a new machine
 
 ### Step 1: Clone and bootstrap
 
 ```bash
-git clone <repo-url> ~/dotfile
+# Ask the user for the repo URL, then:
+git clone <url> ~/dotfile
 cd ~/dotfile
 ./init.sh
 ```
@@ -39,6 +48,8 @@ cd ~/dotfile
 - Generates `~/.zshrc` from tracked zsh modules
 - Switches default shell to zsh
 
+After `init.sh` completes, it prints a summary. Check the **Warnings** section — any tool listed there needs attention before continuing. If init.sh succeeded without warnings, proceed to Step 2.
+
 ### Step 2: Verify symlinks
 
 ```bash
@@ -49,7 +60,7 @@ All should point into `~/dotfile/`. If any is missing or broken, re-run `./init.
 
 ### Step 3: Create secret files (manual, not in git)
 
-These files are gitignored and must be created on each machine:
+These files are gitignored and must be created on each machine. Ask the user for secret values (tokens, API endpoints, model IDs), then create each file with the template below.
 
 **`~/.claude/settings.json`** — Claude Code configuration:
 ```json
@@ -104,6 +115,8 @@ These files are gitignored and must be created on each machine:
 }
 ```
 
+> The template above includes all hooks. `setup-hooks.sh` is only needed when adding new hooks to an existing `settings.json` on an already-provisioned machine.
+
 **`~/.claude/config.json`** — Internal config:
 ```json
 {
@@ -117,7 +130,7 @@ These files are gitignored and must be created on each machine:
 
 ### Step 4: Configure machine-specific shell values
 
-Open `~/.zshrc` and edit only the block between:
+Edit `~/.zshrc` and modify only the block between:
 ```
 # >>> dotfile local block >>>
 # <<< dotfile local block <<<
@@ -128,10 +141,10 @@ Put machine-only exports here (private paths, cluster URLs, etc.). This block su
 ### Step 5: Install Neovim plugins
 
 ```bash
-nvim  # first launch — LazyVim installs plugins from lazy-lock.json
+nvim --headless "+Lazy! sync" +qa  # installs LazyVim plugins non-interactively
 ```
 
-Requires internet access. Wait for plugin installation to complete.
+Requires internet access.
 
 ### Step 6: Verify tooling
 
@@ -146,14 +159,12 @@ ls -la ~/.claude/settings.json ~/.claude/config.json
 ~/.claude/statusline.sh < /dev/null 2>&1 || echo "statusline needs jq"
 ```
 
-## Linux Docker specifics
+## Linux / Docker / Headless specifics
 
-In a minimal Docker container, some tools may be missing:
+In minimal or headless environments, some tools may be missing:
 
 1. **No sudo / no apt**: `init.sh` still creates symlinks and generates `~/.zshrc`. Install packages manually or as root before running.
-2. **Node.js**: Required for Claude Code hooks. Install via `apt install nodejs` or via nvm (see `zsh/zshrc.d/60-nvm.zsh`).
-3. **jq**: Required by `statusline.sh`. `apt install jq` or `brew install jq`.
-4. **Headless environment**: `desktop-notify.js` silently skips on Linux without WSL/PowerShell. No action needed.
+2. **Headless environment**: `desktop-notify.js` silently skips on Linux without WSL/PowerShell. No action needed.
 
 ## What lives where
 

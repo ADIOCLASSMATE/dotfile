@@ -48,9 +48,11 @@ fi
 
 # ── Backup ──────────────────────────────────────────────────────────────
 
-BACKUP="$SETTINGS_FILE.bak.$(date +%Y%m%d_%H%M%S)"
+BACKUP_DIR="$HOME/.claude-backups"
+mkdir -p "$BACKUP_DIR"
+BACKUP="$BACKUP_DIR/settings.json.bak.$(date +%Y%m%d_%H%M%S)"
 cp "$SETTINGS_FILE" "$BACKUP"
-echo "Backed up to: $BACKUP"
+echo "Backed up to: $BACKUP (outside repo)"
 
 # ── Merge new hook entry ────────────────────────────────────────────────
 
