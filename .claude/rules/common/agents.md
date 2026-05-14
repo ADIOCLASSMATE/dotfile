@@ -1,8 +1,8 @@
 # Agent Orchestration
 
-## One Rule: Plan Mode → Pipeline (mandatory)
+## Plan Mode → Pipeline Workflow
 
-If Plan Mode was entered and the plan was approved, Pipeline is mandatory. No exceptions.
+After a Plan Mode plan is approved, you MUST invoke /pipeline. (Authoritative rule: CLAUDE.md. A PostToolUse hook on ExitPlanMode also enforces this at runtime.)
 
 ```text
 Plan Mode approved

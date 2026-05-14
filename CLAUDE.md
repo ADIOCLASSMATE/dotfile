@@ -158,7 +158,8 @@ In a minimal Docker container, some tools may be missing:
 | `agents/*.md` | Subagent definitions (25 agents) | Yes |
 | `skills/*/SKILL.md` | Skill definitions (40 skills) | Yes |
 | `rules/` | Layered rules (common + language-specific) | Yes |
-| `scripts/hooks/*.js` | PreToolUse / PostCompact / Stop hooks | Yes |
+| `scripts/hooks/*.js` | PreToolUse / PostToolUse / PostCompact / Stop hooks | Yes |
+| `scripts/setup-hooks.sh` | One-shot hook config installer for settings.json | Yes |
 | `pet/` | Statusline cat animation data | Yes |
 | `statusline.sh` | Status bar renderer | Yes |
 | `mcp-configs/mcp-servers.json` | MCP template catalog (no live creds) | Yes |
@@ -187,6 +188,7 @@ In a minimal Docker container, some tools may be missing:
 | Neovim / Yazi | Restart application |
 | Claude Code rules, skills, agents, hooks | Immediate — `~/.claude` is a live symlink |
 | Claude Code settings (hooks, env) | Edit `~/.claude/settings.json` manually — not in repo |
+| Hook config (new/changed) | Run `bash ~/dotfile/.claude/scripts/setup-hooks.sh` |
 
 ## Troubleshooting
 
