@@ -244,4 +244,4 @@ Make sure `~/.claude` is a symlink pointing to `~/dotfile/.claude`. Run `ls -la 
 
 ### Claude Code hooks not firing
 
-Hooks are configured in `~/.claude/settings.json` which is gitignored. You must create this file on each new machine. The hook script paths reference `~/dotfile/.claude/scripts/hooks/` — since `~/.claude` is a symlink, the paths resolve correctly.
+Hooks are configured in `~/.claude/settings.json` which is gitignored. You must create this file on each new machine. The hook script paths reference `~/.claude/scripts/hooks/` — since `~/.claude` is a symlink, the paths resolve correctly.

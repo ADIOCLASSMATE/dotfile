@@ -77,32 +77,32 @@ These files are gitignored and must be created on each machine. Ask the user for
     "PreToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
-        "hooks": [{ "type": "command", "command": "node ~/dotfile/.claude/scripts/hooks/gateguard-fact-force.js", "timeout": 5 }]
+        "hooks": [{ "type": "command", "command": "node ~/.claude/scripts/hooks/gateguard-fact-force.js", "timeout": 5 }]
       },
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "node ~/dotfile/.claude/scripts/hooks/gateguard-fact-force.js", "timeout": 5 },
-          { "type": "command", "command": "node ~/dotfile/.claude/scripts/hooks/pre-bash-commit-quality.js" }
+          { "type": "command", "command": "node ~/.claude/scripts/hooks/gateguard-fact-force.js", "timeout": 5 },
+          { "type": "command", "command": "node ~/.claude/scripts/hooks/pre-bash-commit-quality.js" }
         ]
       }
     ],
     "Stop": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "node ~/dotfile/.claude/scripts/hooks/desktop-notify.js", "timeout": 10, "async": true }]
+        "hooks": [{ "type": "command", "command": "node ~/.claude/scripts/hooks/desktop-notify.js", "timeout": 10, "async": true }]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "ExitPlanMode",
-        "hooks": [{ "type": "command", "command": "node ~/dotfile/.claude/scripts/hooks/on-plan-accepted.js", "timeout": 10 }]
+        "hooks": [{ "type": "command", "command": "node ~/.claude/scripts/hooks/on-plan-accepted.js", "timeout": 10 }]
       }
     ],
     "PostCompact": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "node ~/dotfile/.claude/scripts/hooks/post-compact-context-restore.js", "timeout": 15 }]
+        "hooks": [{ "type": "command", "command": "node ~/.claude/scripts/hooks/post-compact-context-restore.js", "timeout": 15 }]
       }
     ]
   },
@@ -205,12 +205,12 @@ In minimal or headless environments, some tools may be missing:
 | Neovim / Yazi | Restart application |
 | Claude Code rules, skills, agents, hooks | Immediate — `~/.claude` is a live symlink |
 | Claude Code settings (hooks, env) | Edit `~/.claude/settings.json` manually — not in repo |
-| Hook config (new/changed) | Run `bash ~/dotfile/.claude/scripts/setup-hooks.sh` |
+| Hook config (new/changed) | Run `bash ~/.claude/scripts/setup-hooks.sh` |
 
 ## Troubleshooting
 
 - **Symlink broken**: `ls -la ~/.claude` should show `-> ~/dotfile/.claude`. If not, `./init.sh` will fix it.
-- **Hooks not firing**: Check `~/.claude/settings.json` exists and hook paths use `~/dotfile/.claude/scripts/hooks/` (resolves via symlink).
+- **Hooks not firing**: Check `~/.claude/settings.json` exists and hook paths use `~/.claude/scripts/hooks/` (resolves via symlink).
 - **Statusline empty**: Ensure `jq` and `zsh` are installed. `statusline.sh` sources `~/.claude/pet/utils.sh`.
 - **Neovim plugins missing**: First launch needs internet. If LazyVim errors, check `nvim --version` is >= 0.8.0.
 - **Claude Code can't find rules**: `~/.claude` must be a symlink, not a directory. If someone created a real `~/.claude/` dir, back it up and re-run `./init.sh`.

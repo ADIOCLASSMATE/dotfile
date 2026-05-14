@@ -4,7 +4,7 @@
 # Idempotent — safe to rerun. Backs up the original before modifying.
 #
 # Usage:
-#   bash ~/dotfile/.claude/scripts/setup-hooks.sh
+#   bash ~/.claude/scripts/setup-hooks.sh
 #
 # Prerequisites:
 #   - jq (brew install jq / apt install jq)
@@ -13,7 +13,7 @@
 set -euo pipefail
 
 SETTINGS_FILE="$HOME/.claude/settings.json"
-HOOK_SCRIPT="$HOME/dotfile/.claude/scripts/hooks/on-plan-accepted.js"
+HOOK_SCRIPT="$HOME/.claude/scripts/hooks/on-plan-accepted.js"
 MATCHER="ExitPlanMode"
 
 # ── Preflight checks ───────────────────────────────────────────────────
@@ -26,13 +26,13 @@ fi
 
 if [[ ! -f "$SETTINGS_FILE" ]]; then
   echo "Error: $SETTINGS_FILE not found."
-  echo "Create it first with your API tokens and base hook config (see ~/dotfile/CLAUDE.md Step 3)."
+  echo "Create it first with your API tokens and base hook config (see CLAUDE.md Step 3)."
   exit 1
 fi
 
 if [[ ! -f "$HOOK_SCRIPT" ]]; then
   echo "Error: $HOOK_SCRIPT not found."
-  echo "Make sure the dotfile repo is cloned to ~/dotfile and on the correct branch."
+  echo "Make sure ~/.claude is symlinked to the dotfile repo and you are on the correct branch."
   exit 1
 fi
 
