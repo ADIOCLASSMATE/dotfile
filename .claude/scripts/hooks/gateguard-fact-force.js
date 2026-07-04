@@ -121,7 +121,7 @@ function run(rawInput) {
   try {
     data = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
   } catch (_) {
-    return rawInput;
+    return '{}';
   }
 
   const rawToolName = data.tool_name || '';
@@ -133,7 +133,7 @@ function run(rawInput) {
 
   if (toolName === 'Write') {
     const filePath = toolInput.file_path || '';
-    if (!filePath) return rawInput;
+    if (!filePath) return '{}';
     return adviseResult(newFileAdviceMsg(filePath));
   }
 
@@ -150,7 +150,7 @@ function run(rawInput) {
       filePath = toolInput.file_path || '';
       oldString = toolInput.old_string || '';
     }
-    if (!filePath) return rawInput;
+    if (!filePath) return '{}';
 
     const oldLines = countLines(oldString);
     const newString = (toolName === 'MultiEdit')
@@ -165,7 +165,7 @@ function run(rawInput) {
     if (isLargeEdit) {
       return adviseResult(largeEditAdviceMsg(filePath, oldLines));
     }
-    return rawInput;
+    return '{}';
   }
 
   // ── Bash ─────────────────────────────────────────────────────────
@@ -175,10 +175,10 @@ function run(rawInput) {
     if (DESTRUCTIVE_BASH.test(command)) {
       return adviseResult(destructiveBashMsg(command));
     }
-    return rawInput;
+    return '{}';
   }
 
-  return rawInput;
+  return '{}';
 }
 
 module.exports = { run };

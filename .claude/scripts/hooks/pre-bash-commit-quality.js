@@ -277,12 +277,12 @@ function evaluate(rawInput) {
     
     // Only run for git commit commands
     if (!command.includes('git commit')) {
-      return { output: rawInput, exitCode: 0 };
+      return { output: '{}', exitCode: 0 };
     }
     
     // Check if this is an amend (skip checks for amends to avoid blocking)
     if (command.includes('--amend')) {
-      return { output: rawInput, exitCode: 0 };
+      return { output: '{}', exitCode: 0 };
     }
     
     // Get staged files
@@ -290,7 +290,7 @@ function evaluate(rawInput) {
     
     if (stagedFiles.length === 0) {
       console.error('[Hook] No staged files found. Use "git add" to stage files first.');
-      return { output: rawInput, exitCode: 0 };
+      return { output: '{}', exitCode: 0 };
     }
     
     console.error(`[Hook] Checking ${stagedFiles.length} staged file(s)...`);
@@ -374,7 +374,7 @@ function evaluate(rawInput) {
     // Non-blocking on error
   }
   
-  return { output: rawInput, exitCode: 0 };
+  return { output: '{}', exitCode: 0 };
 }
 
 function run(rawInput) {

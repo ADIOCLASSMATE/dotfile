@@ -1,0 +1,30 @@
+{
+  "projectRoot": "/Users/wjx/code/qzcli_tool",
+  "generatedAtMs": 1783010149082,
+  "currentSuggestionIds": [
+    "ac16bfcb-76c5-4c60-9ee7-530cc498b029",
+    "7b7db701-b710-42e1-8a20-5165d1209864"
+  ],
+  "suggestions": [
+    {
+      "id": "ac16bfcb-76c5-4c60-9ee7-530cc498b029",
+      "title": "Turn the accidental uv scaffold into a real qzcli-mcp package",
+      "description": "This checkout has fresh untracked `uv` files that currently declare Python 3.14, version 0.1.0, and a Hello World entrypoint. Converting them into a real `qzcli` package would directly support your recent `dev-public` access workflow through Codex/MCP.",
+      "prompt": "Replace the accidental `uv init` scaffold in this repo with a real `pyproject.toml` for `qzcli`: keep Python compatibility aligned with the existing package, declare the current dependencies and console scripts (`qzcli`, `qzcli-mcp`), remove the `main.py` hello-world stub if it is not needed, and make the project installable with `uv` without breaking the existing CLI.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782112958194,
+      "updatedAtMs": 1782112958194
+    },
+    {
+      "id": "7b7db701-b710-42e1-8a20-5165d1209864",
+      "title": "Close the last invalid_grant auth path from issue #14",
+      "description": "The repo still has one open GitHub issue, `#14`, and the unreleased changelog says the `/auth/token` `invalid_grant` path remains open even after this month's auth-retry merges. Codex can reproduce that bug, patch it, and add the regression coverage now.",
+      "prompt": "Trace every remaining code path that can still fall back to `/auth/token` for CAS-federated users, reproduce the `invalid_grant` behavior described in GitHub issue #14, and implement the smallest fix plus regression tests so `qzcli` stays on the cookie/CAS path wherever possible.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782112958194,
+      "updatedAtMs": 1782112958194
+    }
+  ]
+}

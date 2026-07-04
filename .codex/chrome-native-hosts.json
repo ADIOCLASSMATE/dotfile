@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "chromeNativeHosts": [
+    {
+      "schemaVersion": 1,
+      "browserClientPath": "/Users/wjx/.codex/plugins/cache/openai-bundled/chrome/latest/scripts/browser-client.mjs",
+      "codexCliPath": "/Applications/Codex.app/Contents/Resources/codex",
+      "codexHome": "/Users/wjx/.codex",
+      "extensionHostPath": "/Users/wjx/.codex/plugins/cache/openai-bundled/chrome/latest/extension-host/macos/arm64/extension-host",
+      "extensionIds": [
+        "hehggadaopoacecdllhhajmbjkdcmajg"
+      ],
+      "nativeHostName": "com.openai.codexextension",
+      "nodePath": "/Applications/Codex.app/Contents/Resources/node",
+      "nodeReplPath": "/Applications/Codex.app/Contents/Resources/node_repl",
+      "pluginVersion": "26.527.31326",
+      "proxyHost": "127.0.0.1",
+      "proxyPort": 0,
+      "resourcesPath": "/Applications/Codex.app/Contents/Resources",
+      "updatedAt": "2026-06-01T07:28:21.220Z"
+    }
+  ]
+}

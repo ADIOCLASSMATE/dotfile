@@ -1,0 +1,210 @@
+{
+  "projectRoot": "/Users/wjx/博士/综述/None-AR",
+  "generatedAtMs": 1782979898902,
+  "currentSuggestionIds": [
+    "d85ff08e-c272-4f65-8465-52c35b677218",
+    "44d426df-8489-4e65-aaaa-be4e4e613644"
+  ],
+  "suggestions": [
+    {
+      "id": "e865f4d3-57e5-4b57-8d74-0f98f5de5a6c",
+      "title": "Turn the anchor-lineage rewrite into a 14-slide group-meeting deck",
+      "description": "You just created `non_autoregressive_lm_survey_anchor_lineage.md` and `paper_selection.md` for a 45–60 minute talk, but there is still no slide artifact in the project. Codex can turn the 12-anchor narrative into a concise Chinese deck with speaker notes and figures now.",
+      "prompt": "Read `non_autoregressive_lm_survey_anchor_lineage.md`, `paper_selection.md`, and the relevant notes, then create a 14-slide Chinese group-meeting deck in this project. Use the 12 anchor papers as the backbone, keep the five-category taxonomy, add one slide on the speed/KV-cache caveat, and include brief speaker notes per slide. Output both a Markdown slide script and a `.pptx` if the environment supports it.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782412095212,
+      "updatedAtMs": 1782412095212
+    },
+    {
+      "id": "7e884d66-939d-40fe-9ddb-b4fe61664c11",
+      "title": "Repair the lone non-autoregressive-nmt repo failure in the manifest",
+      "description": "`logs/acquisition_report.md` shows one actual acquisition failure: the official repo URL for `non-autoregressive-nmt` returned `Repository not found`, while everything else validated cleanly. This is the last obvious audit gap before you reuse the project or share it.",
+      "prompt": "Investigate the `non-autoregressive-nmt` official repo failure from `logs/acquisition_report.md` and `data/papers.yaml`. Re-check primary-source evidence, determine whether the repo moved, was archived, or should be marked unavailable, then update the manifest, note, and acquisition report so this paper no longer has a stale broken official-repo record.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782412095212,
+      "updatedAtMs": 1782412095212
+    },
+    {
+      "id": "420e687b-3de4-4ae2-a78c-87595e1b5766",
+      "title": "Write the Q&A crib sheet your group will ask after this survey",
+      "description": "The rewritten survey centers on three arguments that usually trigger pushback: whether XLNet/BERT count as NAR, whether diffusion is really faster than AR, and why block diffusion is not a sixth category. Codex can prepare a short answer sheet tied directly to your anchor survey before the meeting.",
+      "prompt": "Create a compact Chinese Q&A crib sheet for this project based on `non_autoregressive_lm_survey_anchor_lineage.md`. Focus on the likely seminar questions: why BERT/XLNet are bridges not strict NAR models, when diffusion language models are or are not faster than AR, why block diffusion stays a cross-cutting tag instead of a sixth main category, and how category 4 differs from category 5. Keep answers precise, evidence-backed, and ready to speak aloud.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782412095212,
+      "updatedAtMs": 1782412095212
+    },
+    {
+      "id": "fc12159c-1e3e-45ba-85ac-19e9c872112a",
+      "title": "Turn the 12-anchor rewrite into a meeting-ready slide deck",
+      "description": "`non_autoregressive_lm_survey_anchor_lineage.md` was updated on June 26 specifically for a 45–60 minute group meeting, but there is still no deck in the project. Codex can convert the validated 12-anchor narrative into a `.pptx` with Chinese slides, appendix backup, and speaker notes.",
+      "prompt": "Use `non_autoregressive_lm_survey_anchor_lineage.md`, `paper_selection.md`, and the local notes to create a 16–20 slide Chinese group-meeting deck in this project. Make a real `.pptx`, not just Markdown. Keep the main talk centered on the 12 anchor papers and 7 lineages, include 2–3 key equations, one taxonomy slide, one speed/complexity comparison slide, and an appendix for the bridge papers. Add concise speaker notes for each slide and keep all claims traceable to local files.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782501481607,
+      "updatedAtMs": 1782501481607
+    },
+    {
+      "id": "b28de68f-a54e-4db4-b784-8c6124333276",
+      "title": "Repair the broken nonauto-nmt repo trail in the manifest",
+      "description": "`logs/acquisition_report.md` shows one actual acquisition failure: the `facebookresearch/nonauto-nmt` clone target is dead, even though this paper is a core entry. Codex can re-audit the official-repo evidence, update the manifest and notes, and rerun the repo validation so this core paper stops carrying a known broken link.",
+      "prompt": "Re-audit the official repository status for `non-autoregressive-nmt` using primary-source evidence only. Check whether the original repo moved, whether there is a new official location, or whether the project should be marked as having no verified official repo. Then update `data/papers.yaml`, `data/papers.csv`, the paper README/note, and the acquisition logs consistently, and rerun the relevant validation so the broken repo trail is resolved cleanly.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782501481607,
+      "updatedAtMs": 1782501481607
+    },
+    {
+      "id": "6c1b49ce-c9d8-44d2-b572-f02e466d58b9",
+      "title": "Verify the 2026 appendix papers still marked venue-unverified",
+      "description": "Several frontier entries in `data/papers.csv` still say `venue not fully verified`, including recent 2026 acceleration and block-diffusion papers. Codex can tighten those metadata now, which will matter if the appendix gets questioned during the talk.",
+      "prompt": "Audit the recent frontier appendix entries whose venue status is still marked as not fully verified, especially the 2026 acceleration, AR-to-DLM, and block-diffusion papers. Use primary sources to confirm whether each item is arXiv-only, has an OpenReview venue, or has a conference status that should be recorded more precisely. Update the manifest, appendix-facing notes, and any derived logs/tables without changing the anchor-lineage selection itself.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782501481607,
+      "updatedAtMs": 1782501481607
+    },
+    {
+      "id": "544a49f0-c8ae-4f2d-8da1-a3d0607d3e5f",
+      "title": "Turn the 12-anchor rewrite into a 45–60 minute talk deck",
+      "description": "`non_autoregressive_lm_survey_anchor_lineage.md` and `paper_selection.md` were updated on June 26 and already compress the project to the exact anchor set for a group meeting. Codex can turn that fresh rewrite into a slide-by-slide outline with speaker notes instead of making you manually distill a 32k-word draft.",
+      "prompt": "Build a presentation-ready Markdown slide outline for this project based on `non_autoregressive_lm_survey_anchor_lineage.md` and `paper_selection.md`. Make it fit a 45–60 minute group meeting, keep the 12 anchor papers and 7 lineages, add per-slide speaker notes, and end with 5 likely audience questions plus concise answers grounded only in local notes and sources.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782588713136,
+      "updatedAtMs": 1782588713136
+    },
+    {
+      "id": "2d455867-1cab-4b49-98df-1b08cb8ee6aa",
+      "title": "Close the non-autoregressive-nmt repo gap in the acquisition manifest",
+      "description": "Your latest `logs/acquisition_report.md` shows exactly one real acquisition failure: `non-autoregressive-nmt` points to a dead GitHub repo while the rest of the manifest validates cleanly. Codex can now resolve that last open loop by verifying whether there is a surviving official code source or downgrading the entry to an explicit no-verified-repo status with evidence.",
+      "prompt": "Audit the `non-autoregressive-nmt` manifest entry and acquisition logs, then fix the official-repo status for that paper. Try to verify whether the current dead GitHub URL has an official replacement from primary sources; if not, update the local audit trail so the project records a clean, evidence-backed 'no verified official repo' outcome instead of a stale clone failure.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782588713136,
+      "updatedAtMs": 1782588713136
+    },
+    {
+      "id": "6a7dcb08-d5e3-4d41-b452-9ddb8cce6656",
+      "title": "Create a defense sheet for the terminology traps in this survey",
+      "description": "The fresh anchor-lineage draft leans heavily on distinctions like XLNet vs NAR, CMLM vs masked diffusion, and continuous token states vs learned latent flows. Codex can prepare a compact rebuttal sheet from your local notes so you have crisp answers ready when those predictable lab-meeting questions come up.",
+      "prompt": "Create a concise Q&A defense sheet for this survey using only local project files. Focus on the distinctions people are most likely to challenge in discussion: non-left-to-right vs non-autoregressive, MLM vs full generative model, CMLM vs masked diffusion, MDLM vs LLaDA, AR-to-DLM adaptation vs from-scratch diffusion, and continuous token-state models vs latent/embedding flow models.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782588713136,
+      "updatedAtMs": 1782588713136
+    },
+    {
+      "id": "61b11f39-23f5-49ff-b46d-bdf74f3ef42d",
+      "title": "Make the anchor-lineage rewrite the project’s canonical survey deliverable",
+      "description": "On June 26 you created `non_autoregressive_lm_survey_anchor_lineage.md` plus `paper_selection.md`, but `README.md` and `validate_manifest.py` still treat the older `non_autoregressive_lm_survey.md` as canonical. Codex can promote the tighter 12-anchor version, preserve backups, and sync validation and docs so the presentation-ready draft is the one the project now guards.",
+      "prompt": "Promote `non_autoregressive_lm_survey_anchor_lineage.md` to the canonical final survey for this project. Keep the older long-form drafts under `backups/`, update `README.md`, `PLAN.md`, and any validation/build scripts that still point at `non_autoregressive_lm_survey.md`, and make sure the canonical final document and its links pass the local checks again. Do not rewrite the research content unless needed for consistency; focus on consolidating the deliverable around the June 26 anchor-lineage rewrite.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782675589912,
+      "updatedAtMs": 1782675589912
+    },
+    {
+      "id": "40d13329-40dd-49d2-bc7d-365a9d817b6b",
+      "title": "Repair the broken official-repo record for non-autoregressive NMT",
+      "description": "`logs/acquisition_report.md` shows exactly one real acquisition failure: `non-autoregressive-nmt` still points at a dead `facebookresearch/nonauto-nmt` URL, while the rest of the manifest is clean. Codex can re-verify the primary-source repo evidence, update the manifest and notes, and rerun the acquisition/validation path so the only concrete repo hole is resolved or explicitly retired.",
+      "prompt": "Investigate the `non-autoregressive-nmt` official repository entry that failed in `logs/acquisition_report.md`. Re-verify from primary-source evidence whether there is a correct official repo, update `data/papers.yaml`, the paper note, and any acquisition logic accordingly, and rerun the relevant local checks so this entry is either fixed or documented as intentionally unresolvable without leaving a stale dead URL.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782675589912,
+      "updatedAtMs": 1782675589912
+    },
+    {
+      "id": "1d80770f-ed65-4d05-918a-5c27acf59382",
+      "title": "Turn the 12 anchor papers into a speaker-ready group-meeting outline",
+      "description": "The June 26 rewrite already narrowed the talk to 12 anchor papers and 13 bridge papers, but the repo still has no dedicated speaking outline or slide skeleton. Codex can turn `paper_selection.md` and the anchor-lineage survey into a 45–60 minute section-by-section talk plan with per-slide equations, transitions, and local paper links.",
+      "prompt": "Create a speaker-ready 45–60 minute group-meeting outline from `paper_selection.md` and `non_autoregressive_lm_survey_anchor_lineage.md`. I want a new Markdown artifact in this project with a slide-by-slide structure, timing, the exact 12 anchor papers to emphasize, which equations/figures to show from local notes or sources, and short transition notes between sections. Keep it tightly aligned with the current anchor-lineage framing rather than the older full survey.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782675589912,
+      "updatedAtMs": 1782675589912
+    },
+    {
+      "id": "63269b96-a07f-4bca-85c9-f2d82a08851d",
+      "title": "Turn the 12-anchor rewrite into a 45-minute group meeting deck",
+      "description": "The project was just narrowed to 12 anchor papers on June 26, and the new `non_autoregressive_lm_survey_anchor_lineage.md` is clearly the meeting-friendly draft. Codex can convert that exact storyline into slides, speaker notes, and one comparison figure instead of making you present from Markdown.",
+      "prompt": "Build a presentation artifact for this project from `non_autoregressive_lm_survey_anchor_lineage.md`: a 45-minute Chinese group-meeting deck with 15–20 slides, speaker notes, one timeline slide, one taxonomy decision slide, and one cross-category comparison slide. Reuse `paper_selection.md` and local notes only, and keep the 12 anchor papers as the spine.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782762120714,
+      "updatedAtMs": 1782762120714
+    },
+    {
+      "id": "16ec6a98-5659-49bd-9433-3f58b3ecb027",
+      "title": "Make the anchor-lineage draft the canonical deliverable everywhere",
+      "description": "Recent work created `paper_selection.md`, `non_autoregressive_lm_survey_anchor_lineage.md`, and a rewrite report, but `README.md` still points to the older full survey as the main output. Codex can remove that split-brain state by updating docs and regeneration scripts so the meeting draft is the obvious entry point.",
+      "prompt": "Update this project so the anchor-lineage rewrite is the canonical meeting deliverable: patch `README.md`, any validation/report text, and related scripts or docs so `non_autoregressive_lm_survey_anchor_lineage.md` is presented as the primary group-meeting artifact while preserving the full survey as background.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782762120714,
+      "updatedAtMs": 1782762120714
+    },
+    {
+      "id": "71e3698d-ed5a-4bd2-aa16-477ca5e31c9b",
+      "title": "Close the remaining official-repo gap for non-autoregressive NMT",
+      "description": "`logs/acquisition_report.md` shows one real acquisition failure: the recorded official repo URL for `non-autoregressive-nmt` 404s, while everything else is already clean. Codex can re-verify the paper’s code provenance, update the manifest/report, and either fix the repo link or replace it with an explicit audited ‘not verified’ record.",
+      "prompt": "Investigate the remaining acquisition failure for `non-autoregressive-nmt`: verify from primary sources whether an official repository exists, update `data/papers.yaml` and the acquisition report accordingly, and leave a clear evidence trail instead of the current dead GitHub URL.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782762120714,
+      "updatedAtMs": 1782762120714
+    },
+    {
+      "id": "35177954-fec1-4dbf-821b-5d50588144a9",
+      "title": "Turn the 12-anchor rewrite into a slide-ready group meeting outline",
+      "description": "You created `non_autoregressive_lm_survey_anchor_lineage.md` on June 26, 2026 specifically for a 45–60 minute talk, but the repo still has no presentation artifact. Codex can extract the 12-anchor storyline into a timed slide-by-slide outline with speaker notes and discussion questions.",
+      "prompt": "Use `non_autoregressive_lm_survey_anchor_lineage.md`, `paper_selection.md`, and the existing notes to create a slide-ready Markdown outline for a 45–60 minute group meeting. I want a concrete deck structure with slide titles, 1–3 key bullets per slide, timing per section, which equations/figures to show, and a final discussion slide. Keep it tightly aligned to the 12 anchor papers and save it as a new local artifact in this project.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782849650272,
+      "updatedAtMs": 1782849650272
+    },
+    {
+      "id": "42b998f5-c829-4bde-b3bb-fc95dc8cf016",
+      "title": "Make the anchor-lineage survey the validated handoff artifact",
+      "description": "The newest work is the June 26, 2026 anchor-lineage rewrite, but `README.md` and `scripts/validate_manifest.py` still treat only `non_autoregressive_lm_survey.md` as the final checked deliverable. Codex can update the build and validation path so the meeting version is reproducible instead of manually trusted.",
+      "prompt": "Promote `non_autoregressive_lm_survey_anchor_lineage.md` to a first-class deliverable in this repo. Update the README and validation/build scripts so the anchor-lineage survey is rebuilt and checked automatically alongside the full survey, and make sure the checks cover links, anchor coverage, and stale placeholders.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782849650272,
+      "updatedAtMs": 1782849650272
+    },
+    {
+      "id": "b78a51b2-5ad3-40dd-8c2b-604420e40c0c",
+      "title": "Remove stale hardcoded dates from the survey generators",
+      "description": "`scripts/build_anchor_lineage_survey.py` still hardcodes `GENERATION_DATE = \"2026-06-25\"` even though the latest rewrite landed on June 26, 2026. Codex can make the generated surveys date themselves correctly and regenerate the affected outputs so you do not ship an obviously stale handout.",
+      "prompt": "Audit the survey-generation scripts for hardcoded dates and other stale metadata, replace them with a reliable dynamic or centralized date source, then regenerate the affected survey outputs and update any reports that depend on those timestamps.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782849650272,
+      "updatedAtMs": 1782849650272
+    },
+    {
+      "id": "d85ff08e-c272-4f65-8465-52c35b677218",
+      "title": "Turn the 12-anchor rewrite into your group meeting slide deck",
+      "description": "On June 26 you created `paper_selection.md` and `non_autoregressive_lm_survey_anchor_lineage.md`, which means the 45–60 minute story is already compressed but not yet packaged as a talk artifact. Codex can turn that into a Chinese slide deck with speaker notes and an appendix for the 44 non-anchor papers.",
+      "prompt": "Use `paper_selection.md`, `non_autoregressive_lm_survey_anchor_lineage.md`, and `non_autoregressive_lm_survey.md` to build a 45–60 minute Chinese group-meeting slide deck for this project. Create a concise main deck focused on the 12 anchor papers, add speaker notes for each slide, and include a short appendix covering the 13 bridge papers and the most likely Q&A challenges. Keep all claims traceable to the local survey, notes, and manifest.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782979898902,
+      "updatedAtMs": 1782979898902
+    },
+    {
+      "id": "44d426df-8489-4e65-aaaa-be4e4e613644",
+      "title": "Resolve the dead Non-Autoregressive NMT repo entry cleanly",
+      "description": "`logs/acquisition_report.md` shows only one real acquisition failure: the `facebookresearch/nonauto-nmt` clone 404, while the rest of the survey is already validated. Codex can re-check the paper’s primary sources, fix or retire that repo entry in `data/papers.yaml`, and rerun the acquisition and validation scripts so the survey is fully auditable.",
+      "prompt": "Investigate the failed official-repo entry for `non-autoregressive-nmt` in this project. Re-verify the paper’s official code evidence from the local source files and primary links, update `data/papers.yaml` and any related logs/scripts so the manifest reflects reality, then rerun the acquisition and validation workflow and summarize exactly what changed.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782979898902,
+      "updatedAtMs": 1782979898902
+    }
+  ]
+}

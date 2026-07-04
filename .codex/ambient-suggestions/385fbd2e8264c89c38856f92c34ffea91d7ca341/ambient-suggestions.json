@@ -1,0 +1,41 @@
+{
+  "projectRoot": "/Users/wjx/博士/项目",
+  "generatedAtMs": 1782199307326,
+  "currentSuggestionIds": [
+    "4d2bdc1d-de9f-4ff2-962e-a726ca6d4003",
+    "3b0eae4f-229c-4ade-9cf6-4506997208ef",
+    "4ebe49da-b908-48ef-8191-c5ba019de869"
+  ],
+  "suggestions": [
+    {
+      "id": "4d2bdc1d-de9f-4ff2-962e-a726ca6d4003",
+      "title": "Fix today’s rotation closing form before you submit the PDF",
+      "description": "You compiled `课题轮转结题申请.tex` today, but it still carries another student’s name, a different project title, and impossible dates. Codex can align the LaTeX form with your `rotation.md` content and regenerate a clean submission PDF.",
+      "prompt": "Please fix the rotation closing package in this project. Use `rotation.md` as the source of truth, update `课题轮转结题申请.tex` so the student/project/mentor/dates/content all match the SOLM work, remove the leftover mismatched information, and leave me with a polished PDF-ready form plus a short list of what you changed.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782199307326,
+      "updatedAtMs": 1782199307326
+    },
+    {
+      "id": "3b0eae4f-229c-4ade-9cf6-4506997208ef",
+      "title": "Turn the SOLM proposal files into one consistent funding packet",
+      "description": "This folder has overlapping proposal artifacts: `docs.md`, `科研立项申请表-自由探索项目-万佳欣.md`, budget spreadsheets, and a June 3 budget report docx. Codex can reconcile the numbers, dates, and wording into one internally consistent packet so you are not manually diffing admin documents.",
+      "prompt": "Please audit the proposal materials in this project for consistency. Compare `docs.md`, `科研立项申请表-自由探索项目-万佳欣.md`, the budget-related files, and the recent report documents, then produce a concise inconsistency report and update the markdown source(s) to a single consistent version of the SOLM funding application with aligned dates, milestones, budget, and prior-results claims.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782199307326,
+      "updatedAtMs": 1782199307326
+    },
+    {
+      "id": "4ebe49da-b908-48ef-8191-c5ba019de869",
+      "title": "Convert your existing SOLM results into the required one-page appendix",
+      "description": "The proposal asks for prior成果说明, and this repo already contains the exact evidence: experimental tables in `rotation.md`, proposal claims in `docs.md`, and ICML-era figures under `icml2026/figures`. Codex can compress that into a submission-ready appendix instead of making you rewrite it by hand.",
+      "prompt": "Please create a polished one-page prior-results appendix for the SOLM application using the evidence already in this project. Pull the strongest validated claims, tables, and figures from `rotation.md`, `docs.md`, and `icml2026/figures`, write it in the tone of an academic admin attachment, and leave the result as a markdown source I can reuse in the application packet.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782199307326,
+      "updatedAtMs": 1782199307326
+    }
+  ]
+}

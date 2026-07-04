@@ -1,0 +1,50 @@
+{
+  "projectRoot": "/Users/wjx/博士/综述/None-AR",
+  "generatedAtMs": 1782659495510,
+  "currentSuggestionIds": [
+    "219b4703-fbf3-4bf6-89aa-4181a1f9a4d8",
+    "d26d2eb5-eadd-4649-a0d5-8d29943c0918"
+  ],
+  "suggestions": [
+    {
+      "id": "3b3d5903-e19f-459f-a69d-af0989add45b",
+      "title": "Make the anchor-lineage survey the project’s primary validated output",
+      "description": "Yesterday’s anchor rewrite produced `non_autoregressive_lm_survey_anchor_lineage.md`, but `README.md` and both validation scripts still treat the older long survey as canonical. Codex can update the build/validate path so the concise group-meeting artifact is the one the project actually checks and presents.",
+      "prompt": "Promote `non_autoregressive_lm_survey_anchor_lineage.md` to the project’s primary deliverable. Update `README.md`, `scripts/validate_manifest.py`, `scripts/check_local_links.py`, and any related logs or docs so the concise anchor-lineage survey is the default validated output for this repo, while preserving the older full survey as an archived artifact. Then run the validation flow and summarize what changed.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782572471854,
+      "updatedAtMs": 1782572471854
+    },
+    {
+      "id": "c479ce31-eb5c-4e16-8913-d8d2619632c2",
+      "title": "Turn the 12-anchor survey into a 45–60 minute group-meeting deck draft",
+      "description": "The repo now has a fresh anchor-paper narrative (`paper_selection.md` + the Jun 26 anchor survey), which is exactly the structure needed for the talk promised in the project brief. Codex can convert that into a slide-ready outline with figures/tables to reuse and speaker notes instead of making you manually compress the survey again.",
+      "prompt": "Create a slide-deck draft for the group meeting from `non_autoregressive_lm_survey_anchor_lineage.md` and `paper_selection.md`. Produce a concise Markdown slide outline in this project with 12–16 slides, section timing for a 45–60 minute talk, per-slide key claims, which local tables/figures to reuse, and short speaker notes for likely questions about AR vs NAR, masked diffusion vs MLM, and continuous-token vs latent approaches.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782572471854,
+      "updatedAtMs": 1782572471854
+    },
+    {
+      "id": "219b4703-fbf3-4bf6-89aa-4181a1f9a4d8",
+      "title": "Turn the 12-anchor rewrite into a 45-minute talk deck",
+      "description": "`non_autoregressive_lm_survey_anchor_lineage.md` and `paper_selection.md` were updated on June 26, 2026, and there is still no slide artifact in the project. Codex can turn the new anchor/bridge structure into a Chinese deck with speaker notes, one equation per anchor, and backup slides for the speed/KV-cache questions.",
+      "prompt": "Build a 45–60 minute Chinese group-meeting slide deck from `non_autoregressive_lm_survey_anchor_lineage.md` and `paper_selection.md`. Create a presentation artifact in this project, keep the 12 anchor papers as the main spine, include one key equation and one comparison takeaway per anchor, and add a short backup appendix for the likely discussion points around MLM vs masked diffusion, why XLNet is still autoregressive, and when DLMs are actually faster than AR models.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782659495510,
+      "updatedAtMs": 1782659495510
+    },
+    {
+      "id": "d26d2eb5-eadd-4649-a0d5-8d29943c0918",
+      "title": "Repair the non-autoregressive NMT repo entry in the manifest",
+      "description": "`logs/acquisition_report.md` still shows the only real acquisition failure: the `non-autoregressive-nmt` official repo URL 404s, while the rest of the workspace validates cleanly. Codex can re-audit the paper’s primary sources, fix `data/papers.yaml`, and either update the clone target or document that official code is no longer recoverable.",
+      "prompt": "Re-audit the `non-autoregressive-nmt` repository record from primary sources and fix the local project state. Check the paper metadata and any official project links, update `data/papers.yaml` and the acquisition logs, and if an official repo still exists prepare the corrected clone target; otherwise record a precise evidence-based reason that the official code is unavailable instead of leaving the broken 404 link.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782659495510,
+      "updatedAtMs": 1782659495510
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "chatTitle": null,
+    "command": "/Users/wjx/code/Inspire-CLI/bin/inspire --help",
+    "conversationId": "019f2aee-7767-7d33-853c-41c891d30f2b",
+    "cwd": "/Users/wjx/Documents/Codex/2026-07-04/w",
+    "id": "019f2aee-7767-7d33-853c-41c891d30f2b:019f2aee-f06f-7e12-b83e-5addc909a862:call_eGaaWkoSFIrS8jT8sXg6bSa1",
+    "itemId": "call_eGaaWkoSFIrS8jT8sXg6bSa1",
+    "osPid": 26194,
+    "processId": "58222",
+    "startedAtMs": 1783131869284,
+    "turnId": "019f2aee-f06f-7e12-b83e-5addc909a862",
+    "updatedAtMs": 1783131871758
+  },
+  {
+    "chatTitle": null,
+    "command": "find /Users/wjx/dotfile/.claude/skills /Users/wjx/.agents/skills /Users/wjx/dotfile/.codex/skills -maxdepth 4 \\\\( -iname '*submit-job*' -o -iname '*inspire*' \\\\) 2>/dev/null",
+    "conversationId": "019eee32-9cf7-71b3-9cd7-740713428deb",
+    "cwd": "/Users/wjx/code/qzcli_tool",
+    "id": "019eee32-9cf7-71b3-9cd7-740713428deb:019eee3a-0fb9-7971-9a7e-3639a3174e05:call_eZkEQl9VuzHmwy2q6OeF3DHv",
+    "itemId": "call_eZkEQl9VuzHmwy2q6OeF3DHv",
+    "osPid": null,
+    "processId": "38503",
+    "startedAtMs": 1782113264063,
+    "turnId": "019eee3a-0fb9-7971-9a7e-3639a3174e05",
+    "updatedAtMs": 1782113264065
+  }
+]

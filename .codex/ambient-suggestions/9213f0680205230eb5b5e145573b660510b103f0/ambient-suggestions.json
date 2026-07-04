@@ -1,0 +1,41 @@
+{
+  "projectRoot": "/Users/wjx/博士/作业/adv ml",
+  "generatedAtMs": 1782012686381,
+  "currentSuggestionIds": [
+    "d9edfc58-a9ab-4451-bbe9-a5d33b16e0bc",
+    "98c82e54-818d-4ef9-a0ab-bd8ce6b68324",
+    "70fc6be2-6cd1-47d9-9f10-050d0ddeeb06"
+  ],
+  "suggestions": [
+    {
+      "id": "d9edfc58-a9ab-4451-bbe9-a5d33b16e0bc",
+      "title": "Fix the fresh uv environment before baseline training fails",
+      "description": "`Project/pyproject.toml` was created today, but it pins Python 3.14 and only `torch>=2.12.1`, which conflicts with the assignment’s Python 3.8-era stack and missing `ml4co-kit`/PyG deps. Codex can make the local environment runnable before you lose time on import and wheel errors.",
+      "prompt": "Patch this project’s environment setup so it actually matches the assignment stack. Update the local packaging files for a reproducible Python 3.8-compatible setup, explain any uv/venv tradeoffs, and leave me with concrete install/run commands for this repo.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782012686381,
+      "updatedAtMs": 1782012686381
+    },
+    {
+      "id": "98c82e54-818d-4ef9-a0ab-bd8ce6b68324",
+      "title": "Remove the hardcoded cuda:1 blocker in both baseline scripts",
+      "description": "Both GP and LC train/eval scripts currently select `cuda:1` whenever CUDA exists, which will break immediately on a single-GPU machine. Codex can patch device selection and add a quick smoke path so first runs stop failing on setup details.",
+      "prompt": "Patch the GP and LC baseline train/eval scripts to choose devices safely instead of hardcoding `cuda:1`, and add a minimal smoke-test path I can run locally to verify the scripts start correctly on CPU or a single GPU.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782012686381,
+      "updatedAtMs": 1782012686381
+    },
+    {
+      "id": "70fc6be2-6cd1-47d9-9f10-050d0ddeeb06",
+      "title": "Build a three-split scoreboard to settle GP vs LC",
+      "description": "Your earlier thread today was about choosing the method, and the assignment explicitly cares about uniform, OOD, and TSP-100 generalization. Right now the eval scripts only point at one test file at a time; Codex can turn that into a small benchmark harness that makes the choice evidence-based fast.",
+      "prompt": "Add a lightweight evaluation harness for this project that runs a baseline checkpoint across `tsp50_uniform_val_128.txt`, `tsp50_ood_val_16.txt`, and `tsp100_uniform_val_16.txt`, then prints a compact table of cost, gap, and runtime so I can decide whether to invest in GP or LC next.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1782012686381,
+      "updatedAtMs": 1782012686381
+    }
+  ]
+}

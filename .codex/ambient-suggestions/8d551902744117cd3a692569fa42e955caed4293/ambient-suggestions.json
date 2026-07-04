@@ -1,0 +1,30 @@
+{
+  "projectRoot": "/inspire/hdd/global_user/wanjiaxin-253108030048/code/selfless-attention",
+  "generatedAtMs": 1781611250016,
+  "currentSuggestionIds": [
+    "b7f76c67-37b9-4682-9951-7d64d1e32ceb",
+    "377f2aed-3b37-4b9c-81ab-fc50e0cb66a0"
+  ],
+  "suggestions": [
+    {
+      "id": "b7f76c67-37b9-4682-9951-7d64d1e32ceb",
+      "title": "Benchmark TF32 on your real training path before the next run",
+      "description": "You asked yesterday whether `enable_tf32=false` hurts efficiency, which is usually a sign an expensive training run is about to happen. Codex can wire up a small apples-to-apples benchmark in this repo and tell you the actual throughput and loss-drift tradeoff instead of leaving this as a guess.",
+      "prompt": "请在这个项目里直接做一个最小但可信的 benchmark，对比 `enable_tf32=true` 和 `false` 在我当前训练路径上的速度、显存和数值差异。优先复用我现有训练入口，给我一个能直接跑的脚本，并说明我应该默认用哪个设置。",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1781611250016,
+      "updatedAtMs": 1781611250016
+    },
+    {
+      "id": "377f2aed-3b37-4b9c-81ab-fc50e0cb66a0",
+      "title": "Finish the multi-GPU native BPB launcher around `eval/text_likelihood.py`",
+      "description": "Your June 8 thread says you want `script/eval/run_native_bpb.sh` to work like `run_unified_bpb.sh`, which looks like an immediate missing artifact in this repo rather than a vague improvement. Codex can implement the launcher, batch multiple models across GPUs, and make the output/logging match the workflow you already use.",
+      "prompt": "请继续完成这个项目里的 `script/eval/run_native_bpb.sh`，目标是像 `script/eval/run_unified_bpb.sh` 一样支持多卡、多模型批量跑 `eval/text_likelihood.py`。请先检查我现在仓库里已有的脚本和配置，再直接补齐可运行版本以及对应的日志/参数处理。",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1781611250016,
+      "updatedAtMs": 1781611250016
+    }
+  ]
+}

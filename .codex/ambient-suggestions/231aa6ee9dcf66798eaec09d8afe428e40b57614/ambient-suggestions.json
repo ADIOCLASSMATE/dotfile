@@ -1,0 +1,41 @@
+{
+  "projectRoot": "/inspire/hdd/global_user/wanjiaxin-253108030048/code/selfless-attention",
+  "generatedAtMs": 1781612544497,
+  "currentSuggestionIds": [
+    "b8dc0455-f478-413b-bd9c-eb13dbe0e740",
+    "900a1f42-d95a-45be-b455-83ba22398882",
+    "70faf251-f8e9-4866-a9f6-70a951ad3263"
+  ],
+  "suggestions": [
+    {
+      "id": "b8dc0455-f478-413b-bd9c-eb13dbe0e740",
+      "title": "Make the consistency probe run on the real selfless/xlnet checkpoints",
+      "description": "`EXPERIMENTS.md` still treats the leak probe as P0, but `script/eval/run_consistency_probe.sh` currently points at nonexistent paths like `configs/0.6B_scratch/selfless.yaml`. Codex can unbreak the runner and wire it to the six actual eval configs so you can launch the probe instead of hand-editing it.",
+      "prompt": "帮我修一下 `script/eval/run_consistency_probe.sh`，它现在引用的 `configs/0.6B_scratch/selfless.yaml` 这类路径在仓库里根本不存在。请把它改成能直接跑现在这 6 个真实 checkpoint（342M / 0.6B / 0.6B-preload 的 selfless 和 xlnet）的版本，顺手检查 `plot_consistency.py` 的输入输出约定有没有需要一起修的地方。先直接改代码，不要只分析。",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1781612544497,
+      "updatedAtMs": 1781612544497
+    },
+    {
+      "id": "900a1f42-d95a-45be-b455-83ba22398882",
+      "title": "Add a strict paloma_c4_en g=1 unified BPB runner",
+      "description": "You already ran `logs/unified_bpb_c4/` on June 8, but those logs are the `g=4` upper bound. Your own `EXPERIMENTS.md` says the next fairness headline should be `paloma_c4_en` with a controlled token limit and strict `g=1`, so this is the cleanest missing artifact.",
+      "prompt": "帮我把 `paloma_c4_en` 的 strict g=1 unified BPB 跑法补齐。基于现有 `script/eval/run_unified_bpb.sh` 和 `collect_unified_bpb.py`，做一个适合 C4 的 preset/脚本，固定好 `HF_DATASET=paloma_c4_en`、合理的 `LIMIT`，并确保汇总里能把这个 C4 的 g=1 headline 单独看出来。先改代码和脚本，不要只给我运行命令。",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1781612544497,
+      "updatedAtMs": 1781612544497
+    },
+    {
+      "id": "70faf251-f8e9-4866-a9f6-70a951ad3263",
+      "title": "Fold the June 15 selfless 0.6B rerun into LR summaries",
+      "description": "Yesterday's `update LR 8e-4` work added `run_0.6B_sweep_selfless_rerun.sh`, but `collect_appendix_sweep.py` still only parses the old `342M` naming pattern. Codex can extend the collector so the new 0.6B rerun stops being a manual open loop.",
+      "prompt": "帮我扩展 `collect_appendix_sweep.py`，把昨天新加的 `script/eval/run_0.6B_sweep_selfless_rerun.sh` 这批 0.6B selfless rerun 也纳入汇总。现在它的正则和表格基本只覆盖 342M appendix sweep；我想要一个能把 0.6B selfless 的 2e-4 / 4e-4 / 8e-4 / 1.5e-3 一起拉出来比较的版本，最好输出成现有 appendix 风格。直接改代码。",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1781612544497,
+      "updatedAtMs": 1781612544497
+    }
+  ]
+}

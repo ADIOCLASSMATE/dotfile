@@ -1,0 +1,60 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/wjx/dotfile/.claude/scripts/hooks/gateguard-fact-force.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/wjx/dotfile/.claude/scripts/hooks/gateguard-fact-force.js",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/wjx/dotfile/.claude/scripts/hooks/pre-bash-commit-quality.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/wjx/dotfile/.claude/scripts/hooks/on-plan-accepted.js",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/wjx/dotfile/.claude/scripts/hooks/post-compact-context-restore.js",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

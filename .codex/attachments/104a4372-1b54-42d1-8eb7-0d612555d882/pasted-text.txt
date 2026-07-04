@@ -1,0 +1,2507 @@
+对，组会综述应该**少选论文、深讲方法**。当前初稿把不少理论节点都按相近篇幅并列，容易让主线变成论文目录。 建议正文只深讲 **12 篇 anchor paper**，其余仅作为桥梁或对照。
+
+把下面这段直接发给 Codex；它应当覆盖此前 prompt 中“尽可能多纳入论文”的要求。
+
+````text
+这是对前述综述重写任务的最高优先级修订。如与之前的要求冲突，以本指令为准。
+
+当前目录已经包含综述初稿、论文 PDF/LaTeX 源码和代码仓库。本次不要继续扩充论文数量，也不要重新下载资料。请对现有 Markdown 进行“减法式重写”：
+
+核心目标不是覆盖尽可能多的论文，而是选出少量最有代表性的工作，真正讲清楚它们的：
+
+- 模型结构；
+- 概率建模；
+- 网络输入和输出；
+- 训练样本如何构造；
+- forward/noising/corruption process；
+- reverse/generative process；
+- 训练 loss；
+- 推理或采样算法；
+- 与前序工作的理论联系；
+- 解决的问题与新增代价。
+
+最终正文必须适合 45–60 分钟组会汇报。
+
+---
+
+# 一、论文数量的硬约束
+
+## 1. Anchor paper
+
+全文最多选择 12 篇 anchor paper。
+
+每条技术谱系：
+
+- 最多深入讲 2 篇；
+- 可以只深入讲 1 篇；
+- 不允许出现一条谱系连续深讲 4–6 篇论文；
+- 同一篇论文只能有一个主要讲解位置，其他章节使用交叉引用，不得重复完整介绍。
+
+Anchor paper 才需要完整分析：
+
+- 模型；
+- 核心公式；
+- loss；
+- 训练算法；
+- 采样算法；
+- repo 实现；
+- 前后工作关系；
+- 局限。
+
+## 2. Bridge paper
+
+Bridge paper 只用于解释两项 anchor paper 之间发生了什么。
+
+每篇 bridge paper最多：
+
+- 1–3 个自然段；
+- 或比较表中的一行；
+- 或一个“补充说明”框。
+
+Bridge paper 不得：
+
+- 独立占用大型二级章节；
+- 展开所有实验；
+- 罗列全部公式；
+- 深入阅读整个 repo；
+- 写成与 anchor paper 同等篇幅。
+
+## 3. Extended paper
+
+其他已下载论文统一放入：
+
+- “延伸阅读”表；
+- 附录论文清单；
+- 或每章结尾的“其他相关方向”。
+
+每篇只需一句定位，不展开方法。
+
+不要因为论文和 repo 已经下载到本地，就认为必须写入正文。
+
+---
+
+# 二、默认的 12 篇 Anchor Paper
+
+除非本地论文内容表明某项选择明显不合理，否则正文优先采用以下 12 篇。
+
+## 谱系 1：AR → permutation/order-flexible AR
+
+### Anchor 1：XLNet
+
+深入讲：
+
+- permutation language modeling；
+- permutation objective；
+- two-stream attention；
+- 为什么非左到右仍然是 AR；
+- 为什么 PLM 主要是预训练目标，而不是严格 NAR 生成器。
+
+### Bridge：Insertion Transformer
+
+Insertion Transformer 不作为完整 anchor paper。
+
+仅用一个小节说明：
+
+- permutation order 与 insertion action order 的区别；
+- insertion canvas；
+- 动作序列为什么仍然具有自回归性；
+- 生成顺序可以改变，但条件依赖仍存在。
+
+本谱系的核心结论应是：
+
+> “非左到右”描述的是生成顺序，“非自回归”描述的是概率因子分解，两者不是同一个概念。
+
+---
+
+## 谱系 2：NAT → iterative refinement → CMLM
+
+### Anchor 2：Mask-Predict
+
+重点讲清楚：
+
+- CMLM objective；
+- mask subset 如何采样；
+- length prediction；
+- 初始全 mask 状态；
+- confidence-based remasking；
+- 每轮内 masked positions 的条件独立；
+- 多轮 refinement 如何缓解而非彻底消除 multi-modality；
+- 训练和推理的差异。
+
+### Background/Bridge
+
+以下工作不单独深讲：
+
+- Non-Autoregressive Neural Machine Translation；
+- Iterative Refinement。
+
+只需要用 2–4 个自然段建立背景：
+
+1. 写出 one-shot NAT factorization；
+2. 解释条件独立和 multi-modality；
+3. 简要说明 fertility、length predictor 和 knowledge distillation；
+4. 说明 iterative refinement 为什么自然导向 CMLM。
+
+不需要完整展开 NAT 和 Iterative Refinement 的全部模型。
+
+---
+
+## 谱系 3：CMLM → masked diffusion
+
+### Anchor 3：D3PM
+
+深入讲：
+
+- categorical transition matrix；
+- cumulative transition；
+- forward process；
+- posterior；
+- reverse model；
+- ELBO；
+- \(x_0\)-parameterization；
+- auxiliary cross entropy；
+- absorbing mask transition；
+- 为什么 D3PM 为 masked diffusion 提供了完整概率框架。
+
+### Anchor 4：MDLM
+
+深入讲：
+
+- absorbing-state masking；
+- mask schedule；
+- SUBS parameterization；
+- true posterior；
+- approximate posterior；
+- Rao-Blackwellization；
+- simplified weighted masked cross entropy；
+- ancestral sampling；
+- MDLM 与普通 MLM/CMLM 的本质区别。
+
+### Bridge
+
+以下工作只作为过渡：
+
+- SUNDAE；
+- DiffusionBERT。
+
+只回答：
+
+- 它们在哪些方面已经像 diffusion；
+- 是否具有明确的 forward/reverse process；
+- 是否使用时间变量；
+- 为什么它们可以称为 conceptual bridge，而不是必须视为 D3PM 的直接前驱。
+
+本章必须以一张表总结：
+
+| 维度 | CMLM | D3PM | MDLM |
+|---|---|---|---|
+| forward corruption | | | |
+| time variable | | | |
+| network predicts | | | |
+| loss | | | |
+| sampler | | | |
+| 是否定义完整生成过程 | | | |
+
+---
+
+## 谱系 4：D3PM → SEDD/MDLM → LLaDA
+
+### Anchor 5：SEDD
+
+深入讲：
+
+- continuous-time discrete diffusion；
+- rate matrix；
+- reverse rate；
+- probability ratio/discrete score；
+- score entropy；
+- 网络究竟预测什么；
+- score entropy 与 NELBO 的关系；
+- tau-leaping sampling；
+- 与 D3PM posterior parameterization 的区别。
+
+### Anchor 6：LLaDA
+
+深入讲：
+
+- forward masking process；
+- time/mask-rate sampling；
+- masked diffusion pretraining loss；
+- 时间权重；
+- likelihood upper bound；
+- reverse unmasking；
+- instruction SFT；
+- prompt 与 response 的 corruption；
+- response-only loss；
+- 双向 attention；
+- 从零训练大规模 diffusion LM 的意义与代价。
+
+MDLM 已在上一章完整介绍，本章只交叉引用，不得重复推导。
+
+本章重点回答：
+
+> 离散 diffusion 如何从通用 transition framework，演化成适用于大规模语言模型的训练 recipe？
+
+---
+
+## 谱系 5：MDLM → AR adaptation / Block Diffusion
+
+### Anchor 7：DiffuLLaMA / DiffuGPT
+
+将同一论文或同一系列视为一个 anchor。
+
+深入讲：
+
+- 如何从 AR checkpoint 初始化；
+- causal attention 如何改造；
+- corrupted input 如何构造；
+- continued pretraining；
+- diffusion objective；
+- AR objective 与 diffusion objective 的理论联系；
+- 为什么 AR-to-DLM adaptation 能节省训练成本；
+- 复用 AR 模型带来的 inductive bias；
+- 与从零训练 LLaDA 的比较边界。
+
+### Anchor 8：Block Diffusion
+
+深入讲：
+
+- block 划分；
+- block 间 AR factorization；
+- block 内 diffusion；
+- block conditional NELBO；
+- prefix/context conditioning；
+- block attention；
+- KV cache；
+- 可变长度；
+- block size 为 1 的极限；
+- block size 为全序列的极限；
+- block size 对质量、并行性和延迟的影响。
+
+必须写出：
+
+\[
+p_\theta(x)
+=
+\prod_{b=1}^{B}
+p_\theta
+\left(
+x^{(b)}
+\mid
+x^{(<b)}
+\right).
+\]
+
+并进一步解释每个 block conditional 如何由 diffusion model 表示。
+
+本章要明确呈现两条并行分支：
+
+1. AR checkpoint adaptation；
+2. block/semi-autoregressive restructuring。
+
+不要把 Block Diffusion 错写成 DiffuLLaMA 的直接后继。
+
+---
+
+## 谱系 6：continuous token-level state → one-step flow map
+
+### Anchor 9：Diffusion-LM
+
+深入讲：
+
+- token embedding 作为连续 clean state；
+- Gaussian forward process；
+- noise schedule；
+- denoising network；
+- denoising loss；
+- embedding rounding；
+- token reconstruction；
+- controllable generation；
+- 固定长度；
+- embedding manifold 与 Gaussian prior 的不匹配；
+- continuous-to-discrete interface。
+
+### Anchor 10：Flow Map Language Models
+
+深入讲：
+
+- one-hot 或论文实际采用的连续表示；
+- probability path；
+- flow matching；
+- velocity target；
+- ODE sampling；
+- flow map 的定义；
+- teacher trajectory；
+- self-distillation；
+- one-step/few-step 推理；
+- 多步 flow 如何提供一步监督；
+- 一步生成的质量损失；
+- 最终 token projection。
+
+### Bridge
+
+以下工作只放入一个 1–2 页以内的过渡小节或比较表：
+
+- CDCD；
+- SSD-LM；
+- RDLM；
+- Likelihood-Based Diffusion LM。
+
+过渡逻辑应是：
+
+- Diffusion-LM：普通 embedding Gaussian diffusion；
+- CDCD/SSD-LM：转向 categorical/simplex 表示；
+- RDLM：显式考虑 categorical geometry；
+- Flow Map LM：进一步压缩多步连续轨迹。
+
+不要分别为 CDCD、SSD-LM、RDLM 建立完整论文章节。
+
+本章最多深入讲 Diffusion-LM 和 Flow Map LM 两篇。
+
+---
+
+## 谱系 7：learned latent / embedded language flow
+
+### Anchor 11：Continuous Latent Diffusion Language Model / Cola DLM
+
+深入讲：
+
+- Text VAE；
+- encoder \(q_\phi(z\mid x)\)；
+- decoder \(p_\psi(x\mid z)\)；
+- latent sequence；
+- reconstruction objective；
+- latent regularization；
+- latent diffusion 或 flow prior；
+- block-causal DiT；
+- global semantic prior；
+- local textual realization；
+- 各模块的训练顺序；
+- inference pipeline；
+- latent compression；
+- reconstruction quality 与 latent generative quality 的区别。
+
+### Anchor 12：ELF: Embedded Language Flows
+
+深入讲：
+
+- token 如何变成 continuous embedding state；
+- embedding 是否 static/contextual/learned；
+- probability path；
+- continuous-time flow matching；
+- velocity network；
+- flow matching loss；
+- ODE sampling；
+- 最后一步 token projection；
+- shared-weight output map；
+- 是否存在 autoencoder；
+- 与 Diffusion-LM 的区别；
+- 与 Cola DLM 的区别；
+- 为什么 ELF 不应被自动归入 VAE latent diffusion。
+
+### Bridge
+
+以下工作仅用一个比较表概括：
+
+- Latent Diffusion for Language Generation；
+- TextLDM；
+- LDLM。
+
+表格列为：
+
+| 工作 | 表示来源 | 是否 VAE | latent 是否压缩 | prior | decoder | 是否联合训练 | 主要问题 |
+|---|---|---|---|---|---|---|---|
+
+谱系 7 不要强行写成：
+
+Cola → TextLDM → LDLM → ELF。
+
+更准确的结构是：
+
+```text
+Autoencoder / VAE latent
+    └── Cola DLM / TextLDM / LDLM
+
+Token or contextual embedding flow
+    └── ELF
+````
+
+两条路线在“把主要生成过程移出离散 token space”这一目标上汇合，但架构未必相同。
+
+---
+
+# 三、正文篇幅分配
+
+建议正文约 15,000–25,000 中文字。
+
+篇幅优先级：
+
+1. 统一数学框架：15%；
+2. 12 篇 anchor paper：65%；
+3. 谱系过渡和横向比较：15%；
+4. 开放问题与结论：5%。
+
+每篇 anchor paper 建议约 700–1,500 中文字，根据理论复杂度调整。
+
+以下论文可以更长：
+
+* D3PM；
+* MDLM；
+* SEDD；
+* LLaDA；
+* Block Diffusion；
+* Flow Map LM；
+* Cola DLM；
+* ELF。
+
+以下论文无需同等篇幅：
+
+* XLNet；
+* Mask-Predict；
+* Diffusion-LM。
+
+---
+
+# 四、每篇 Anchor Paper 的统一模板
+
+每篇 anchor paper 必须回答以下九个问题，但不要写成僵硬的九条论文卡片。请组织成连贯叙述。
+
+## 1. 为什么需要它
+
+说明上一种方法的具体失败机制。
+
+## 2. 生成状态是什么
+
+例如：
+
+* discrete token；
+* masked categorical state；
+* CTMC state；
+* embedding；
+* simplex；
+* manifold point；
+* VAE latent。
+
+## 3. 模型结构是什么
+
+说明：
+
+* encoder-only、decoder-only 或 encoder-decoder；
+* causal 或 bidirectional attention；
+* 是否加入 time conditioning；
+* 是否存在 encoder/decoder；
+* 是否存在 length predictor；
+* 是否使用 block attention。
+
+## 4. 网络输入和输出是什么
+
+不能只写“进行去噪”。
+
+必须明确模型预测：
+
+* token logits；
+* (x_0)；
+* posterior；
+* score ratio；
+* reverse rate；
+* noise；
+* velocity；
+* flow map；
+* latent condition。
+
+## 5. 训练样本如何构造
+
+按顺序解释：
+
+1. 从数据中取出什么；
+2. 如何采样 (t)；
+3. 如何构造 (x_t) 或 (z_t)；
+4. 模型接收什么；
+5. target 是什么；
+6. loss 对哪些位置计算。
+
+## 6. Loss 是什么
+
+每篇 anchor 至少包含：
+
+* 一个状态或概率模型公式；
+* 一个训练 loss 公式；
+* 一个采样或生成公式/算法；
+* 必要时一个论文特有公式。
+
+不追求公式数量，追求决定方法本质的公式。
+
+每个公式后必须解释：
+
+* 新符号；
+* 直观含义；
+* 与前一工作的差别；
+* 本地论文中的 section/equation；
+* 必要时对应 repo 路径。
+
+## 7. 推理如何进行
+
+说明：
+
+* 初始状态；
+* 采样步数；
+* 每步更新对象；
+* schedule；
+* sampler；
+* remasking；
+* ODE solver；
+* tau-leaping；
+* block decoding；
+* 最终 token projection；
+* 长度和终止条件。
+
+## 8. 它继承和改变了什么
+
+统一使用以下结构：
+
+* 保留：
+* 替换：
+* 新增：
+* 去除：
+* 获得：
+* 代价：
+
+## 9. 根本局限
+
+区分：
+
+* 理论限制；
+* 训练代价；
+* 采样代价；
+* 表示瓶颈；
+* 实验尚未证明的主张。
+
+---
+
+# 五、非 Anchor Paper 的写法
+
+非 anchor paper 不得继续使用当前初稿中的完整论文卡片格式。
+
+不要为每篇都写：
+
+* 位置；
+* S2 citation；
+* 机构信号；
+* 方法；
+* 公式线索；
+* 为什么不是普通相关工作；
+* 局限。
+
+改成以下两种方式之一。
+
+## 方式 1：过渡段
+
+例如：
+
+> 在 Mask-Predict 与完整 masked diffusion 之间，SUNDAE 将迭代去噪作为生成过程进行训练，而 DiffusionBERT 进一步引入显式离散 corruption 与时间感知表示。它们说明 CMLM 式迭代预测正在向具有时间参数的 denoising model 过渡，但本文不分别展开，其差异汇总于表 X。
+
+## 方式 2：压缩表格
+
+| 工作 | 在谱系中的作用 | 相对上一阶段的变化 | 为什么不作为 anchor |
+| -- | ------- | --------- | ------------- |
+
+不再保留大段 citation count 和机构信息。
+
+---
+
+# 六、每章最多一张核心比较表
+
+不要为每项工作都制作独立表格。
+
+每条谱系只保留：
+
+1. 一张 anchor paper 对比表；
+2. 必要时一张 bridge paper 压缩表。
+
+例如：
+
+| 工作 | 状态空间 | 网络预测 | Loss | 采样 | 相对前驱的关键变化 |
+| -- | ---- | ---- | ---- | -- | --------- |
+
+表格应服务叙述，不能替代叙述。
+
+---
+
+# 七、避免重复讲解
+
+需要特别处理以下重复：
+
+## D3PM
+
+* 在“CMLM → masked diffusion”章节完整讲；
+* 在“SEDD/MDLM → LLaDA”章节只引用其 transition matrix 和 reverse posterior，不再重复全部 ELBO。
+
+## MDLM
+
+* 在“CMLM → masked diffusion”章节完整讲；
+* 在 LLaDA 章节只比较 LLaDA 与 MDLM 的训练目标和 scaling，不重新从头介绍 SUBS。
+
+## Diffusion-LM
+
+* 在 continuous token-state 章节完整讲；
+* 在 ELF 章节只作为对比基线。
+
+## Cola DLM
+
+* 在 learned latent 章节完整讲；
+* TextLDM 和 LDLM 只用于说明其他 latent-space training choices。
+
+---
+
+# 八、论文筛选理由文件
+
+创建：
+
+`paper_selection.md`
+
+内容包括：
+
+## Anchor Papers
+
+列出 12 篇 anchor paper，并为每篇写 2–4 句选择理由：
+
+* 是否奠定范式；
+* 是否引入关键理论；
+* 是否代表规模化；
+* 是否代表近期 frontier；
+* 与其他 anchor 是否存在重复。
+
+## Bridge Papers
+
+列出 bridge paper，并说明它只需要贡献哪一项概念。
+
+## Extended Papers
+
+列出仅放附录的论文。
+
+## Removed From Main Narrative
+
+列出从正文移出的论文，并说明原因，例如：
+
+* 与另一 anchor 方法重复；
+* 主要是任务应用；
+* 理论贡献可由另一篇更清楚地代表；
+* 对组会主线帮助有限；
+* 实验价值高但不改变建模范式。
+
+不要删除本地论文，只调整写作层级。
+
+---
+
+# 九、重写后的正文结构
+
+最终 Markdown 建议采用：
+
+1. 摘要；
+2. 一页式总览；
+3. 五类分类和统一符号；
+4. 谱系 1：XLNet；
+5. 谱系 2：Mask-Predict；
+6. 谱系 3：D3PM 与 MDLM；
+7. 谱系 4：SEDD 与 LLaDA；
+8. 谱系 5：DiffuLLaMA 与 Block Diffusion；
+9. 谱系 6：Diffusion-LM 与 Flow Map LM；
+10. 谱系 7：Cola DLM 与 ELF；
+11. 五类分类的横向总结；
+12. 尚未解决的问题；
+13. 结论和组会汇报提纲；
+14. 附录：bridge/extended papers。
+
+每章的叙述顺序固定为：
+
+```text
+前一范式
+→ 暴露的问题
+→ anchor paper 的建模改变
+→ 核心公式
+→ 训练
+→ 推理
+→ 解决了什么
+→ 新问题
+→ 下一条路线为何出现
+```
+
+---
+
+# 十、验收标准
+
+只有同时满足以下条件才算完成：
+
+* [ ] 正文 anchor paper 不超过 12 篇；
+* [ ] 每条谱系深入论文不超过 2 篇；
+* [ ] 不再给所有已下载论文同等篇幅；
+* [ ] 每篇 anchor 都有模型、训练、loss 和采样；
+* [ ] 每篇 anchor 都有至少一个真正展开的核心 loss；
+* [ ] bridge paper 没有扩张为完整论文章节；
+* [ ] D3PM、MDLM 等没有在多个章节重复完整介绍；
+* [ ] 正文不再包含 S2 citation count 和机构信号；
+* [ ] 不再出现“目标/公式线索”占位文字；
+* [ ] 所有箭头区分 direct extension、conceptual bridge、parallel branch 和 convergence；
+* [ ] 读者能清楚回答每条谱系为什么会出现下一项工作；
+* [ ] 文档可以在 45–60 分钟内完成汇报；
+* [ ] 全部公式可以追溯到本地 LaTeX/PDF；
+* [ ] 关键实现可以追溯到本地 repo；
+* [ ] 其他已下载论文仍保留在附录和本地索引中。
+
+完成后只报告：
+
+1. 最终 Markdown 路径；
+2. 12 篇 anchor paper 列表；
+3. bridge paper 数量；
+4. 移入附录的论文数量；
+5. 每篇 anchor 的公式数量；
+6. 总字数；
+7. 是否通过上述验收标准；
+8. `git status --short`。
+
+```
+```
+
+
+你的初版已经有很好的分类素材和七条谱系，但目前不少论文仍停留在“方法一句话 + 目标/公式线索 + 核验位置”，真正的模型定义、训练过程、loss 和采样公式尚未展开。 下面这版 prompt 会让 Codex **基于本地论文源码和 repo 重写现有文档，而不是重新下载或继续堆论文列表**。
+
+```text
+你是一名擅长概率生成模型、NLP 和技术写作的研究员。当前工作目录已经包含：
+
+1. 一份非自回归语言建模综述初稿；
+2. 所有相关论文的 PDF 和/或 LaTeX 源码；
+3. 已下载的论文官方代码仓库；
+4. 可能已有 papers.yaml、research_notes、references.bib、下载日志等辅助文件。
+
+本次任务不是重新进行大规模文献检索，也不是继续下载论文。你的核心任务是：
+
+- 深入阅读本地论文源码和代码；
+- 重构并改写现有综述；
+- 将原来“按类别罗列论文”的写法，改成“围绕七条技术谱系解释问题如何逐步演化”的写法；
+- 为每篇核心论文补全模型、训练方式、训练目标、loss、推理/采样算法和核心公式；
+- 清楚解释每项工作继承了什么、修改了什么、解决了什么、又引入了什么新问题；
+- 最终形成一篇可以直接用于 45–60 分钟组会汇报的中文 Markdown 综述。
+
+不要只给修改建议。请直接检查本地文件、完成重写、运行检查并交付最终 Markdown。
+
+---
+
+# 一、首先检查工作区
+
+开始执行以下操作：
+
+1. 查看当前目录结构；
+2. 查看 `git status --short`，但不要 reset、checkout 或删除用户文件；
+3. 搜索包含以下内容的初稿文件：
+
+   - `更简洁的谱系`
+   - `数学框架`
+   - `目标/公式线索`
+   - `D3PM -> SEDD/MDLM -> LLaDA`
+
+   可以使用：
+
+   `rg -n "更简洁的谱系|目标/公式线索|D3PM.*SEDD|数学框架" .`
+
+4. 同时检查：
+   - `papers/`
+   - `repos/`
+   - `research_notes/`
+   - `data/papers.yaml`
+   - `references.bib`
+   - 现有 Markdown 文件；
+5. 确认论文源码和 repo 的实际组织方式；
+6. 找到初稿后，先创建备份：
+
+   `backups/<原文件名>.before_lineage_rewrite.<扩展名>`
+
+7. 如果初稿是 `.txt`，最终输出为同名或合理命名的 `.md`；
+8. 如果初稿本来就是主要 Markdown，则备份后直接修改原文件；
+9. 不移动、不删除、不重新克隆现有论文和 repo；
+10. 除非某篇核心论文在本地确实缺失，否则不要联网重新下载。
+
+如果工作区已有 `AGENTS.md` 或 `PLAN.md`，先阅读它们。创建或更新一个简洁的 `PLAN.md`，但制定计划后必须立即继续执行，不要停下来等待确认。
+
+---
+
+# 二、这次重写要解决的核心问题
+
+当前初稿的问题不是论文数量不足，而是：
+
+1. 论文按照类别连续罗列，读者难以感受到“为什么下一项工作会出现”；
+2. 很多论文只有一句方法概括；
+3. “目标/公式线索”仍然只是占位符，并未真正写出公式；
+4. 没有完整说明：
+   - 模型输入输出；
+   - 状态空间；
+   - 概率分解；
+   - forward/noising process；
+   - reverse/generative process；
+   - 网络预测目标；
+   - 训练 loss；
+   - 训练数据构造；
+   - 推理和采样步骤；
+   - 长度处理；
+   - 并行性；
+   - 与前序方法的数学差异；
+5. D3PM、SEDD、MDLM 等理论差异没有被真正推导；
+6. continuous token state 与 learned latent representation 的边界没有充分说明；
+7. 有些箭头只是概念谱系，不一定是直接引用或直接继承关系，需要严谨区分；
+8. S2 citation 数、机构信号、`unknown venue` 等元数据不适合作为正文主体；
+9. “为什么不是普通相关工作”之类模板化表达重复过多，破坏叙述节奏。
+
+最终文档不能再出现大量如下内容：
+
+- “目标/公式线索：……”
+- “核验位置：Paper Sec. …”
+- “为什么不是普通相关工作：……”
+- 只有英文 loss 名称却没有公式；
+- 只说“采用 diffusion objective”却不说明预测什么、怎么采样；
+- 只说“flow matching”却不说明 probability path、velocity target 和 ODE；
+- 只说“latent diffusion”却不说明 encoder、decoder、prior 和联合目标。
+
+这些内容必须被真正展开。
+
+---
+
+# 三、总体叙事结构：五类作为坐标，七条谱系作为正文主线
+
+保留原有五类分类，但将其降为“横向分类坐标”，不要继续把五类直接作为全文唯一的章节结构。
+
+五类分类用于回答“这篇论文处在哪个状态空间和生成结构中”：
+
+1. 离散文本，非左到右的自回归或顺序灵活建模；
+2. 离散文本，双向并行 NAR 与 iterative refinement；
+3. 离散文本，离散状态 diffusion / masked diffusion / discrete flow；
+4. 离散文本，在连续 token-level 状态或连续松弛上建模；
+5. continuous embedding / learned latent / flow language modeling。
+
+正文则必须以以下七条技术谱系为主线：
+
+## 谱系 1
+
+AR  
+→ permutation / order-flexible AR  
+→ XLNet、Insertion Transformer
+
+核心问题：
+
+- 生成顺序是否必须等于文本表面顺序？
+- 改变顺序是否等于摆脱自回归？
+- 为什么给定 permutation 或 insertion action trajectory 后仍然是 AR？
+
+## 谱系 2
+
+one-shot NAT  
+→ iterative refinement  
+→ CMLM / Mask-Predict
+
+核心问题：
+
+- 一次性独立预测为什么导致 multi-modality？
+- fertility、length prediction 和 knowledge distillation 在解决什么？
+- iterative refinement 如何用多轮条件更新修补 one-shot NAT？
+- CMLM 与普通 MLM 有什么不同？
+- Mask-Predict 的训练和推理为什么并不完全一致？
+
+## 谱系 3
+
+CMLM / masked iterative generation  
+→ denoising bridge  
+→ masked diffusion
+
+重点工作：
+
+- SUNDAE；
+- DiffusionBERT；
+- D3PM；
+- MDLM。
+
+核心问题：
+
+- 什么时候“反复 mask-predict”开始变成有概率语义的 diffusion？
+- 普通 MLM objective 与 diffusion ELBO 有何区别？
+- forward corruption、reverse transition 和 time conditioning 分别增加了什么？
+- SUNDAE、DiffusionBERT 应被称为直接前驱、概念桥梁还是并行路线？
+
+注意：必须核验真实年份和方法关系。不要为了线性故事而错误声称 D3PM 一定直接继承 SUNDAE，或者 MDLM 直接继承 DiffusionBERT。允许画成分支汇合图。
+
+## 谱系 4
+
+D3PM  
+→ SEDD / MDLM  
+→ LLaDA
+
+核心问题：
+
+- D3PM 如何用 transition matrix 建立通用离散 diffusion？
+- SEDD 为什么改为估计 probability ratio / discrete score？
+- MDLM 如何利用 absorbing mask 和 SUBS 参数化化简目标？
+- LLaDA 如何把 masked diffusion recipe 扩展到大规模预训练和 SFT？
+- 从通用离散状态扩散到大规模语言模型，真正需要解决的是什么？
+
+注意：SEDD 与 MDLM 更可能是从 D3PM/离散扩散出发的两条并行理论路线，不要强行写成 SEDD → MDLM。
+
+## 谱系 5
+
+MDLM / large masked DLM  
+→ DiffuLLaMA / DiffuGPT  
+→ Block Diffusion
+
+这里实际是两条分支：
+
+1. 复用 AR checkpoint 的 adaptation 路线；
+2. block/semi-autoregressive 路线。
+
+核心问题：
+
+- DLM 是否必须从零训练？
+- AR objective 和 masked diffusion objective 有什么可连接之处？
+- 为什么 full-sequence diffusion 难以使用标准 KV cache？
+- Block Diffusion 如何在 block 之间恢复 AR、block 内保留 diffusion？
+- block size 为 1 时是否恢复标准 AR？
+- block size 为全序列时是否接近 full diffusion？
+- 这种折中换来了什么，又失去了什么？
+
+## 谱系 6
+
+Diffusion-LM  
+→ SSD-LM / CDCD / RDLM  
+→ Flow Map Language Models
+
+核心问题：
+
+- 为什么早期连续文本 diffusion 选择 token embedding？
+- embedding rounding 为什么成为瓶颈？
+- simplex/logit/one-hot 表示比普通 embedding 改善了什么？
+- RDLM 为什么强调 categorical geometry 和 statistical manifold？
+- diffusion trajectory 与 flow matching trajectory 有何区别？
+- Flow Map LM 如何把多步 flow 压缩到 one-step 或 few-step map？
+- one-step 生成是否真的消除了训练和推理成本？
+
+## 谱系 7
+
+Autoencoder latent  
+→ Latent Diffusion for Language Generation  
+→ Cola DLM / TextLDM / LDLM
+
+以及一条汇合但不一定直接继承的分支：
+
+token/contextual embedding flow  
+→ ELF
+
+核心问题：
+
+- token-aligned continuous state 与 learned semantic latent 的区别是什么？
+- VAE/autoencoder 为什么能够改变生成对象？
+- reconstruction fidelity 为什么不等于 latent 易于 diffusion？
+- Cola DLM、TextLDM、LDLM 分别如何处理 latent prior、表示对齐和联合训练？
+- ELF 是否真的属于 autoencoder latent 路线？
+- ELF 更适合被解释为 latent 路线的延续，还是 embedding flow 的独立汇合点？
+
+不要强行写成：
+
+Autoencoder → Cola → TextLDM → LDLM → ELF
+
+除非本地论文明确支持这种直接继承关系。
+
+更准确的叙述可以是：
+
+- Autoencoder latent → Cola/TextLDM/LDLM；
+- embedding-space continuous flow → ELF；
+- 两条路线在“将大部分生成过程移出离散 token space”这一目标上汇合。
+
+---
+
+# 四、箭头的含义必须严格区分
+
+全文中的箭头不能都被写成“后者直接建立在前者上”。
+
+为每一条关系选择以下标签之一：
+
+- `direct extension`：论文明确基于前一工作；
+- `shared formulation`：共享相同数学形式，但不一定直接继承；
+- `conceptual precursor`：前一工作提供概念基础；
+- `parallel branch`：同期或相近时期的独立路线；
+- `retrospective bridge`：后来看起来连接两种范式，但历史上不一定直接承接；
+- `contrast`：用于对比而非继承；
+- `convergence`：不同路线最后汇合到相似目标。
+
+在每个谱系章节中至少加入一张“关系表”：
+
+| 从 | 到 | 关系类型 | 继承内容 | 改变内容 | 解决的问题 | 新增代价 |
+|---|---|---|---|---|---|---|
+
+不得仅凭发布时间接近就声称存在继承关系。
+
+---
+
+# 五、最终 Markdown 的推荐结构
+
+最终综述建议采用以下结构。
+
+## 0. 标题、摘要和阅读指南
+
+包括：
+
+- 中文标题；
+- 英文标题；
+- 检索或资料版本截止日期；
+- 适用汇报时长；
+- 300–600 字摘要；
+- “如何阅读本文”；
+- 五类分类与七条谱系的关系。
+
+## 1. 一页式总览
+
+包含：
+
+1. 8–12 条关键结论；
+2. 一张五类分类表；
+3. 一张七条谱系 Mermaid 图；
+4. Mermaid 的普通文本/表格 fallback；
+5. 一张二维坐标图或矩阵：
+   - 横轴：生成因子分解/时间结构；
+   - 纵轴：状态表示空间。
+
+横轴可以包括：
+
+- left-to-right AR；
+- permutation/order-flexible AR；
+- one-shot NAR；
+- iterative refinement；
+- discrete diffusion；
+- flow matching；
+- block/semi-AR。
+
+纵轴可以包括：
+
+- discrete token；
+- mask/absorbing categorical state；
+- one-hot/simplex/logit；
+- static embedding；
+- contextual embedding；
+- VAE latent；
+- semantic/compressed latent。
+
+## 2. 统一符号与数学基础
+
+本章建立统一 notation，后文不再随意改变符号。
+
+至少定义：
+
+- 离散序列：
+  \(x=(x_1,\ldots,x_n)\)；
+- 词表：
+  \(\mathcal V\)；
+- 顺序：
+  \(\pi\)；
+- mask 集合：
+  \(M\)；
+- clean state：
+  \(x_0\)；
+- noisy state：
+  \(x_t\)；
+- 连续表示：
+  \(z_t\)；
+- transition matrix：
+  \(Q_t\)；
+- cumulative transition：
+  \(\bar Q_t\)；
+- encoder、decoder、denoiser、velocity field；
+- block 和 block index。
+
+本章必须解释而不是只罗列以下公式：
+
+### 2.1 左到右 AR
+
+\[
+p_\theta(x)=\prod_{i=1}^{n}p_\theta(x_i\mid x_{<i})
+\]
+
+说明：
+
+- chain rule；
+- teacher forcing；
+- NLL；
+- 推理串行深度；
+- KV cache。
+
+### 2.2 任意顺序 AR
+
+\[
+p_\theta(x\mid \pi)
+=
+\prod_{t=1}^{n}
+p_\theta(x_{\pi_t}\mid x_{\pi_{<t}})
+\]
+
+解释：
+
+- permutation 改变条件顺序；
+- 为什么仍是 AR；
+- 对 permutation 取期望的含义；
+- 训练顺序和真实生成顺序的区别。
+
+### 2.3 one-shot NAT
+
+\[
+p_\theta(y\mid x,N)
+=
+p_\theta(N\mid x)
+\prod_{i=1}^{N}p_\theta(y_i\mid x,N)
+\]
+
+解释：
+
+- 条件独立；
+- multi-modality；
+- length/fertility；
+- knowledge distillation 为什么有效。
+
+### 2.4 MLM/CMLM
+
+\[
+\mathcal L_{\mathrm{CMLM}}
+=
+-\mathbb E_{M}
+\sum_{i\in M}
+\log p_\theta(y_i\mid x,y_{\bar M})
+\]
+
+解释：
+
+- 这通常训练的是条件分布族；
+- 它是否定义一致的 joint distribution；
+- 为什么加上 iterative sampler 后才成为生成算法；
+- 它与 masked diffusion 的区别。
+
+### 2.5 离散 diffusion
+
+\[
+q(x_t\mid x_{t-1})
+=
+\operatorname{Cat}(x_t;x_{t-1}Q_t)
+\]
+
+\[
+q(x_t\mid x_0)
+=
+\operatorname{Cat}(x_t;x_0\bar Q_t)
+\]
+
+继续推导或说明：
+
+- \(\bar Q_t=Q_1Q_2\cdots Q_t\)；
+- \(q(x_{t-1}\mid x_t,x_0)\)；
+- reverse model；
+- ELBO；
+- \(x_0\)-parameterization；
+- absorbing mask 特例。
+
+### 2.6 continuous-time discrete diffusion
+
+解释：
+
+- rate matrix；
+- CTMC；
+- reverse rate；
+- probability ratio / discrete score；
+- tau-leaping。
+
+### 2.7 连续 diffusion
+
+\[
+z_t=\alpha_t z_0+\sigma_t\epsilon
+\]
+
+解释：
+
+- noise prediction；
+- \(z_0\)-prediction；
+- score prediction；
+- velocity prediction；
+- 离散化接口。
+
+### 2.8 Flow Matching
+
+解释并写出：
+
+- probability path；
+- conditional path；
+- conditional velocity；
+- marginal velocity；
+- flow matching loss；
+- ODE sampling。
+
+不要默认所有论文都使用完全相同的直线路径。每篇论文以其原文为准。
+
+### 2.9 VAE / latent language modeling
+
+写出：
+
+\[
+q_\phi(z\mid x),\qquad
+p_\psi(x\mid z)
+\]
+
+以及适用时的 ELBO：
+
+\[
+\mathcal L_{\mathrm{VAE}}
+=
+-\mathbb E_{q_\phi(z\mid x)}
+\log p_\psi(x\mid z)
++
+\beta D_{\mathrm{KL}}
+\left(
+q_\phi(z\mid x)\|p(z)
+\right)
+\]
+
+再解释：
+
+- reconstruction；
+- KL；
+- latent prior；
+- latent diffusion/flow；
+- representation alignment；
+- posterior collapse；
+- latent geometry。
+
+## 3–9. 七条技术谱系
+
+每条谱系使用统一叙事模板，见下一节。
+
+## 10. 五类分类与边界工作
+
+在七条主线讲完后，回到五类分类进行横向归纳。
+
+讨论：
+
+- insertion/edit；
+- MRF/energy-based；
+- FlowSeq/normalizing flow；
+- CTC/latent alignment；
+- discrete flow matching；
+- block diffusion；
+- semi-autoregressive；
+- continuous-discrete hybrid；
+- bit/analog-bit diffusion；
+- one-step/few-step distillation。
+
+回答五类是否足够。
+
+## 11. 跨路线统一比较
+
+至少提供以下比较：
+
+- 状态空间；
+- 联合分布；
+- 训练目标；
+- 网络预测对象；
+- 生成初始状态；
+- 采样更新；
+- 串行深度；
+- NFE；
+- full-sequence attention；
+- KV cache；
+- 可变长度；
+- infilling；
+- likelihood；
+- reasoning；
+- 控制性；
+- discretization gap；
+- latent bottleneck；
+- 主要失败模式。
+
+## 12. 核心争议和开放问题
+
+包括：
+
+- 并行 factorization error；
+- few-step quality collapse；
+- 固定长度；
+- KV cache；
+- 训练和推理不一致；
+- likelihood 与生成质量；
+- AR checkpoint 依赖；
+- continuous-to-discrete interface；
+- latent representation design；
+- reconstruction 与 generation 的冲突；
+- reasoning 是否需要顺序生成；
+- 理论并行是否等于 wall-clock 加速；
+- benchmark 可比性。
+
+## 13. 结论与组会汇报提纲
+
+包括：
+
+- 最终判断；
+- 推荐重点讲解的 10–15 篇工作；
+- 45–60 分钟时间安排；
+- 5 个可讨论问题。
+
+## 附录
+
+包括：
+
+- 完整论文清单；
+- 本地 paper/source/repo 链接；
+- 公式来源审计；
+- supporting papers；
+- 缩写表。
+
+---
+
+# 六、每条谱系章节的写作模板
+
+每一条谱系必须写成“问题推动方法演化”的故事，而不是论文卡片堆叠。
+
+每章按下面结构组织：
+
+## A. 起点：当时的方法解决了什么
+
+解释：
+
+- 原始问题；
+- 标准 formulation；
+- 当时为什么合理；
+- 它的核心假设是什么。
+
+## B. 暴露出的瓶颈
+
+必须具体说明：
+
+- 是表示问题？
+- 因子分解问题？
+- 条件独立问题？
+- 训练目标问题？
+- 采样步数问题？
+- 长度问题？
+- 离散化问题？
+- scaling 问题？
+
+## C. 第一项关键工作
+
+完整解释其：
+
+- 模型；
+- 概率分解；
+- 网络输入输出；
+- 训练数据构造；
+- loss；
+- 推理算法；
+- 与前一方法的数学区别。
+
+## D. 为什么仍然不够
+
+不要只写“效果不够好”。需要指出机制上的不足。
+
+## E. 下一项工作的改动
+
+明确使用：
+
+- “保留了……”
+- “替换了……”
+- “将……从……改为……”
+- “训练目标从……变为……”
+- “采样状态从……变为……”
+- “串行单位从 token 变为 block……”
+- “离散接口从每一步变为最后一步……”
+
+## F. 谱系小结
+
+给出一张表：
+
+| 工作 | 表示状态 | 因子分解 | 模型预测什么 | 训练 loss | 采样方式 | 解决的问题 | 新问题 |
+|---|---|---|---|---|---|---|---|
+
+并用 3–5 段话总结：
+
+- 这一谱系真正改变了什么；
+- 哪些只是工程改进；
+- 哪些是概率建模改变；
+- 还有什么没有解决。
+
+---
+
+# 七、每篇核心论文的强制内容
+
+对于每篇核心论文，正文必须包含以下内容。
+
+## 1. 在谱系中的位置
+
+用 1–2 段说明：
+
+- 前一工作是什么；
+- 当前论文改变哪一部分；
+- 它是直接继承、并行分支还是概念桥梁。
+
+## 2. 模型和变量
+
+明确列出：
+
+- 输入；
+- 输出；
+- clean state；
+- noisy/latent state；
+- conditioning；
+- 状态空间；
+- Transformer 类型；
+- attention mask；
+- 是否 time-conditioned；
+- 是否 encoder-decoder；
+- 是否使用外部 tokenizer/encoder/decoder；
+- 是否有 length predictor；
+- 是否有 latent bottleneck。
+
+## 3. 概率模型
+
+写出论文实际采用的：
+
+- 联合分布；
+- 条件分布；
+- factorization；
+- forward process；
+- reverse process；
+- latent prior；
+- block factorization；
+- flow ODE。
+
+不能只使用通用公式代替论文具体公式。
+
+## 4. 网络预测目标
+
+明确模型到底预测：
+
+- token logits；
+- masked token；
+- \(x_0\)；
+- posterior；
+- noise；
+- score；
+- probability ratio；
+- reverse rate；
+- velocity；
+- flow map；
+- latent；
+- decoder condition。
+
+这一项不得模糊写成“模型进行去噪”。
+
+## 5. 训练方式
+
+写清楚每个训练样本如何生成：
+
+1. 如何采样时间 \(t\)；
+2. 如何采样 mask/noise；
+3. 如何得到 \(x_t\) 或 \(z_t\)；
+4. Transformer 收到什么；
+5. 预测 target 是什么；
+6. loss 如何计算；
+7. loss 对哪些位置求和；
+8. 是否有时间权重；
+9. 是否使用 auxiliary loss；
+10. 是否联合训练 encoder/decoder；
+11. 是否从 AR checkpoint 初始化；
+12. 是否使用 SFT 或蒸馏。
+
+## 6. 核心 loss
+
+正文必须真正写出公式。
+
+每篇 anchor paper 原则上至少需要：
+
+- 一个模型或状态定义公式；
+- 一个训练目标公式；
+- 一个推理/采样更新公式或算法；
+- 一个论文特有的关键公式。
+
+不是机械要求数量，而是不能漏掉方法成立所依赖的关键公式。
+
+每个公式后必须：
+
+- 定义所有新符号；
+- 解释直观意义；
+- 说明它与上一工作的区别；
+- 标明来自论文哪个 section/equation；
+- 如统一记号与原论文记号不同，说明映射关系。
+
+## 7. 推理与采样
+
+至少写清：
+
+- 初始状态；
+- 一共几步；
+- 每步更新哪些位置；
+- 是否可以同时更新多个 token；
+- confidence/remasking 策略；
+- transition/schedule；
+- ODE solver；
+- tau-leaping；
+- block 生成；
+- termination；
+- 长度处理；
+- 最终如何得到 token。
+
+尽量提供 8–20 行的简洁伪代码。
+
+## 8. 代码对应
+
+查阅本地官方 repo，核验：
+
+- model 文件；
+- loss 文件；
+- corruption/noising 文件；
+- sampler/decoding 文件；
+- config；
+- 训练入口；
+- 推理入口。
+
+正文只需简要说明关键实现，但必须在 `formula_audit.md` 中记录实际代码路径。
+
+不要复制大段代码。
+
+## 9. 改进与局限
+
+分别写：
+
+- 相对于前驱解决了什么；
+- 理论上解决还是经验上缓解；
+- 是否依赖额外训练数据；
+- 是否依赖 knowledge distillation；
+- 是否依赖 AR initialization；
+- 是否牺牲 likelihood、长度灵活性、KV cache 或采样速度；
+- 论文实验是否真的支持其主张。
+
+---
+
+# 八、七条谱系中必须展开的具体理论
+
+## 谱系 1：XLNet 与 Insertion Transformer
+
+### XLNet
+
+必须解释：
+
+1. permutation language modeling objective；
+2. 对 permutation 求期望；
+3. 为什么不能直接看到目标 token；
+4. two-stream attention 的作用；
+5. content stream 与 query stream；
+6. 训练时改变 factorization order，而不是简单随机打乱文本；
+7. 为什么 XLNet 不是严格 NAR 生成器。
+
+至少核验并写出：
+
+\[
+\mathbb E_{\pi}
+\sum_t
+\log p_\theta
+(x_{\pi_t}\mid x_{\pi_{<t}})
+\]
+
+以及 two-stream attention 对应的更新形式或足够准确的公式描述。
+
+### Insertion Transformer
+
+必须解释：
+
+1. canvas；
+2. insertion slot；
+3. token-position/action；
+4. insertion action probability；
+5. 生成轨迹如何诱导 sequence probability；
+6. 不同 insertion order；
+7. parallel insertion；
+8. termination；
+9. 为什么动作级生成仍然具有自回归性。
+
+不能只说“它可以在任意位置插入 token”。
+
+---
+
+## 谱系 2：NAT → refinement → CMLM
+
+### Non-Autoregressive NMT
+
+必须解释：
+
+1. factorized target distribution；
+2. length/fertility latent；
+3. multimodality 的数学来源；
+4. knowledge distillation 如何降低目标分布熵；
+5. one-shot 并行推理；
+6. 独立预测导致的重复、漏词和模式混合。
+
+### Iterative Refinement
+
+必须解释：
+
+1. 初始预测；
+2. refinement chain；
+3. 每轮条件分布；
+4. 训练时如何构造中间状态；
+5. 训练和推理是否一致；
+6. 多轮更新如何放松 one-shot 独立假设。
+
+### CMLM / Mask-Predict
+
+必须解释：
+
+1. conditional MLM loss；
+2. mask 数量的采样；
+3. 第一次全 mask 或 length-conditioned 初始化；
+4. confidence-based token selection；
+5. remasking schedule；
+6. 已确定 token 与待预测 token；
+7. 为什么每一轮内仍有条件独立；
+8. 为什么多轮迭代可以改善整体一致性；
+9. 它与普通 BERT MLM 的差别。
+
+必须给出训练算法和推理算法。
+
+---
+
+## 谱系 3：CMLM → masked diffusion
+
+### SUNDAE
+
+核验并解释：
+
+- corruption process；
+- unrolled denoising；
+- one-step 与多步 loss；
+- 是否有显式 diffusion time；
+- 它与 CMLM 和 DLM 的相似与不同。
+
+### DiffusionBERT
+
+核验并解释：
+
+- discrete diffusion/noising；
+- time-aware encoding；
+- transition schedule；
+- denoising objective；
+- 与 BERT 初始化或 encoder architecture 的关系；
+- 它作为生成模型的具体采样方式。
+
+### D3PM
+
+必须详细推导：
+
+1. categorical transition matrix；
+2. cumulative transition；
+3. posterior：
+
+   \[
+   q(x_{t-1}\mid x_t,x_0)
+   \]
+
+4. reverse model；
+5. ELBO decomposition；
+6. \(x_0\)-parameterization；
+7. auxiliary cross entropy；
+8. uniform、absorbing、structured transition；
+9. absorbing mask 如何连接 masked generation。
+
+### MDLM
+
+必须详细解释：
+
+1. absorbing-state forward process；
+2. continuous-time 或离散时间 mask schedule；
+3. SUBS parameterization；
+4. 已 unmask token 为什么可以保持不变；
+5. true posterior；
+6. approximate posterior；
+7. diffusion ELBO；
+8. Rao-Blackwellization；
+9. weighted masked cross entropy；
+10. 为什么它看起来像 MLM，但具有不同的概率解释；
+11. ancestral sampling 和时间步选择。
+
+必须明确比较：
+
+| 维度 | CMLM | D3PM | MDLM |
+|---|---|---|---|
+| corruption | | | |
+| time variable | | | |
+| objective | | | |
+| joint model | | | |
+| sampler | | | |
+| remasking | | | |
+
+---
+
+## 谱系 4：D3PM → SEDD/MDLM → LLaDA
+
+### SEDD
+
+必须解释：
+
+1. continuous-time discrete diffusion；
+2. rate matrix；
+3. reverse process 中为何需要概率比；
+4. discrete score / score ratio；
+5. score entropy；
+6. score entropy 与 score matching/NELBO 的关系；
+7. tau-leaping sampling；
+8. 网络输出如何转化为 reverse rate；
+9. 它与 D3PM transition posterior 参数化的根本区别。
+
+不能只写“SEDD 估计数据分布比率”。
+
+### MDLM
+
+本章不要机械重复前一章。使用交叉引用，重点说明：
+
+- SEDD 与 MDLM 分别简化了离散 diffusion 的哪个部分；
+- 一个偏 ratio/score formulation；
+- 一个偏 absorbing mask 和简化 CE recipe；
+- 二者为何都是大规模 DLM 的理论基础。
+
+### LLaDA
+
+必须解释：
+
+1. forward masking process；
+2. mask rate/time sampling；
+3. \(1/t\) 或论文实际采用的时间权重；
+4. masked diffusion pretraining objective；
+5. NLL upper bound 或 likelihood 解释；
+6. reverse generation；
+7. unmasking schedule；
+8. instruction SFT 时 prompt 与 response 如何处理；
+9. response-only loss；
+10. 模型 architecture 是否与 decoder-only Transformer 相同；
+11. 双向 attention 与标准 causal attention 的区别；
+12. 规模化后仍然存在的推理问题。
+
+需要将 LLaDA 与 MDLM 做“公式层面”的对应，而不是只说二者都使用 mask。
+
+---
+
+## 谱系 5：DiffuLLaMA / DiffuGPT 与 Block Diffusion
+
+### DiffuLLaMA / DiffuGPT
+
+必须解释：
+
+1. 从 AR checkpoint 初始化哪些参数；
+2. causal mask 如何改变；
+3. positional/time conditioning 如何加入；
+4. continued pretraining 如何构造 corrupted input；
+5. diffusion objective；
+6. 论文给出的 AR objective 与 diffusion objective 联系；
+7. adaptation 需要多少额外训练；
+8. 从 AR 初始化可能带来的 inductive bias；
+9. 与从零训练 LLaDA 的比较边界。
+
+### Block Diffusion
+
+必须解释：
+
+1. 序列如何切分为 block；
+2. block 之间的 AR factorization：
+
+   \[
+   p(x)
+   =
+   \prod_b p(x^{(b)}\mid x^{(<b)})
+   \]
+
+3. block 内如何定义 diffusion conditional；
+4. block diffusion NELBO；
+5. block 内 attention；
+6. prefix/context 如何进入 denoiser；
+7. KV cache 为什么重新可用；
+8. 可变长度和终止；
+9. block size 为 1 时与 AR 的关系；
+10. block size 为整段时与 full-sequence DLM 的关系；
+11. block size 对并行性和质量的影响。
+
+必须绘制一个 block decoding 示意图。
+
+---
+
+## 谱系 6：continuous token-level state
+
+### Diffusion-LM
+
+必须解释：
+
+1. token embedding 如何成为 \(z_0\)；
+2. embedding Gaussian diffusion；
+3. noise schedule；
+4. denoising objective；
+5. rounding loss 或 token reconstruction；
+6. embedding rounding；
+7. conditional control 或 classifier guidance；
+8. 固定序列长度问题；
+9. 为什么 embedding manifold 与 Gaussian prior 不匹配。
+
+### CDCD
+
+作为桥梁解释：
+
+- categorical data 的连续化；
+- score interpolation；
+- one-hot/simplex 视角；
+- 与普通 embedding diffusion 的差别。
+
+### SSD-LM
+
+必须解释：
+
+1. vocabulary simplex/logit representation；
+2. 如何编码 token；
+3. 如何添加连续噪声；
+4. denoiser 预测什么；
+5. simplex projection 或最终 decoding；
+6. semi-autoregressive block；
+7. modular control；
+8. 为什么它同时跨越类别 4 与 block/semi-AR 标签。
+
+### RDLM
+
+必须解释：
+
+1. categorical distribution 的 statistical manifold；
+2. 使用哪种坐标或映射；
+3. Riemannian metric；
+4. forward process；
+5. radial symmetry；
+6. simulation-free objective；
+7. continuous flow 与 discrete diffusion 的对应；
+8. 最终 token recovery；
+9. 理论优点与实现成本。
+
+不要仅用“Riemannian diffusion”一词带过。
+
+### Flow Map Language Models
+
+必须解释：
+
+1. 基础 continuous denoising/flow matching model；
+2. probability path；
+3. velocity target；
+4. flow matching loss；
+5. ODE trajectory；
+6. flow map 的定义；
+7. teacher trajectory 或自蒸馏；
+8. flow-map self-distillation；
+9. one-step/few-step inference；
+10. one-step 模型如何从多步流获得监督；
+11. one-step 质量下降和误差累积问题；
+12. 最终离散化方式。
+
+必须区分：
+
+- flow matching；
+- consistency model；
+- flow-map distillation；
+- 普通 diffusion distillation。
+
+如论文没有使用其中某个术语，不要擅自混用。
+
+---
+
+## 谱系 7：learned latent 与 ELF
+
+### Latent Diffusion for Language Generation
+
+必须解释：
+
+1. text encoder；
+2. decoder；
+3. latent sequence；
+4. autoencoder reconstruction objective；
+5. latent diffusion prior；
+6. encoder/decoder 是否冻结；
+7. latent normalization；
+8. decoder 如何从 latent 生成 token；
+9. reconstruction quality 和 generation quality 的差异。
+
+### Cola DLM
+
+必须解释：
+
+1. Text VAE；
+2. \(q_\phi(z\mid x)\)；
+3. conditional decoder \(p_\theta(x\mid z)\)；
+4. latent prior；
+5. flow matching 或 diffusion prior；
+6. block-causal DiT；
+7. global semantic prior 与 local realization；
+8. 各阶段是分开训练还是联合训练；
+9. 完整训练目标；
+10. inference pipeline。
+
+### TextLDM
+
+必须解释：
+
+1. Transformer VAE；
+2. reconstruction loss；
+3. KL 或其他 regularization；
+4. REPA/representation alignment；
+5. frozen language representation 的作用；
+6. latent DiT；
+7. flow matching prior；
+8. 为什么仅提高重建率不能保证生成质量；
+9. latent 的长度和压缩比例。
+
+### LDLM
+
+必须解释：
+
+1. naive joint training 为什么失败；
+2. encoder、decoder、diffusion prior 的联合目标；
+3. warmup；
+4. adaptive timestep；
+5. latent space 如何被生成模型反向塑造；
+6. diversity、reconstruction、denoising difficulty 之间的冲突。
+
+### ELF
+
+必须先核验它的实际状态表示，再决定分类措辞。
+
+必须解释：
+
+1. 输入 token 如何变成 embedding state；
+2. 这个 embedding 是 static、contextual 还是 learned continuous state；
+3. probability path；
+4. continuous-time Flow Matching；
+5. velocity network；
+6. 训练 target；
+7. ODE sampling；
+8. 最后一步的 token projection；
+9. shared-weight projection；
+10. 是否存在 autoencoder 或单独 decoder；
+11. 为什么大部分轨迹不需要 token-level projection；
+12. 与 Diffusion-LM 的区别；
+13. 与 Cola/TextLDM/LDLM 的区别；
+14. ELF 更接近 token-level continuous flow 还是 learned representation flow。
+
+如果 ELF 没有 VAE/autoencoder，就必须明确写：
+
+“ELF 与 latent diffusion 路线在连续生成目标上汇合，但不是相同的 encoder–latent prior–decoder 架构。”
+
+---
+
+# 九、公式提取与核验流程
+
+对每篇核心论文执行以下流程。
+
+## 1. 优先读取 LaTeX 源码
+
+使用：
+
+- `rg "\\label\{" papers/...`
+- `rg "\\begin\{equation|align|gather" papers/...`
+- `rg "loss|objective|posterior|reverse|forward|sampling|velocity|score|rate" papers/...`
+
+确定：
+
+- 主 `.tex` 文件；
+- 方法章节；
+- 关键公式 label；
+- appendix 中的重要推导。
+
+## 2. PDF 作为交叉核验
+
+如果源码缺失或公式分散：
+
+- 使用本地 PDF；
+- 可以使用 `pdftotext`；
+- 不要依赖 OCR，除非确实没有文本层；
+- 不因 PDF 解析错误而猜测公式。
+
+## 3. Repo 作为实现核验
+
+搜索：
+
+- `loss`
+- `forward_process`
+- `q_sample`
+- `noise`
+- `mask_prob`
+- `schedule`
+- `sample`
+- `denoise`
+- `velocity`
+- `score`
+- `flow`
+- `posterior`
+- `transition`
+- `block`
+- `remask`
+
+确认论文公式在代码中的实际实现。
+
+## 4. 建立公式审计表
+
+创建：
+
+`formula_audit.md`
+
+至少包含：
+
+| Paper | 公式用途 | 正文公式编号 | 本地 TeX 路径 | TeX label/section | 对应 repo 路径 | 已核验 |
+|---|---|---|---|---|---|---|
+
+对于核心论文，不允许只写 `paper Sec. 3`。尽可能给出：
+
+- 公式编号；
+- LaTeX label；
+- 文件路径；
+- 代码实现路径。
+
+如果论文没有编号，则记录“unnumbered equation in Sec. X”。
+
+## 5. 统一记号
+
+正文使用统一记号，但不得歪曲论文。
+
+第一次出现时说明：
+
+“原论文使用 \(z\) 表示 permutation，本文为避免与连续 latent 混淆，将其改记为 \(\pi\)。”
+
+类似冲突都要处理。
+
+---
+
+# 十、将代码阅读融入方法解释
+
+对于有本地 repo 的核心论文，在正文中加入简洁的“实现落点”说明，例如：
+
+> 在官方实现中，时间采样与 mask corruption 位于
+> `src/diffusion.py`，加权 CE 位于 `src/losses.py`，
+> sampler 位于 `src/sampling.py`。
+
+但不要让正文变成代码阅读笔记。
+
+详细代码对应放入 `formula_audit.md` 或附录。
+
+需要重点检查：
+
+- 论文写的是哪种 parameterization；
+- 代码实际预测的是 logits、\(x_0\)、noise、score 还是 velocity；
+- loss 是否只计算 corrupted positions；
+- 是否有 hidden auxiliary loss；
+- sampling schedule 是否与论文一致；
+- repo 默认配置与主实验配置是否一致。
+
+若论文与 repo 有差异，明确写出，不要默默选择其中一个。
+
+---
+
+# 十一、写作风格要求
+
+全文使用中文，论文标题保留英文。
+
+要求：
+
+1. 以问题驱动，而不是文献清单驱动；
+2. 每章开头先讲“前一方法哪里不够”；
+3. 每篇论文结束时回答“它将哪一项建模选择换成了什么”；
+4. 每个公式后解释直觉；
+5. 不连续堆砌十几个公式；
+6. 不复制论文摘要；
+7. 不大段翻译论文；
+8. 不使用宣传式措辞；
+9. 不把论文作者声称的 SOTA 当作独立事实；
+10. 区分：
+    - 理论并行；
+    - 串行采样步数；
+    - NFE；
+    - FLOPs；
+    - wall-clock throughput；
+11. 区分：
+    - 非左到右；
+    - 非自回归；
+    - 双向 attention；
+    - 并行预测；
+    - 多步 denoising；
+12. 区分：
+    - embedding diffusion；
+    - simplex diffusion；
+    - contextual embedding flow；
+    - VAE latent diffusion；
+13. 不在正文突出 S2 citation count、influential count 和机构信号；
+14. citation count 等元数据如需保留，移入附录；
+15. 删除重复的模板句式；
+16. 每个谱系都要有自然过渡段；
+17. Markdown 数学使用标准：
+    - 行内公式 `$...$`
+    - 独立公式 `$$...$$` 或 `\[...\]`
+18. 不使用无法渲染的自定义 LaTeX 宏，除非在文档开头定义；
+19. 表格不能过宽，必要时拆分；
+20. Mermaid 图必须有普通文本 fallback。
+
+---
+
+# 十二、正文深度与篇幅
+
+目标是组会综述，不是论文摘要集合。
+
+建议：
+
+- 正文约 20,000–35,000 中文字；
+- 每条主谱系约 1,500–4,000 字；
+- 重点论文可以更长；
+- supporting papers 可以放到边栏、表格或附录；
+- 质量优先，不为满足字数重复内容。
+
+每篇 anchor paper 至少应让读者回答：
+
+1. 模型状态是什么？
+2. 网络输入是什么？
+3. 网络输出是什么？
+4. 如何构造训练样本？
+5. loss 是什么？
+6. 如何采样？
+7. 与上一项工作的核心公式差在哪里？
+8. 为什么这一变化有效？
+9. 它还有什么根本问题？
+
+如果正文看完后仍无法回答其中任何一个问题，说明该论文部分没有写完整。
+
+---
+
+# 十三、推荐加入的图和表
+
+至少制作：
+
+## 图 1：五类分类 × 七条谱系总图
+
+显示：
+
+- 类别是状态空间/因子分解坐标；
+- 谱系是历史和问题演化路径。
+
+## 图 2：CMLM 到 masked diffusion
+
+展示：
+
+- 随机 mask 训练；
+- iterative remasking；
+- forward corruption；
+- reverse denoising；
+- 时间变量；
+- objective 的变化。
+
+## 图 3：D3PM、SEDD、MDLM 的参数化对比
+
+展示：
+
+- transition posterior；
+- score ratio；
+- \(x_0\)/SUBS；
+- 各自网络预测内容。
+
+## 图 4：full DLM、Block Diffusion 和 AR
+
+展示：
+
+- token-wise AR；
+- block-wise AR；
+- block 内 diffusion；
+- KV cache 范围。
+
+## 图 5：三种连续文本状态
+
+展示：
+
+1. token embedding/simplex；
+2. contextual embedding；
+3. learned VAE/semantic latent。
+
+## 表 1：每篇核心工作的训练和采样
+
+列：
+
+- paper；
+- clean state；
+- noisy state；
+- prediction target；
+- loss；
+- sampler；
+- NFE；
+- final discretization。
+
+## 表 2：每个箭头究竟改变了什么
+
+列：
+
+- transition；
+- representation；
+- factorization；
+- objective；
+- sampler；
+- benefit；
+- cost。
+
+---
+
+# 十四、需要移出正文或重写的内容
+
+将以下内容从主叙述中移除或改写：
+
+1. `S2 citation/influential = ...`
+2. `机构信号 = ...`
+3. `venue = unknown`
+4. 重复出现的“为什么不是普通相关工作”
+5. 只有标题没有展开的方法卡片
+6. 只有 `目标/公式线索` 的段落
+7. 未经核验的“被后续路线继承”
+8. 将概念相似误写成直接引用关系
+9. 仅用一句话概括复杂理论，如：
+   - “SEDD 使用 score entropy”
+   - “RDLM 使用流形”
+   - “ELF 使用 flow matching”
+10. 不能公平比较的实验数字。
+
+这些元数据可保留在 appendix 或 manifest，但不应破坏组会叙述。
+
+---
+
+# 十五、执行流程
+
+按照以下阶段完成，不要只执行第一阶段。
+
+## 阶段 1：结构和缺口审计
+
+创建：
+
+`revision_gap_audit.md`
+
+列出：
+
+- 当前初稿章节；
+- 每篇论文当前已有内容；
+- 缺少的模型信息；
+- 缺少的公式；
+- 缺少的训练说明；
+- 缺少的采样说明；
+- 谱系关系是否严谨；
+- 需要重写或移动的段落。
+
+## 阶段 2：逐篇公式与代码核验
+
+优先处理核心论文。
+
+建议按谱系分别建立临时笔记：
+
+`work_notes/lineage_1.md`
+到
+`work_notes/lineage_7.md`
+
+不要直接在最终文件里边查边堆未经整理的内容。
+
+## 阶段 3：先重写数学基础
+
+建立统一 notation，为七条谱系提供公共语言。
+
+## 阶段 4：重写七条谱系
+
+每完成一条谱系，检查：
+
+- 是否解释起点问题；
+- 是否有核心公式；
+- 是否有训练；
+- 是否有采样；
+- 是否解释每个箭头；
+- 是否出现错误的直接继承表述。
+
+## 阶段 5：横向比较和结论
+
+最后写：
+
+- 五类横向归纳；
+- 跨路线比较；
+- 开放问题；
+- 组会提纲。
+
+不要先写结论再用论文内容填充。
+
+## 阶段 6：引用、公式和链接检查
+
+检查：
+
+- 所有核心论文是否进入参考文献；
+- 所有公式是否可渲染；
+- 符号是否在使用前定义；
+- 本地相对链接是否存在；
+- 论文标题、年份和作者是否一致；
+- Mermaid 是否有 fallback；
+- 是否存在 TODO/TBD；
+- 是否仍出现“目标/公式线索”。
+
+## 阶段 7：最终润色
+
+重点检查叙事：
+
+- 每一节是否回答“为什么会出现下一项工作”；
+- 是否仍像论文清单；
+- 是否有过多 bullet；
+- 段落之间是否自然；
+- 同一理论是否重复解释；
+- 交叉引用是否正确。
+
+---
+
+# 十六、交付文件
+
+至少交付：
+
+## 1. 最终综述
+
+若初稿为 Markdown：
+
+- 备份后修改原文件。
+
+若初稿为 txt 或文件名不适合作为最终文档：
+
+- 创建 `non_autoregressive_language_modeling_survey.md`。
+
+## 2. 公式审计
+
+`formula_audit.md`
+
+记录所有核心公式的本地来源和实现位置。
+
+## 3. 修改报告
+
+`revision_report.md`
+
+包括：
+
+- 原结构存在的主要问题；
+- 新结构；
+- 七条谱系的最终组织方式；
+- 新增了哪些论文公式；
+- 哪些继承关系被修正；
+- 哪些内容移入附录；
+- 哪些核心论文仍因源码问题无法完全核验；
+- 最终文件统计。
+
+## 4. 缺口审计
+
+保留：
+
+`revision_gap_audit.md`
+
+作为修改过程记录。
+
+不要修改或覆盖本地论文源码和 repo。
+
+---
+
+# 十七、验收条件
+
+只有满足以下条件才算完成。
+
+## 结构
+
+- [ ] 正文以七条技术谱系为主线；
+- [ ] 五类分类作为横向坐标保留；
+- [ ] 七条谱系均有问题起点、演化过程和总结；
+- [ ] 不再是论文逐条卡片堆叠。
+
+## 论文内容
+
+- [ ] 每篇 anchor paper 都包含模型；
+- [ ] 每篇 anchor paper 都包含训练数据构造；
+- [ ] 每篇 anchor paper 都包含网络预测目标；
+- [ ] 每篇 anchor paper 都包含实际 loss 公式；
+- [ ] 每篇 anchor paper 都包含推理或采样算法；
+- [ ] 每篇 anchor paper 都说明与前驱的差异；
+- [ ] 每篇 anchor paper 都说明局限。
+
+## 理论
+
+- [ ] D3PM posterior 和 ELBO 被解释；
+- [ ] SEDD reverse ratio 和 score entropy 被解释；
+- [ ] MDLM absorbing process、SUBS 和 weighted CE 被解释；
+- [ ] LLaDA objective 和 SFT 被解释；
+- [ ] Block Diffusion factorization 和 NELBO 被解释；
+- [ ] Diffusion-LM embedding diffusion 与 rounding 被解释；
+- [ ] RDLM manifold formulation 被解释；
+- [ ] Flow Map objective 与 distillation 被解释；
+- [ ] VAE/latent prior/decoder 三部分被解释；
+- [ ] ELF flow 与 final projection 被解释。
+
+## 严谨性
+
+- [ ] 所有核心公式可追溯到本地论文；
+- [ ] 关键实现可追溯到本地 repo；
+- [ ] 不虚构公式；
+- [ ] 不虚构直接继承关系；
+- [ ] 不把非左到右等同于 NAR；
+- [ ] 不把 CMLM 等同于完整 diffusion；
+- [ ] 不把 embedding state 和 VAE latent 混为一类；
+- [ ] 不把理论并行等同于实际速度。
+
+## 文档质量
+
+- [ ] 没有 TODO/TBD；
+- [ ] 没有“目标/公式线索”占位符；
+- [ ] 没有大量重复模板句；
+- [ ] Markdown 数学可以渲染；
+- [ ] 本地链接有效；
+- [ ] 表格没有严重溢出；
+- [ ] Mermaid 有 fallback；
+- [ ] 可直接支持 45–60 分钟组会。
+
+---
+
+# 十八、最后的自检问题
+
+完成初稿重写后，逐项回答：
+
+1. 读者能否从 XLNet 看出“非左到右不等于非自回归”？
+2. 读者能否从 NAT 到 Mask-Predict 看出 multi-modality 如何推动 refinement？
+3. 读者能否准确说出 CMLM 与 MDLM loss 的区别？
+4. 读者能否说出 D3PM、SEDD、MDLM 的网络分别预测什么？
+5. 读者能否说出 LLaDA 如何训练和如何生成？
+6. 读者能否解释 DiffuLLaMA 为什么能够复用 AR checkpoint？
+7. 读者能否推导 Block Diffusion 在 block size 为 1 时为何接近 AR？
+8. 读者能否区分 embedding、simplex、manifold 和 VAE latent？
+9. 读者能否说出 Flow Map LM 如何从多步 flow 得到一步生成器？
+10. 读者能否解释 Cola、TextLDM、LDLM 的 latent training 差异？
+11. 读者能否解释 ELF 为什么不一定属于标准 autoencoder latent diffusion？
+12. 读者能否从七条谱系自然理解该领域为什么发展到今天？
+
+任何一题无法从正文中直接回答，都要继续补充相应章节。
+
+---
+
+# 十九、最终终端回复
+
+全部完成后，不要在终端粘贴整篇综述。只报告：
+
+1. 找到并修改的初稿路径；
+2. 备份路径；
+3. 最终 Markdown 路径；
+4. 总字数；
+5. 深入展开的核心论文数量；
+6. 新增的公式数量；
+7. 已关联到 repo 实现的论文数量；
+8. 七条谱系是否全部完成；
+9. 尚未完全核验的内容；
+10. 链接和公式检查结果；
+11. `git status --short` 摘要。
+
+再次强调：
+
+- 本地资料优先；
+- 不重新做下载工程；
+- 不在计划或审计阶段停止；
+- 不只输出修改建议；
+- 不保留公式占位符；
+- 不为了故事流畅而制造虚假的论文继承关系；
+- 最终需要直接完成 Markdown 重写。
+```

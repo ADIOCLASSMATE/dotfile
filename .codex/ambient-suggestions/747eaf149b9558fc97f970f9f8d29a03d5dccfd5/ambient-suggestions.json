@@ -1,0 +1,60 @@
+{
+  "projectRoot": "/Users/wjx/code",
+  "generatedAtMs": 1781611372167,
+  "currentSuggestionIds": [
+    "39f832f7-a80a-4412-89d5-54e4fd660bbd",
+    "5b07b225-52fe-466b-9ec8-cdfc43fe4e48"
+  ],
+  "suggestions": [
+    {
+      "id": "58e1f969-899b-442a-a700-beedc3bfd5db",
+      "title": "Merge today’s proposal_ori2 into a cleaner final submission draft",
+      "description": "`proposal_ori2.md` was created today and is now the freshest draft, but it also reintroduced wording and structure regressions relative to `proposal_restructured.md` like the broken abstract sentence. Codex can diff them, keep the stronger new content, and produce one polished base draft instead of letting the proposal fork again.",
+      "prompt": "Please compare `proposal_ori2.md` against `proposal_restructured.md`, identify which changes genuinely improve the proposal, and produce a single cleaned merged draft. Preserve the stronger technical additions from today, but fix wording regressions, remove duplicated framing, and tell me which file should become the main submission version.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1780299119830,
+      "updatedAtMs": 1780299119830
+    },
+    {
+      "id": "e3600b49-4332-45b5-bbe3-91445e1014d5",
+      "title": "Integrate Stage II.5 and the metric-validity table into the proposal",
+      "description": "`experiment_analysis_dimensions.md` was added on May 30, but the current proposal draft still does not contain the proposed `Stage II.5 — Inference-time causal validation` or the metric-validity table that would make the experiment section much harder to attack. Codex can splice only the highest-value pieces into the main proposal.",
+      "prompt": "Read `experiment_analysis_dimensions.md` and `proposal_ori2.md`, then integrate the strongest missing experiment-analysis pieces into the proposal itself. In particular, add a concise `Stage II.5 — Inference-time causal validation` subsection and a compact metric-validity table, without bloating the draft.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1780299119830,
+      "updatedAtMs": 1780299119830
+    },
+    {
+      "id": "863e1b8a-1514-49c0-a682-5e2c3ff6beda",
+      "title": "Resync the Chinese proposal with the latest English theory changes",
+      "description": "`proposal_restructured_cn.md` predates today’s English rewrite and still contains an explicit citation placeholder about mHC and AttnRes. Codex can update only the changed sections, keep terminology aligned across languages, and resolve the obvious submission-time loose ends.",
+      "prompt": "Please update `proposal_restructured_cn.md` so it matches the latest English proposal logic and terminology, especially the revised scope, descriptor language, and experiment framing. Also check every explicit placeholder or citation-warning note and clean them up so the Chinese draft is submission-ready.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1780299119830,
+      "updatedAtMs": 1780299119830
+    },
+    {
+      "id": "39f832f7-a80a-4412-89d5-54e4fd660bbd",
+      "title": "Make train_test force each opponent mix branch deterministically",
+      "description": "Yesterday's `train-diy-v0_43` run still collapsed against `common_ai`, and today's uncommitted change adds random `selfplay/common_ai` mixing plus `random` checkpoint loading. A deterministic local harness would let Codex prove each branch before you burn another remote run.",
+      "prompt": "In `/Users/wjx/code/kaiwu`, add a deterministic local smoke path for `episode.train_opponent_mix` so `train_test` can force `common_ai`, `selfplay`, or `model_pool` without relying on randomness. I want a cheap way to verify the new opponent-selection logic and the `random` vs `latest` selfplay checkpoint behavior before the next cloud training job. Add focused tests for the selector and show me how to run the smoke checks locally.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1781611372167,
+      "updatedAtMs": 1781611372167
+    },
+    {
+      "id": "5b07b225-52fe-466b-9ec8-cdfc43fe4e48",
+      "title": "Save reward breakdown and opponent source in diagnostics artifacts",
+      "description": "Your latest commit already writes checkpoint diagnostics, but today's reward patch and opponent-mix logic are only visible in monitor logs. Extending the saved artifacts would make the next run answer the real question immediately: did `lane_progress` help, and against which opponent source?",
+      "prompt": "In `/Users/wjx/code/kaiwu`, extend `agent_diy` diagnostics so checkpoint artifacts include per-episode reward-item totals and the selected opponent source (`common_ai`, `selfplay`, or model-pool id). Wire it through the current training workflow, add/update tests, and keep the artifact format compact so I can compare the next run without digging through raw logs.",
+      "appIds": [],
+      "status": "pending",
+      "createdAtMs": 1781611372167,
+      "updatedAtMs": 1781611372167
+    }
+  ]
+}
