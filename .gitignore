@@ -1,5 +1,8 @@
+# --- shell local overrides ---
 zsh/zshrc.d/99-private.local.zsh
 zsh/zshrc.d/*.local.zsh
+
+# --- system / editor files ---
 .DS_Store
 *.swp
 *.swo
@@ -11,73 +14,19 @@ zsh/zshrc.d/*.local.zsh
 .vscode/
 Session.vim
 tags
-# --- .claude runtime / secrets ---
-.claude/backups/
-.claude/.agents/
-.claude/bash-commands.log
-.claude/cache/
-.claude/cost-tracker.log
-.claude/debug/
-.claude/downloads/
-.claude/file-history/
-.claude/history.jsonl
-.claude/homunculus/
-.claude/metrics/
-.claude/ide/
-.claude/observer-last-run.log
-.claude/paste-cache/
-.claude/plans/
-.claude/plugins/cache/
-.claude/plugins/install-counts-cache.json
-.claude/plugins/installed_plugins.json
-.claude/plugins/known_marketplaces.json
-.claude/plugins/marketplaces/*.json
-.claude/projects/
-.claude/session-data/
-.claude/session-env/
-.claude/sessions/
-.claude/shell-snapshots/
-.claude/stats-cache.json
-.claude/statsig/
-.claude/tasks/
-.claude/telemetry/
-.claude/todos/
-.claude/transcripts/
-# secrets with API keys / tokens
-.claude/config.json
-.claude/settings.json
-.claude/settings.json.*
-.claude/backup-settings.json
-.claude/metrics/
 
-# --- .codex runtime / secrets ---
-.codex/.codex
-.codex/.codex-global-state.json
-.codex/.tmp/
-.codex/auth.json
-.codex/config.toml
-.codex/history.jsonl
-.codex/installation_id
-.codex/log/
-.codex/logs_2.sqlite
-.codex/logs_2.sqlite-shm
-.codex/logs_2.sqlite-wal
-.codex/plugins/
-.codex/sessions/
-.codex/shell_snapshots/
-.codex/skills/codex-primary-runtime/
-.codex/sqlite/
-.codex/state_5.sqlite
-.codex/state_5.sqlite-shm
-.codex/state_5.sqlite-wal
-.codex/tmp/
-.codex/vendor_imports/*.json
-.codex/config-backup.toml
+# --- .claude (runtime-only, not tracked) ---
+.claude/
 
-# --- other runtime / local files ---
+# --- .codex (runtime-only, not tracked) ---
+.codex/
+
+# --- .agents (runtime-only, not tracked) ---
+.agents/
+
+# --- pipeline state ---
+.pipeline/
+
+# --- other local files ---
 .sii/
 responses_proxy.py
-.codex/backup-auth.json
-.codex/backup-config.toml
-.codex/.sync_backup_*/
-.pipeline/
