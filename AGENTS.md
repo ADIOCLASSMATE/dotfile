@@ -1,13 +1,14 @@
 # dotfile — Machine Provisioning Guide
 
-This repo contains all config needed to reproduce a development environment on macOS or Linux. When you (the agent) are given a new machine, follow the instructions below.
+This repo bootstraps a development environment on macOS or Linux, with special support for shared Docker/headless setups where each container has a different `$HOME`.
 
 ## Architecture
 
 ```
 ~/dotfile/          ← this repo (cloned from git)
-  ├── .Codex/      ← symlinked to ~/.Codex
-  ├── .codex/       ← symlinked to ~/.codex
+  ├── .claude/      ← gitignored shared runtime, symlinked to ~/.claude
+  ├── .codex/       ← gitignored shared runtime, symlinked to ~/.codex
+  ├── .agents/      ← gitignored local agent/runtime workspace, when present
   ├── zsh/          ← modules sourced into generated ~/.zshrc
   ├── tmux/         ← symlinked to ~/.tmux.conf
   ├── git/          ← symlinked to ~/.gitconfig
@@ -16,15 +17,19 @@ This repo contains all config needed to reproduce a development environment on m
   └── init.sh       ← idempotent bootstrap script
 ```
 
-Key design: `~/.Codex` and `~/.codex` are **symlinks into this repo**, not copies. All agents, skills, rules, hooks, and statusline config are version-controlled here. Runtime state (sessions, transcripts, plans) lives inside the same directory tree and is gitignored.
+Key design: `~/.claude` and `~/.codex` are **symlinks into this repo**, not copies. The directories inside the repo are shared runtime targets and are gitignored, so multiple Docker containers can share sessions, settings, credentials, hooks, and local installed agent assets without each container rebuilding its own `$HOME`.
+
+Tracked files in this repo are the reproducible bootstrap surface: `init.sh`, shell modules, tmux, git, Neovim, Yazi, and documentation. Runtime state and secrets stay out of Git.
 
 ## Prerequisites
 
 Before provisioning, verify these tools are available. If any are missing, ask the user to install them or install via the OS package manager:
 
 - `git` — required to clone this repo
-- `bun` — required for Codex hooks (`gateguard-fact-force.js`, `on-plan-accepted.js`, etc.)
+- `bun` — required for Claude/Codex hooks and used as the JavaScript runtime/package-manager surface
 - `jq` — required for `statusline.sh` and `setup-hooks.sh`
+
+Do not require a separate Node.js/npm install by default. `init.sh` creates Bun compatibility shims in `~/.bun/bin` for `node`, `npm`, `npx`, `yarn`, `pnpm`, and `corepack`; make sure `~/.bun/bin` is ahead of system package-manager paths before troubleshooting JS tooling.
 
 ## Provisioning a new machine
 
@@ -39,21 +44,32 @@ cd ~/dotfile
 
 `init.sh` is idempotent — safe to rerun. It:
 - Detects OS (macOS → Homebrew, Linux → apt-get)
-- Installs: zsh, tmux, git, curl, ripgrep, fzf, neovim, Yazi support tools
+- Installs: zsh, tmux, git, curl, ripgrep, fzf, neovim, unzip, Yazi support tools
 - Installs Oh My Zsh + plugins (autosuggestions, syntax-highlighting)
 - Installs Rust + Yazi via rustup/cargo
-- Falls back to official Neovim tarball on Linux if system nvim < 0.8.0
+- Installs uv and ruff as user-local Python tooling
+- Creates Bun compatibility shims for Node.js/npm-style tools
+- Falls back to the official latest Neovim tarball on Linux if system nvim < 0.8.0
 - Backs up conflicts to `~/.dotfile-backups/<timestamp>/`
-- Creates symlinks: `~/.tmux.conf`, `~/.gitconfig`, `~/.config/nvim`, `~/.config/yazi`, `~/.Codex`, `~/.codex`
+- Creates symlinks: `~/.tmux.conf`, `~/.gitconfig`, `~/.config/nvim`, `~/.config/yazi`, `~/.claude`, `~/.codex`
 - Generates `~/.zshrc` from tracked zsh modules
 - Switches default shell to zsh
+
+Useful options:
+```bash
+./init.sh --link-only      # only generate dotfiles/symlinks; no installs or chsh
+./init.sh --no-packages    # skip apt/Homebrew installs
+./init.sh --no-user-tools  # skip Rust/Bun/Yazi/Oh My Zsh installs
+./init.sh --upgrade-neovim # install the latest official Neovim release
+./init.sh --no-chsh        # do not change login shell
+```
 
 After `init.sh` completes, it prints a summary. Check the **Warnings** section — any tool listed there needs attention before continuing. If init.sh succeeded without warnings, proceed to Step 2.
 
 ### Step 2: Verify symlinks
 
 ```bash
-ls -la ~/.Codex ~/.codex ~/.tmux.conf ~/.gitconfig ~/.config/nvim ~/.config/yazi
+ls -la ~/.claude ~/.codex ~/.tmux.conf ~/.gitconfig ~/.config/nvim ~/.config/yazi
 ```
 
 All should point into `~/dotfile/`. If any is missing or broken, re-run `./init.sh`.
@@ -62,7 +78,7 @@ All should point into `~/dotfile/`. If any is missing or broken, re-run `./init.
 
 These files are gitignored and must be created on each machine. Ask the user for secret values (tokens, API endpoints, model IDs), then create each file with the template below.
 
-**`~/.Codex/settings.json`** — Codex configuration:
+**`~/.claude/settings.json`** — Claude Code configuration:
 ```json
 {
   "env": {
@@ -77,38 +93,38 @@ These files are gitignored and must be created on each machine. Ask the user for
     "PreToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
-        "hooks": [{ "type": "command", "command": "bun ~/.Codex/scripts/hooks/gateguard-fact-force.js", "timeout": 5 }]
+        "hooks": [{ "type": "command", "command": "bun ~/.claude/scripts/hooks/gateguard-fact-force.js", "timeout": 5 }]
       },
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "bun ~/.Codex/scripts/hooks/gateguard-fact-force.js", "timeout": 5 },
-          { "type": "command", "command": "bun ~/.Codex/scripts/hooks/pre-bash-commit-quality.js" }
+          { "type": "command", "command": "bun ~/.claude/scripts/hooks/gateguard-fact-force.js", "timeout": 5 },
+          { "type": "command", "command": "bun ~/.claude/scripts/hooks/pre-bash-commit-quality.js" }
         ]
       }
     ],
     "Stop": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "bun ~/.Codex/scripts/hooks/desktop-notify.js", "timeout": 10, "async": true }]
+        "hooks": [{ "type": "command", "command": "bun ~/.claude/scripts/hooks/desktop-notify.js", "timeout": 10, "async": true }]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "ExitPlanMode",
-        "hooks": [{ "type": "command", "command": "bun ~/.Codex/scripts/hooks/on-plan-accepted.js", "timeout": 10 }]
+        "hooks": [{ "type": "command", "command": "bun ~/.claude/scripts/hooks/on-plan-accepted.js", "timeout": 10 }]
       }
     ],
     "PostCompact": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "bun ~/.Codex/scripts/hooks/post-compact-context-restore.js", "timeout": 15 }]
+        "hooks": [{ "type": "command", "command": "bun ~/.claude/scripts/hooks/post-compact-context-restore.js", "timeout": 15 }]
       }
     ]
   },
   "statusLine": {
     "type": "command",
-    "command": "~/.Codex/statusline.sh",
+    "command": "~/.claude/statusline.sh",
     "padding": 2,
     "refreshInterval": 3
   }
@@ -117,7 +133,7 @@ These files are gitignored and must be created on each machine. Ask the user for
 
 > The template above includes all hooks. `setup-hooks.sh` is only needed when adding new hooks to an existing `settings.json` on an already-provisioned machine.
 
-**`~/.Codex/config.json`** — Internal config:
+**`~/.claude/config.json`** — Internal config:
 ```json
 {
   "customApiKeyResponses": {
@@ -150,13 +166,13 @@ Requires internet access.
 
 ```bash
 # Check core tools are on PATH
-which zsh tmux git curl rg fzf nvim yazi
+which zsh tmux git curl rg fzf nvim yazi bun node npm npx
 
-# Check Codex reads its config
-ls -la ~/.Codex/settings.json ~/.Codex/config.json
+# Check Claude Code reads its config
+ls -la ~/.claude/settings.json ~/.claude/config.json
 
 # Check statusline works
-~/.Codex/statusline.sh < /dev/null 2>&1 || echo "statusline needs jq"
+~/.claude/statusline.sh < /dev/null 2>&1 || echo "statusline needs jq"
 ```
 
 ## Linux / Docker / Headless specifics
@@ -168,30 +184,29 @@ In minimal or headless environments, some tools may be missing:
 
 ## What lives where
 
-### .Codex/ (Codex)
+### .claude/ (Claude Code shared runtime)
 
 | Path | What | Tracked |
 |------|------|---------|
-| `agents/*.md` | Subagent definitions (25 agents) | Yes |
-| `skills/*/SKILL.md` | Skill definitions (40 skills) | Yes |
-| `rules/` | Layered rules (common + language-specific) | Yes |
-| `scripts/hooks/*.js` | PreToolUse / PostToolUse / PostCompact / Stop hooks | Yes |
-| `scripts/setup-hooks.sh` | One-shot hook config installer for settings.json | Yes |
-| `pet/` | Statusline cat animation data | Yes |
-| `statusline.sh` | Status bar renderer | Yes |
-| `mcp-configs/mcp-servers.json` | MCP template catalog (no live creds) | Yes |
+| `agents/*.md` | Local installed subagent definitions | No |
+| `skills/*/SKILL.md` | Local installed skills | No |
+| `rules/` | Local rules | No |
+| `scripts/hooks/*.js` | Hook scripts | No |
+| `scripts/setup-hooks.sh` | One-shot hook config installer for settings.json | No |
+| `pet/` | Statusline animation data | No |
+| `statusline.sh` | Status bar renderer | No |
 | `settings.json` | API tokens, env vars, hook config | **No** — gitignored |
-| `config.json` | Internal Codex config | **No** — gitignored |
+| `config.json` | Internal Claude Code config | **No** — gitignored |
 | `sessions/`, `transcripts/`, `plans/`, etc. | Runtime state | **No** — gitignored |
 
 ### .codex/ (OpenAI Codex CLI)
 
 | Path | What | Tracked |
 |------|------|---------|
-| `rules/default.rules` | Codex allow-list rules | Yes |
-| `skills/feynman/` | Research skills | Yes |
-| `skills/.system/` | System skills | Yes |
-| `vendor_imports/skills/` | Upstream skill sync (submodule) | Yes |
+| `rules/default.rules` | Local allow-list rules | No |
+| `skills/feynman/` | Local research skills | No |
+| `skills/.system/` | Local system skills | No |
+| `vendor_imports/skills/` | Local upstream skill sync, if installed | No |
 | `auth.json` | Credentials | **No** — gitignored |
 | `config.toml` | Config | **No** — gitignored |
 | `sessions/`, `log/`, `*.sqlite` | Runtime state | **No** — gitignored |
@@ -203,14 +218,14 @@ In minimal or headless environments, some tools may be missing:
 | Shell modules | `./init.sh && source ~/.zshrc` |
 | tmux | `tmux source-file ~/.tmux.conf` |
 | Neovim / Yazi | Restart application |
-| Codex rules, skills, agents, hooks | Immediate — `~/.Codex` is a live symlink |
-| Codex settings (hooks, env) | Edit `~/.Codex/settings.json` manually — not in repo |
-| Hook config (new/changed) | Run `bash ~/.Codex/scripts/setup-hooks.sh` |
+| Claude/Codex runtime rules, skills, agents, hooks | Immediate — `~/.claude` and `~/.codex` are live symlinks, but gitignored |
+| Claude settings (hooks, env) | Edit `~/.claude/settings.json` manually — not in repo |
+| Hook config (new/changed) | Run `bash ~/.claude/scripts/setup-hooks.sh` when available |
 
 ## Troubleshooting
 
-- **Symlink broken**: `ls -la ~/.Codex` should show `-> ~/dotfile/.Codex`. If not, `./init.sh` will fix it.
-- **Hooks not firing**: Check `~/.Codex/settings.json` exists and hook paths use `~/.Codex/scripts/hooks/` (resolves via symlink).
-- **Statusline empty**: Ensure `jq` and `zsh` are installed. `statusline.sh` sources `~/.Codex/pet/utils.sh`.
+- **Symlink broken**: `ls -la ~/.claude ~/.codex` should point into `~/dotfile/`. If not, `./init.sh` will fix it.
+- **Hooks not firing**: Check `~/.claude/settings.json` exists and hook paths use `~/.claude/scripts/hooks/` (resolves via symlink).
+- **Statusline empty**: Ensure `jq` and `zsh` are installed. `statusline.sh` sources `~/.claude/pet/utils.sh`.
 - **Neovim plugins missing**: First launch needs internet. If LazyVim errors, check `nvim --version` is >= 0.8.0.
-- **Codex can't find rules**: `~/.Codex` must be a symlink, not a directory. If someone created a real `~/.Codex/` dir, back it up and re-run `./init.sh`.
+- **Claude/Codex can't find runtime files**: `~/.claude` and `~/.codex` must be symlinks, not unrelated directories. If someone created real directories there, back them up and re-run `./init.sh`.

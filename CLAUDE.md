@@ -1,6 +1,6 @@
 # dotfile — Shared Config for Docker/Headless Environments
 
-Minimal dotfile repo. Cloned into a shared folder mounted across Docker containers so all containers share the same Claude Code / Codex sessions, API keys, and runtime state.
+Minimal dotfile repo. Cloned into a shared folder mounted across Docker containers so all containers share the same Claude Code / Codex sessions, API keys, hook assets, and runtime state.
 
 ## Architecture
 
@@ -20,7 +20,7 @@ Minimal dotfile repo. Cloned into a shared folder mounted across Docker containe
 Key design:
 - `~/.claude` → `~/dotfile/.claude` (symlink). All runtime state (sessions, settings.json, API keys) lives in the shared folder and is gitignored.
 - `~/.codex` → `~/dotfile/.codex` (symlink). Same pattern.
-- Rules, skills, agents, hooks are NOT tracked in this repo — this repo only provides the symlink + shared runtime storage.
+- Rules, skills, agents, hooks are local runtime assets by default. They live under the symlinked `.claude/` or `.codex/` directories and are not tracked by this repo.
 
 ## Provisioning a new machine
 
@@ -29,6 +29,10 @@ git clone <url> ~/dotfile
 cd ~/dotfile
 ./init.sh
 ```
+
+Use `./init.sh --link-only` inside containers that should only create symlinks and generated dotfiles without installing packages or changing the login shell.
+
+JavaScript tooling is Bun-first. `init.sh` creates compatibility shims in `~/.bun/bin` for `node`, `npm`, `npx`, `yarn`, `pnpm`, and `corepack`, so Node/npm-style tools should run through Bun unless a machine explicitly overrides PATH.
 
 After `init.sh`, create secret files manually:
 - `~/.claude/settings.json` — API tokens, env vars
