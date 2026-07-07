@@ -23,7 +23,7 @@ Key design: `~/.Codex` and `~/.codex` are **symlinks into this repo**, not copie
 Before provisioning, verify these tools are available. If any are missing, ask the user to install them or install via the OS package manager:
 
 - `git` — required to clone this repo
-- `node` — required for Codex hooks (`gateguard-fact-force.js`, `on-plan-accepted.js`, etc.)
+- `bun` — required for Codex hooks (`gateguard-fact-force.js`, `on-plan-accepted.js`, etc.)
 - `jq` — required for `statusline.sh` and `setup-hooks.sh`
 
 ## Provisioning a new machine
@@ -77,32 +77,32 @@ These files are gitignored and must be created on each machine. Ask the user for
     "PreToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
-        "hooks": [{ "type": "command", "command": "node ~/.Codex/scripts/hooks/gateguard-fact-force.js", "timeout": 5 }]
+        "hooks": [{ "type": "command", "command": "bun ~/.Codex/scripts/hooks/gateguard-fact-force.js", "timeout": 5 }]
       },
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "node ~/.Codex/scripts/hooks/gateguard-fact-force.js", "timeout": 5 },
-          { "type": "command", "command": "node ~/.Codex/scripts/hooks/pre-bash-commit-quality.js" }
+          { "type": "command", "command": "bun ~/.Codex/scripts/hooks/gateguard-fact-force.js", "timeout": 5 },
+          { "type": "command", "command": "bun ~/.Codex/scripts/hooks/pre-bash-commit-quality.js" }
         ]
       }
     ],
     "Stop": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "node ~/.Codex/scripts/hooks/desktop-notify.js", "timeout": 10, "async": true }]
+        "hooks": [{ "type": "command", "command": "bun ~/.Codex/scripts/hooks/desktop-notify.js", "timeout": 10, "async": true }]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "ExitPlanMode",
-        "hooks": [{ "type": "command", "command": "node ~/.Codex/scripts/hooks/on-plan-accepted.js", "timeout": 10 }]
+        "hooks": [{ "type": "command", "command": "bun ~/.Codex/scripts/hooks/on-plan-accepted.js", "timeout": 10 }]
       }
     ],
     "PostCompact": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "node ~/.Codex/scripts/hooks/post-compact-context-restore.js", "timeout": 15 }]
+        "hooks": [{ "type": "command", "command": "bun ~/.Codex/scripts/hooks/post-compact-context-restore.js", "timeout": 15 }]
       }
     ]
   },

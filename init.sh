@@ -306,6 +306,30 @@ install_rust() {
   fi
 }
 
+install_bun() {
+  if command -v bun >/dev/null 2>&1; then
+    log_skip "bun already available"
+    return
+  fi
+
+  if ! command -v curl >/dev/null 2>&1; then
+    log_warn "curl is unavailable, skipped bun installation"
+    return
+  fi
+
+  if ! command -v unzip >/dev/null 2>&1; then
+    log_warn "unzip is unavailable, skipped bun installation"
+    return
+  fi
+
+  if curl -fsSL https://bun.sh/install | bash; then
+    export PATH="$HOME/.bun/bin:$PATH"
+    log_done "Installed bun"
+  else
+    log_warn "Failed to install bun automatically"
+  fi
+}
+
 install_yazi() {
   load_cargo_env
 
@@ -643,6 +667,7 @@ main() {
   esac
 
   install_rust
+  install_bun
   install_yazi
   install_oh_my_zsh
   install_oh_my_zsh_plugins
@@ -663,6 +688,13 @@ main() {
   ensure_link "$REPO_ROOT/.claude" "$HOME/.claude"
   ensure_dir "$REPO_ROOT/.codex"
   ensure_link "$REPO_ROOT/.codex" "$HOME/.codex"
+
+  # Use Bun as the Node.js runtime so tools with "#!/usr/bin/env node" shebangs
+  # (e.g., codex) work without installing Node.js.
+  if [[ -x "$HOME/.bun/bin/bun" ]] && [[ ! -e "$HOME/.bun/bin/node" ]]; then
+    ln -s bun "$HOME/.bun/bin/node"
+    log_done "Linked node -> bun in ~/.bun/bin for Node.js shebang compatibility"
+  fi
 
   check_runtime_tools
   switch_default_shell
